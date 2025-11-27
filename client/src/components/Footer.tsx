@@ -3,9 +3,9 @@ import { Link } from "wouter";
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white py-16">
-        <div className="max-w-[1800px] mx-auto px-8 lg:px-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+    <footer className="bg-black text-white py-12 md:py-16">
+        <div className="container-full">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
             {/* Columna 1: Espacio vacío (elegancia) */}
             <div className="hidden md:block">
               <div className="h-full border-r border-neutral-800"></div>
@@ -13,10 +13,10 @@ export default function Footer() {
 
             {/* Columna 2: PRODUCTOS */}
             <div>
-              <h3 className="text-xl lg:text-2xl tracking-wider text-neutral-400 mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+              <h3 className="text-lg md:text-xl lg:text-2xl tracking-wider text-neutral-400 mb-4 md:mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
                 PRODUCTOS
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-2 md:space-y-3">
                 <li>
                   <Link href="/productos">
                     <a className="text-sm font-light text-neutral-300 hover:text-white transition-colors duration-200 cursor-pointer">
@@ -57,10 +57,10 @@ export default function Footer() {
 
             {/* Columna 3: ONICE */}
             <div>
-              <h3 className="text-xl lg:text-2xl tracking-wider text-neutral-400 mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+              <h3 className="text-lg md:text-xl lg:text-2xl tracking-wider text-neutral-400 mb-4 md:mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
                 ONICE
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-2 md:space-y-3">
                 <li>
                   <Link href="/portfolio">
                     <a className="text-sm font-light text-neutral-300 hover:text-white transition-colors duration-200 cursor-pointer">
@@ -87,10 +87,10 @@ export default function Footer() {
 
             {/* Columna 4: SERVICIO AL CLIENTE */}
             <div>
-              <h3 className="text-xl lg:text-2xl tracking-wider text-neutral-400 mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+              <h3 className="text-lg md:text-xl lg:text-2xl tracking-wider text-neutral-400 mb-4 md:mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
                 SERVICIO AL CLIENTE
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-2 md:space-y-3">
                 <li>
                   <Link href="/contacto">
                     <a className="text-sm font-light text-neutral-300 hover:text-white transition-colors duration-200 cursor-pointer">
@@ -117,8 +117,8 @@ export default function Footer() {
           </div>
 
           {/* Pie de página */}
-          <div className="mt-24 pt-8 border-t border-neutral-800 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex gap-8 text-xs text-neutral-400">
+          <div className="mt-12 md:mt-24 pt-6 md:pt-8 border-t border-neutral-800 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+            <div className="flex gap-4 md:gap-8 text-xs text-neutral-400">
               <a href="#" className="hover:text-white transition-colors duration-200">
                 Política de Privacidad
               </a>
@@ -127,7 +127,7 @@ export default function Footer() {
               </a>
             </div>
             <div>
-              <h2 className="text-3xl lg:text-4xl tracking-wider text-white" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl tracking-wider text-white" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
                 {APP_TITLE}
               </h2>
             </div>

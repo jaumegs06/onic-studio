@@ -154,32 +154,42 @@ export default function ProjectDetail() {
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Breadcrumb */}
-        <section className="py-4 border-b border-neutral-300 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex gap-2 text-sm text-neutral-600">
+        <section className="py-6 bg-white">
+          <div className="container-full">
+            <div className="flex gap-2 text-xs uppercase tracking-widest text-neutral-500">
               <Link href="/">
-                <a className="hover:text-black">Inicio</a>
+                <a className="hover:text-black transition-colors">Home</a>
               </Link>
-              <span>/</span>
+              <span>&gt;</span>
               <Link href="/portfolio">
-                <a className="hover:text-black">Portfolio</a>
+                <a className="hover:text-black transition-colors">Proyectos</a>
               </Link>
-              <span>/</span>
-              <span className="text-black">{project.title}</span>
             </div>
           </div>
         </section>
 
         {/* Project Header */}
+        <section className="py-12 bg-white border-b border-neutral-200">
+          <div className="container-full">
+            <h1 className="text-6xl md:text-7xl lg:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+              PROYECTOS
+            </h1>
+            <p className="text-sm text-neutral-600">
+              ({allProjects.length}) Proyectos
+            </p>
+          </div>
+        </section>
+
+        {/* Project Info */}
         <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="container-full">
             <div className="max-w-4xl">
               <p className="text-sm uppercase tracking-widest text-neutral-500 mb-2">
                 {project.category}
               </p>
-              <h1 className="text-5xl lg:text-6xl mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <h2 className="text-4xl lg:text-5xl mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {project.title}
-              </h1>
+              </h2>
               <div className="flex gap-6 text-lg text-neutral-600 mb-6">
                 <span>{project.location}</span>
                 <span>•</span>
@@ -195,7 +205,7 @@ export default function ProjectDetail() {
         {/* Section Tabs */}
         {project.sections.length > 1 && (
           <section className="py-6 bg-white border-y border-neutral-300">
-            <div className="max-w-7xl mx-auto px-6">
+            <div className="container">
               <div className="flex gap-6 overflow-x-auto">
                 {project.sections.map((section, index) => (
                   <button
@@ -224,7 +234,7 @@ export default function ProjectDetail() {
 
         {/* Gallery */}
         <section className="py-16">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="container">
             {/* Section info */}
             <div className="mb-8">
               <h2 className="text-3xl mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -261,7 +271,7 @@ export default function ProjectDetail() {
 
         {/* Contact CTA */}
         <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="container text-center">
             <h2 className="text-3xl mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
               ¿Interesado en un proyecto similar?
             </h2>
@@ -279,7 +289,7 @@ export default function ProjectDetail() {
         {/* Related Projects */}
         {relatedProjects.length > 0 && (
           <section className="py-16 bg-stone-100">
-            <div className="max-w-7xl mx-auto px-6">
+            <div className="container">
               <h2 className="text-3xl mb-8" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Proyectos Relacionados
               </h2>

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -47,27 +48,32 @@ export default function Studio() {
   ];
 
   return (
-    <div className="flex flex-col">
+    <motion.div 
+      className="min-h-screen flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Navigation />
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl">
-              <h1 className="text-5xl md:text-6xl mb-6">El Estudio</h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Somos un estudio de arquitectura y diseño de interiores
-                especializado en proyectos de alto standing. Nuestra pasión es
-                crear espacios únicos que inspiran y transforman.
-              </p>
-            </div>
+        <section className="py-12 md:py-16 bg-stone-200">
+          <div className="container-full">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+              EL ESTUDIO
+            </h1>
+            <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl">
+              Somos un estudio de arquitectura y diseño de interiores
+              especializado en proyectos de alto standing. Nuestra pasión es
+              crear espacios únicos que inspiran y transforman.
+            </p>
           </div>
         </section>
 
         {/* Philosophy Section */}
         <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
                 <h2 className="text-4xl mb-6">Nuestra Filosofía</h2>
@@ -105,28 +111,68 @@ export default function Studio() {
 
         {/* Values Section */}
         <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="container">
             <h2 className="text-4xl mb-16 text-center">Nuestros Valores</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.15
+                  }
+                }
+              }}
+            >
               {values.map((value, index) => (
-                <div key={index} className="text-center">
+                <motion.div 
+                  key={index} 
+                  className="text-center"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  transition={{ duration: 0.5 }}
+                >
                   <h3 className="text-2xl mb-4">{value.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">
                     {value.description}
                   </p>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Team Section */}
         <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="container">
             <h2 className="text-4xl mb-16 text-center">Nuestro Equipo</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-3 gap-12"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.2
+                  }
+                }
+              }}
+            >
               {team.map((member, index) => (
-                <div key={index} className="text-center">
+                <motion.div 
+                  key={index} 
+                  className="text-center"
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.95 },
+                    visible: { opacity: 1, scale: 1 }
+                  }}
+                  transition={{ duration: 0.5 }}
+                >
                   <div className="w-48 h-48 mx-auto mb-6 bg-foreground/10" />
                   <h3 className="text-2xl mb-2">{member.name}</h3>
                   <p className="text-sm text-muted-foreground uppercase tracking-wider mb-4">
@@ -135,15 +181,15 @@ export default function Studio() {
                   <p className="text-muted-foreground leading-relaxed">
                     {member.description}
                   </p>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Process Section */}
         <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="container">
             <h2 className="text-4xl mb-16 text-center">Nuestro Proceso</h2>
             <div className="max-w-3xl mx-auto space-y-12">
               {[
@@ -190,7 +236,7 @@ export default function Studio() {
 
         {/* CTA Section */}
         <section className="py-24 bg-foreground text-background">
-          <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="container text-center">
             <h2 className="text-4xl md:text-5xl mb-6">
               Trabajemos juntos
             </h2>
@@ -209,6 +255,6 @@ export default function Studio() {
       </main>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 }

@@ -153,31 +153,100 @@
    * For custom widths, use max-w-* utilities directly:
    * <div className="max-w-6xl mx-auto px-4">...</div>
    */
+  /* 
+   * Container principal - padding mínimo, se adapta a cualquier pantalla
+   * Usa todo el ancho disponible con márgenes mínimos
+   */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
-    padding-right: 1rem;
-  }
-
-  .flex {
-    min-height: 0;
-    min-width: 0;
+    padding-left: 1.5rem; /* 24px - padding mínimo */
+    padding-right: 1.5rem;
+    max-width: none; /* Sin límite de ancho */
   }
 
   @media (min-width: 640px) {
     .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
-      padding-right: 1.5rem;
+      padding-left: 2rem; /* 32px */
+      padding-right: 2rem;
     }
   }
 
   @media (min-width: 1024px) {
     .container {
-      padding-left: 2rem; /* 32px - desktop padding */
-      padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
+      padding-left: 3rem; /* 48px */
+      padding-right: 3rem;
     }
+  }
+
+  @media (min-width: 1536px) {
+    .container {
+      padding-left: 4rem; /* 64px - para pantallas muy grandes */
+      padding-right: 4rem;
+    }
+  }
+
+  /* 
+   * Container para contenido centrado con ancho máximo
+   * Ideal para textos, formularios, contenido que no debe ser muy ancho
+   */
+  .container-center {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    max-width: 1400px; /* Contenido centrado con límite */
+  }
+
+  @media (min-width: 640px) {
+    .container-center {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-center {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+
+  /* 
+   * Container para grids y galerías - full width
+   * Sin padding lateral, para que las imágenes lleguen hasta el borde
+   */
+  .container-full {
+    width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-full {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-full {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .container-full {
+      padding-left: 4rem;
+      padding-right: 4rem;
+    }
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
   }
 }

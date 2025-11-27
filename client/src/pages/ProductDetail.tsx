@@ -61,25 +61,23 @@ export default function ProductDetail() {
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Breadcrumb */}
-        <section className="py-4 border-b border-neutral-300 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex gap-2 text-sm text-neutral-600">
+        <section className="py-6 bg-white">
+          <div className="container-full">
+            <div className="flex gap-2 text-xs uppercase tracking-widest text-neutral-500">
               <Link href="/">
-                <a className="hover:text-black">Inicio</a>
+                <a className="hover:text-black transition-colors">Home</a>
               </Link>
-              <span>/</span>
+              <span>&gt;</span>
               <Link href="/productos">
-                <a className="hover:text-black">Materiales</a>
+                <a className="hover:text-black transition-colors">Materiales</a>
               </Link>
-              <span>/</span>
-              <span className="text-black">{product.name}</span>
             </div>
           </div>
         </section>
 
         {/* Product Detail */}
         <section className="py-16">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="container-full">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {/* Galería de imágenes */}
               <div>
@@ -111,13 +109,13 @@ export default function ProductDetail() {
               {/* Información del producto */}
               <div className="space-y-8">
                 <div>
-                  <p className="text-sm uppercase tracking-widest text-neutral-500 mb-2">
+                  <p className="text-xs uppercase tracking-widest text-neutral-500 mb-3">
                     {product.collection || product.category}
                   </p>
-                  <h1 className="text-5xl lg:text-6xl mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  <h1 className="text-6xl lg:text-7xl mb-6 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
                     {product.name}
                   </h1>
-                  <p className="text-lg text-neutral-600 leading-relaxed">
+                  <p className="text-base text-neutral-600 leading-relaxed">
                     {product.description || `${product.name} es un ${product.category.toLowerCase()} de alta calidad que combina elegancia y durabilidad. Ideal para proyectos de arquitectura y diseño de interiores premium.`}
                   </p>
                 </div>
@@ -184,7 +182,7 @@ export default function ProductDetail() {
         {/* Productos relacionados */}
         {relatedProducts.length > 0 && (
           <section className="py-16 bg-white">
-            <div className="max-w-7xl mx-auto px-6">
+            <div className="container">
               <h2 className="text-3xl mb-8" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Productos Similares
               </h2>

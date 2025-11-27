@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { ChevronDown, Search } from "lucide-react";
 
 export default function Portfolio() {
   const [filter, setFilter] = useState("Todos");
+  const [locationFilter, setLocationFilter] = useState("Todas");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [locationOpen, setLocationOpen] = useState(false);
 
   const categories = ["Todos", "Residencial", "Hospitalidad"];
+  const locations = ["Todas", "Mallorca"];
 
   const projects = [
     // Hotel Meliá Beach - Consolidado
@@ -118,88 +125,194 @@ export default function Portfolio() {
     },
   ];
 
-  const filteredProjects =
-    filter === "Todos"
-      ? projects
-      : projects.filter((project) => project.category === filter);
+  const filteredProjects = projects.filter((project) => {
+    const matchesCategory = filter === "Todos" || project.category === filter;
+    const matchesLocation = locationFilter === "Todas" || project.location === locationFilter;
+    const matchesSearch = searchTerm === "" || 
+      project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.materials.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesLocation && matchesSearch;
+  });
 
   return (
-    <div className="flex flex-col">
+    <motion.div 
+      className="flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Navigation />
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl">
-              <h1 className="text-5xl md:text-6xl mb-6">Portfolio</h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Una selección de nuestros proyectos más destacados en
-                arquitectura y diseño de interiores de lujo.
-              </p>
-            </div>
+        <section className="py-12 md:py-16 bg-stone-200">
+          <div className="container-full">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+              PORTFOLIO
+            </h1>
+            <p className="text-xs md:text-sm text-neutral-600 mb-4 md:mb-6">
+              ({filteredProjects.length}) Proyectos
+            </p>
+            <p className="text-lg text-neutral-600 leading-relaxed max-w-3xl">
+              Una selección de nuestros proyectos más destacados en
+              arquitectura y diseño de interiores de lujo.
+            </p>
           </div>
         </section>
 
         {/* Filter Section */}
-        <section className="py-8 bg-white border-y border-border">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-wrap gap-4 justify-center">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setFilter(category)}
-                  className={`px-6 py-2 text-sm uppercase tracking-wider transition-colors ${
-                    filter === category
-                      ? "bg-foreground text-background"
-                      : "bg-transparent text-foreground hover:bg-foreground/10"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+        <section className="py-8 bg-stone-200 relative">
+          <div className="container">
+            {/* Línea superior */}
+            <div className="absolute top-8 left-0 right-0 h-px bg-neutral-300"></div>
+            {/* Línea inferior */}
+            <div className="absolute bottom-8 left-0 right-0 h-px bg-neutral-300"></div>
+            
+            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4">
+              {/* Filtros desplegables */}
+              <div className="flex flex-wrap items-center gap-3 p-3 md:p-4 border border-neutral-300 bg-stone-200">
+                {/* Filtro de Aplicación/Categoría */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setCategoryOpen(!categoryOpen);
+                      setLocationOpen(false);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 border-0 hover:opacity-70 transition-opacity text-sm uppercase tracking-wider bg-transparent"
+                  >
+                    <span className="text-neutral-700">APLICACIÓN</span>
+                    <ChevronDown className="w-4 h-4 text-neutral-600" />
+                  </button>
+                  {categoryOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-300 shadow-lg z-10 min-w-[200px]">
+                      {categories.map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            setFilter(category);
+                            setCategoryOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm uppercase tracking-wider hover:bg-neutral-100 transition-colors ${
+                            filter === category ? "bg-neutral-100 font-semibold" : ""
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Filtro de Ubicación */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setLocationOpen(!locationOpen);
+                      setCategoryOpen(false);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 border-0 hover:opacity-70 transition-opacity text-sm uppercase tracking-wider bg-transparent"
+                  >
+                    <span className="text-neutral-700">UBICACIÓN</span>
+                    <ChevronDown className="w-4 h-4 text-neutral-600" />
+                  </button>
+                  {locationOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-300 shadow-lg z-10 min-w-[200px]">
+                      {locations.map((location) => (
+                        <button
+                          key={location}
+                          onClick={() => {
+                            setLocationFilter(location);
+                            setLocationOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm uppercase tracking-wider hover:bg-neutral-100 transition-colors ${
+                            locationFilter === location ? "bg-neutral-100 font-semibold" : ""
+                          }`}
+                        >
+                          {location}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Barra de búsqueda */}
+              <div className="relative w-full md:w-auto p-3 md:p-4 border border-neutral-300 bg-stone-200 md:ml-auto">
+                <input
+                  type="text"
+                  placeholder="Buscar proyectos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-4 pr-10 py-2 border-0 focus:outline-none focus:ring-0 transition-colors text-sm uppercase tracking-wider w-full bg-transparent"
+                />
+                <Search className="w-4 h-4 text-neutral-500 absolute right-5 md:right-6 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
             </div>
           </div>
         </section>
 
         {/* Projects Grid */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProjects.map((project) => (
-                <Link key={project.id} href={`/portfolio/${project.id}`}>
-                  <a className="block group cursor-pointer">
-                    <div className="relative h-80 mb-4 overflow-hidden">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground uppercase tracking-wider">
-                        {project.category}
-                      </p>
-                      <h3 className="text-xl">{project.title}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {project.location} · {project.year}
-                      </p>
-                      <p className="text-xs text-muted-foreground italic">
-                        {project.materials}
-                      </p>
-                    </div>
-                  </a>
-                </Link>
+        <section className="py-12 md:py-16">
+          <div className="container-full">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+            >
+              {filteredProjects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Link href={`/portfolio/${project.id}`}>
+                    <a className="block group cursor-pointer">
+                      <motion.div 
+                        className="relative h-80 mb-4 overflow-hidden"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                      </motion.div>
+                      <div className="space-y-2">
+                        <p className="text-sm text-muted-foreground uppercase tracking-wider">
+                          {project.category}
+                        </p>
+                        <h3 className="text-xl">{project.title}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {project.location} · {project.year}
+                        </p>
+                        <p className="text-xs text-muted-foreground italic">
+                          {project.materials}
+                        </p>
+                      </div>
+                    </a>
+                  </Link>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* CTA Section */}
         <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="container text-center">
             <h2 className="text-4xl md:text-5xl mb-6">
               ¿Listo para comenzar tu proyecto?
             </h2>
@@ -217,6 +330,6 @@ export default function Portfolio() {
       </main>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 }

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -42,64 +43,96 @@ export default function Services() {
   ];
 
   return (
-    <div className="flex flex-col">
+    <motion.div 
+      className="min-h-screen flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Navigation />
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl">
-              <h1 className="text-5xl md:text-6xl mb-6">Servicios</h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Ofrecemos servicios integrales de arquitectura y diseño de
-                interiores para proyectos de alto standing. Nuestro enfoque
-                combina creatividad, funcionalidad y atención al detalle.
-              </p>
-            </div>
+        <section className="py-12 md:py-16 bg-stone-200">
+          <div className="container-full">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+              SERVICIOS
+            </h1>
+            <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl">
+              Ofrecemos servicios integrales de arquitectura y diseño de
+              interiores para proyectos de alto standing. Nuestro enfoque
+              combina creatividad, funcionalidad y atención al detalle.
+            </p>
           </div>
         </section>
 
         {/* Services Detail */}
         {services.map((service, index) => (
-          <section
+          <motion.section
             key={index}
             className="py-24"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
           >
-            <div className="max-w-7xl mx-auto px-6">
+            <div className="container-full">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div className={index % 2 === 0 ? "order-1" : "order-1 lg:order-2"}>
+                <motion.div 
+                  className={index % 2 === 0 ? "order-1" : "order-1 lg:order-2"}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
                   <h2 className="text-4xl mb-6">{service.title}</h2>
                   <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                     {service.description}
                   </p>
                   <div className="space-y-3">
                     {service.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
+                      <motion.div 
+                        key={idx} 
+                        className="flex items-start gap-3"
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: 0.3 + (idx * 0.1) }}
+                      >
                         <div className="w-1.5 h-1.5 bg-foreground mt-2.5 flex-shrink-0" />
                         <p className="text-foreground">{feature}</p>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
-                </div>
-                <div className={index % 2 === 0 ? "order-2" : "order-2 lg:order-1"}>
-                  <div className="relative h-96 lg:h-[500px]">
+                </motion.div>
+                <motion.div 
+                  className={index % 2 === 0 ? "order-2" : "order-2 lg:order-1"}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? 30 : -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  <motion.div 
+                    className="relative h-96 lg:h-[500px] overflow-hidden"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.4 }}
+                  >
                     <img
                       src={service.image}
                       alt={service.title}
                       loading="lazy"
                       className="w-full h-full object-cover"
                     />
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               </div>
             </div>
-          </section>
+          </motion.section>
         ))}
 
         {/* CTA Section */}
         <section className="py-24 bg-foreground text-background">
-          <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="container text-center">
             <h2 className="text-4xl md:text-5xl mb-6">
               ¿Tienes un proyecto en mente?
             </h2>
@@ -118,6 +151,6 @@ export default function Services() {
       </main>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 }

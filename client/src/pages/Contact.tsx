@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -37,32 +38,47 @@ export default function Contact() {
   };
 
   return (
-    <div className="flex flex-col">
+    <motion.div 
+      className="flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Navigation />
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl">
-              <h1 className="text-5xl md:text-6xl mb-6">Contacto</h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                ¿Tienes un proyecto en mente? Nos encantaría conocer tus ideas
-                y ayudarte a crear el espacio perfecto.
-              </p>
-            </div>
+        <section className="py-12 md:py-16 bg-stone-200">
+          <div className="container-full">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+              CONTACTO
+            </h1>
+            <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl">
+              ¿Tienes un proyecto en mente? Nos encantaría conocer tus ideas
+              y ayudarte a crear el espacio perfecto.
+            </p>
           </div>
         </section>
 
         {/* Contact Form Section */}
         <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
               {/* Form */}
-              <div>
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
                 <h2 className="text-3xl mb-8">Envíanos un mensaje</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.1 }}
+                  >
                     <label
                       htmlFor="name"
                       className="block text-sm mb-2 uppercase tracking-wider"
@@ -78,9 +94,14 @@ export default function Contact() {
                       onChange={handleChange}
                       className="w-full"
                     />
-                  </div>
+                  </motion.div>
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                  >
                     <label
                       htmlFor="email"
                       className="block text-sm mb-2 uppercase tracking-wider"
@@ -96,9 +117,14 @@ export default function Contact() {
                       onChange={handleChange}
                       className="w-full"
                     />
-                  </div>
+                  </motion.div>
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.3 }}
+                  >
                     <label
                       htmlFor="phone"
                       className="block text-sm mb-2 uppercase tracking-wider"
@@ -113,9 +139,14 @@ export default function Contact() {
                       onChange={handleChange}
                       className="w-full"
                     />
-                  </div>
+                  </motion.div>
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.4 }}
+                  >
                     <label
                       htmlFor="projectType"
                       className="block text-sm mb-2 uppercase tracking-wider"
@@ -136,9 +167,14 @@ export default function Contact() {
                       <option value="restauracion">Restauración</option>
                       <option value="otro">Otro</option>
                     </select>
-                  </div>
+                  </motion.div>
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.5 }}
+                  >
                     <label
                       htmlFor="message"
                       className="block text-sm mb-2 uppercase tracking-wider"
@@ -154,27 +190,49 @@ export default function Contact() {
                       rows={6}
                       className="w-full resize-none"
                     />
-                  </div>
+                  </motion.div>
 
-                  <Button type="submit" size="lg" className="w-full">
-                    Enviar Mensaje
-                  </Button>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.6 }}
+                  >
+                    <Button type="submit" size="lg" className="w-full">
+                      Enviar Mensaje
+                    </Button>
+                  </motion.div>
                 </form>
-              </div>
+              </motion.div>
 
               {/* Contact Info */}
-              <div>
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
                 <h2 className="text-3xl mb-8">Información de contacto</h2>
                 <div className="space-y-8">
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                  >
                     <h3 className="text-xl mb-3">Oficina</h3>
                     <p className="text-muted-foreground leading-relaxed">
                       Calle Serrano 123, 4º A<br />
                       28006 Madrid, España
                     </p>
-                  </div>
+                  </motion.div>
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.3 }}
+                  >
                     <h3 className="text-xl mb-3">Email</h3>
                     <a
                       href="mailto:info@onicstudio.com"
@@ -182,9 +240,14 @@ export default function Contact() {
                     >
                       info@onicstudio.com
                     </a>
-                  </div>
+                  </motion.div>
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.4 }}
+                  >
                     <h3 className="text-xl mb-3">Teléfono</h3>
                     <a
                       href="tel:+34123456789"
@@ -192,18 +255,28 @@ export default function Contact() {
                     >
                       +34 123 456 789
                     </a>
-                  </div>
+                  </motion.div>
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.5 }}
+                  >
                     <h3 className="text-xl mb-3">Horario</h3>
                     <p className="text-muted-foreground leading-relaxed">
                       Lunes a Viernes: 9:00 - 18:00<br />
                       Sábados: 10:00 - 14:00<br />
                       Domingos: Cerrado
                     </p>
-                  </div>
+                  </motion.div>
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.6 }}
+                  >
                     <h3 className="text-xl mb-3">Síguenos</h3>
                     <div className="flex gap-4">
                       <a
@@ -225,9 +298,9 @@ export default function Contact() {
                         Pinterest
                       </a>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -241,6 +314,6 @@ export default function Contact() {
       </main>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 }

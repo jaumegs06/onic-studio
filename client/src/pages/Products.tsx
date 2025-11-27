@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { ChevronDown, Search } from "lucide-react";
 
 export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryOpen, setCategoryOpen] = useState(false);
 
   const products = [
     // GRANITOS
@@ -101,102 +104,152 @@ export default function Products() {
   });
 
   return (
-    <div className="flex flex-col">
+    <motion.div 
+      className="flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Navigation />
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl text-center font-serif mb-4">
-              Nuestra Colección de Materiales
+        <section className="py-12 md:py-16">
+          <div className="container-full">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+              MATERIALES
             </h1>
-            <p className="text-center text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-xs md:text-sm text-neutral-600 mb-4 md:mb-6">
+              ({filteredProducts.length}) Materiales
+            </p>
+            <p className="text-lg text-neutral-600 leading-relaxed max-w-3xl">
               Selección exclusiva de materiales premium para proyectos de lujo
             </p>
           </div>
         </section>
 
         {/* Filter Section */}
-        <section className="py-8 bg-white border-y border-neutral-300">
-          <div className="max-w-7xl mx-auto px-6">
-            {/* Barra de búsqueda */}
-            <div className="mb-8 max-w-md mx-auto">
-              <input
-                type="text"
-                placeholder="Buscar material..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-6 py-3 border border-neutral-300 focus:outline-none focus:border-black transition-colors text-sm uppercase tracking-wider"
-                style={{ fontFamily: "'Lato', sans-serif" }}
-              />
-            </div>
+        <section className="py-8 bg-stone-200 relative">
+          <div className="container">
+            {/* Línea superior */}
+            <div className="absolute top-8 left-0 right-0 h-px bg-neutral-300"></div>
+            {/* Línea inferior */}
+            <div className="absolute bottom-8 left-0 right-0 h-px bg-neutral-300"></div>
+            
+            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4">
+              {/* Filtros desplegables */}
+              <div className="flex flex-wrap items-center gap-3 p-3 md:p-4 border border-neutral-300 bg-stone-200">
+                {/* Filtro de Tipo */}
+                <div className="relative">
+                  <button
+                    onClick={() => setCategoryOpen(!categoryOpen)}
+                    className="flex items-center gap-2 px-4 py-2 border-0 hover:opacity-70 transition-opacity text-sm uppercase tracking-wider bg-transparent"
+                  >
+                    <span className="text-neutral-700">TIPO</span>
+                    <ChevronDown className="w-4 h-4 text-neutral-600" />
+                  </button>
+                  {categoryOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-300 shadow-lg z-10 min-w-[200px]">
+                      {categories.map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            setSelectedCategory(category);
+                            setCategoryOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm uppercase tracking-wider hover:bg-neutral-100 transition-colors ${
+                            selectedCategory === category ? "bg-neutral-100 font-semibold" : ""
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
 
-            {/* Filtros de categoría */}
-            <div className="flex flex-wrap gap-4 justify-center">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-8 py-3 text-sm uppercase tracking-widest transition-all duration-300 ${
-                    selectedCategory === category
-                      ? "bg-black text-white"
-                      : "bg-transparent text-neutral-600 hover:bg-neutral-100 border border-neutral-300"
-                  }`}
-                  style={{ fontFamily: "'Lato', sans-serif" }}
-                >
-                  {category}
-                </button>
-              ))}
+              {/* Barra de búsqueda */}
+              <div className="relative w-full md:w-auto p-3 md:p-4 border border-neutral-300 bg-stone-200 md:ml-auto">
+                <input
+                  type="text"
+                  placeholder="Buscar material..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-4 pr-10 py-2 border-0 focus:outline-none focus:ring-0 transition-colors text-sm uppercase tracking-wider w-full bg-transparent"
+                />
+                <Search className="w-4 h-4 text-neutral-500 absolute right-5 md:right-6 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
             </div>
-            <p className="text-center mt-6 text-sm text-neutral-500">
-              {filteredProducts.length} {filteredProducts.length === 1 ? 'material' : 'materiales'} encontrados
-            </p>
           </div>
         </section>
 
         {/* Products Grid */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <section className="py-12 md:py-16">
+          <div className="container-full">
+            <motion.div 
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.08
+                  }
+                }
+              }}
+            >
               {filteredProducts.map((product) => (
-                <Link key={product.id} href={`/productos/${product.id}`}>
-                  <a className="block group cursor-pointer">
-                  <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    {/* Overlay con información al hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                      <p className="text-xs text-white/80 uppercase tracking-widest mb-1">
+                <motion.div
+                  key={product.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Link href={`/productos/${product.id}`}>
+                    <a className="block group cursor-pointer">
+                    <motion.div 
+                      className="relative aspect-[3/4] overflow-hidden mb-4 bg-white"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      {/* Overlay con información al hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <p className="text-xs text-white/80 uppercase tracking-widest mb-1">
+                          {product.category}
+                        </p>
+                        <h3 className="text-white text-2xl font-serif">
+                          {product.name}
+                        </h3>
+                      </div>
+                    </motion.div>
+                    {/* Información visible siempre */}
+                    <div className="opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                      <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
                         {product.category}
                       </p>
-                      <h3 className="text-white text-2xl font-serif">
+                      <h3 className="text-foreground text-xl font-serif">
                         {product.name}
                       </h3>
                     </div>
-                  </div>
-                  {/* Información visible siempre */}
-                  <div className="opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                    <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
-                      {product.category}
-                    </p>
-                    <h3 className="text-foreground text-xl font-serif">
-                      {product.name}
-                    </h3>
-                  </div>
-                  </a>
-                </Link>
+                    </a>
+                  </Link>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
       </main>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 }

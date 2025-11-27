@@ -36,15 +36,15 @@ export default function Navigation() {
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ease-in-out ${headerClass}`}>
-      <div className="container">
+      <div className="container-full">
         <div className="flex items-center justify-between h-20">
           <Link href="/">
             <span 
-              className="text-3xl font-bold tracking-normal cursor-pointer hover:opacity-70 transition-opacity"
+              className="text-2xl md:text-3xl cursor-pointer hover:opacity-70 transition-opacity uppercase"
               style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "'Oswald', sans-serif",
                 fontWeight: 700,
-                letterSpacing: "0.5px",
+                letterSpacing: "0",
                 color: "inherit"
               }}
             >

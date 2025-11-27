@@ -6,6 +6,15 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
+  const [currentHeroImage, setCurrentHeroImage] = useState(0);
+
+  const heroImages = [
+    "/images/hero-1.jpg",
+    "/images/hero-2.jpg",
+    "/images/hero-3.jpg",
+    "/images/hero-4.jpg"
+  ];
+
   const services = [
     {
       title: "Residencial",
@@ -50,6 +59,15 @@ export default function Home() {
 
   const [activeProject, setActiveProject] = useState(featuredProjects[0]);
 
+  // Autoplay hero carousel: cambio cada 6 segundos
+  useEffect(() => {
+    const heroInterval = setInterval(() => {
+      setCurrentHeroImage((current) => (current + 1) % heroImages.length);
+    }, 6000);
+
+    return () => clearInterval(heroInterval);
+  }, []);
+
   // Autoplay: rotación automática cada 5 segundos
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,10 +88,18 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative h-screen flex flex-col items-center justify-end">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url(/images/hero.jpg)" }}
-        />
+        {/* Carrusel de imágenes de fondo */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentHeroImage}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${heroImages[currentHeroImage]})` }}
+          />
+        </AnimatePresence>
 
         {/* Global soft overlay to unify image contrast (behind text) */}
         <div className="absolute inset-0 bg-black/15" />
@@ -81,17 +107,33 @@ export default function Home() {
         {/* Bottom gradient for contrast on lower part of image */}
         <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-black/60 to-transparent" />
 
-        <div className="relative z-10 text-center text-white px-4 flex flex-col items-center justify-center pb-24">
-          <p className="text-lg sm:text-xl md:text-2xl mb-8 text-white max-w-2xl mx-auto font-medium drop-shadow-md">
+        {/* Indicadores del carrusel */}
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentHeroImage(index)}
+              className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-300 ${
+                currentHeroImage === index 
+                  ? 'bg-white w-6 md:w-8' 
+                  : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Ir a imagen ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        <div className="relative z-10 text-center text-white px-4 flex flex-col items-center justify-center pb-20 md:pb-24">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-white max-w-2xl mx-auto font-medium drop-shadow-md">
             Descubre la esencia de la piedra natural en nuestro showroom.
           </p>
           <Link href="/contact">
             <button className="group flex items-center justify-between rounded-full border border-white bg-transparent p-1 pr-1 transition-all duration-300 hover:bg-white hover:text-black">
-              <span className="px-6 text-sm font-medium tracking-widest text-white transition-colors duration-300 group-hover:text-black">
+              <span className="px-4 md:px-6 text-xs md:text-sm font-medium tracking-widest text-white transition-colors duration-300 group-hover:text-black">
                 AGENDA UNA VISITA
               </span>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition-colors duration-300 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full bg-white text-black transition-colors duration-300 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white">
+                <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -101,23 +143,23 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="py-24 bg-stone-200">
+      <section className="py-12 md:py-16 lg:py-24 bg-stone-200">
         <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl mb-4 font-serif">Servicios</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl mb-3 md:mb-4 font-serif">Servicios</h2>
+            <p className="text-muted-foreground text-sm md:text-base lg:text-lg max-w-2xl mx-auto">
               Ofrecemos soluciones integrales de arquitectura y diseño de interiores
               para proyectos de lujo
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {services.map((service, index) => (
               <div
                 key={index}
                 className="group cursor-pointer"
               >
-                <div className="relative h-80 mb-6 overflow-hidden">
+                <div className="relative h-64 md:h-80 mb-4 md:mb-6 overflow-hidden">
                   <img
                     src={service.image}
                     alt={service.title}
@@ -125,17 +167,17 @@ export default function Home() {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 </div>
-                <h3 className="text-2xl mb-3">{service.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <h3 className="text-xl md:text-2xl mb-2 md:mb-3">{service.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
                   {service.description}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-8 md:mt-12">
             <Link href="/servicios">
-              <Button variant="outline" size="lg" className="px-8">
+              <Button variant="outline" size="lg" className="px-6 md:px-8 text-sm md:text-base">
                 Ver Todos los Servicios
               </Button>
             </Link>
@@ -144,10 +186,10 @@ export default function Home() {
       </section>
 
       {/* Featured Projects Section */}
-      <section className="py-24 bg-stone-200">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-12 md:py-16 lg:py-24 bg-stone-200">
+        <div className="container-full">
           {/* Grid Asimétrico */}
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-8 md:mb-12 lg:mb-16">
             {/* Columna Izquierda - Texto */}
             <AnimatePresence mode="wait">
               <motion.div
@@ -156,19 +198,19 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
-                className="space-y-6"
+                className="space-y-4 md:space-y-6"
               >
-                <p className="text-sm uppercase tracking-widest text-neutral-500" style={{ fontFamily: "'Lato', sans-serif" }}>
+                <p className="text-xs md:text-sm uppercase tracking-widest text-neutral-500" style={{ fontFamily: "'Lato', sans-serif" }}>
                   {activeProject.category}
                 </p>
-                <h2 className="text-5xl lg:text-6xl tracking-wider" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+                <h2 className="text-4xl md:text-5xl lg:text-6xl tracking-wider" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
                   {activeProject.title}
                 </h2>
-                <p className="text-gray-600 leading-relaxed text-lg" style={{ fontFamily: "'Lato', sans-serif" }}>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base lg:text-lg" style={{ fontFamily: "'Lato', sans-serif" }}>
                   {activeProject.description}
                 </p>
                 <Link href="/portfolio">
-                  <a className="inline-block text-sm uppercase tracking-wider border-b border-black pb-1 hover:opacity-70 transition-opacity">
+                  <a className="inline-block text-xs md:text-sm uppercase tracking-wider border-b border-black pb-1 hover:opacity-70 transition-opacity">
                     Ver Proyecto
                   </a>
                 </Link>
@@ -176,7 +218,7 @@ export default function Home() {
             </AnimatePresence>
 
             {/* Columna Derecha - Imagen */}
-            <div className="relative h-[600px] overflow-hidden">
+            <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={activeProject.id}
@@ -193,12 +235,12 @@ export default function Home() {
           </div>
 
           {/* Navegación Inferior - Estilo Kala */}
-          <div className="flex justify-center gap-12 pt-8 border-t border-neutral-300">
+          <div className="flex justify-start md:justify-center gap-6 md:gap-12 pt-6 md:pt-8 border-t border-neutral-300 overflow-x-auto pb-2">
             {featuredProjects.map((project) => (
               <button
                 key={project.id}
                 onClick={() => setActiveProject(project)}
-                className={`relative text-sm lg:text-base uppercase tracking-widest transition-all duration-300 py-4 ${
+                className={`relative text-xs md:text-sm lg:text-base uppercase tracking-widest transition-all duration-300 py-3 md:py-4 whitespace-nowrap flex-shrink-0 ${
                   activeProject.id === project.id
                     ? "text-black font-medium"
                     : "text-neutral-400 hover:text-neutral-600"
