@@ -27,24 +27,24 @@ export default function Home() {
   const featuredProjects = [
     {
       id: 1,
-      title: "CASA SON VIDA",
-      category: "Residencial",
-      description: "Una villa contemporánea en Mallorca que fusiona el diseño minimalista con vistas panorámicas al Mediterráneo. Espacios abiertos, luz natural y materiales nobles definen este proyecto único.",
-      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80",
+      title: "HOTEL MELIÁ BEACH",
+      category: "Hospitalidad",
+      description: "Renovación integral de baños con Techlam y barra de bar en Quarzo. Un proyecto que combina funcionalidad y diseño de alto nivel para espacios de hospitalidad premium.",
+      image: "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
     },
     {
       id: 2,
-      title: "HOTEL BOUTIQUE",
+      title: "HOTEL KATMANDU",
       category: "Hospitalidad",
-      description: "Experiencia sensorial en el corazón de Palma. Cada habitación cuenta una historia a través de texturas, colores y piezas de diseño exclusivo. Un refugio urbano de lujo contemporáneo.",
-      image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
+      description: "Buffet realizado en granito Negro Zimbabwe. Un espacio gastronómico que destaca por la elegancia atemporal de la piedra natural y su acabado impecable.",
+      image: "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
     },
     {
       id: 3,
-      title: "ÁTICO PALMA",
+      title: "APARTAMENTOS CALA MAJOR",
       category: "Residencial",
-      description: "Reforma integral de un ático en el casco antiguo. El proyecto integra arquitectura histórica con intervenciones contemporáneas, creando un diálogo entre pasado y presente.",
-      image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
+      description: "Reforma integral con material Techlam en cocinas, baños y espacios comunes. Un proyecto residencial que apuesta por la innovación y la calidad en cada detalle.",
+      image: "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
     },
   ];
 

@@ -10,6 +10,8 @@ import Portfolio from "./pages/Portfolio";
 import Studio from "./pages/Studio";
 import Contact from "./pages/Contact";
 import Products from "./pages/Products";
+import ProductDetail from "./pages/ProductDetail";
+import ProjectDetail from "./pages/ProjectDetail";
 
 function Router() {
   return (
@@ -17,7 +19,9 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/servicios"} component={Services} />
       <Route path={"/portfolio"} component={Portfolio} />
+      <Route path={"/portfolio/:id"} component={ProjectDetail} />
       <Route path={"/productos"} component={Products} />
+      <Route path={"/productos/:id"} component={ProductDetail} />
       <Route path={"/estudio"} component={Studio} />
       <Route path={"/contacto"} component={Contact} />
       <Route path={"/404"} component={NotFound} />
