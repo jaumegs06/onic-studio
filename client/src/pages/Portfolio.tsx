@@ -6,13 +6,13 @@ import Footer from "@/components/Footer";
 import { ChevronDown, Search } from "lucide-react";
 
 export default function Portfolio() {
-  const [filter, setFilter] = useState("Todos");
+  const [filter, setFilter] = useState<string | null>(null);
   const [locationFilter, setLocationFilter] = useState("Todas");
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
 
-  const categories = ["Todos", "Residencial", "Hospitalidad"];
+  const categories = ["Residencial", "Hoteles"];
   const locations = ["Todas", "Mallorca"];
 
   const projects = [
@@ -20,7 +20,7 @@ export default function Portfolio() {
     {
       id: 1,
       title: "Hotel Meliá Beach",
-      category: "Hospitalidad",
+      category: "Hoteles",
       location: "Mallorca",
       year: "2024",
       materials: "Techlam, Quarzo",
@@ -52,7 +52,7 @@ export default function Portfolio() {
     {
       id: 2,
       title: "Hotel Katmandu",
-      category: "Hospitalidad",
+      category: "Hoteles",
       location: "Mallorca",
       year: "2024",
       materials: "Granito Negro Zimbabwe",
@@ -126,7 +126,7 @@ export default function Portfolio() {
   ];
 
   const filteredProjects = projects.filter((project) => {
-    const matchesCategory = filter === "Todos" || project.category === filter;
+    const matchesCategory = !filter || project.category === filter;
     const matchesLocation = locationFilter === "Todas" || project.location === locationFilter;
     const matchesSearch = searchTerm === "" || 
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -172,16 +172,16 @@ export default function Portfolio() {
               {/* Filtros desplegables */}
               <div className="flex flex-wrap items-center gap-3 p-3 md:p-4 border border-neutral-300 bg-stone-200">
                 {/* Filtro de Aplicación/Categoría */}
-                <div className="relative">
+                <div className="relative" onMouseLeave={() => setCategoryOpen(false)}>
                   <button
                     onClick={() => {
                       setCategoryOpen(!categoryOpen);
                       setLocationOpen(false);
                     }}
-                    className="flex items-center gap-2 px-4 py-2 border-0 hover:opacity-70 transition-opacity text-sm uppercase tracking-wider bg-transparent"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 transition-colors text-sm uppercase tracking-wider bg-stone-200 border border-neutral-300 rounded-sm"
                   >
-                    <span className="text-neutral-700">APLICACIÓN</span>
-                    <ChevronDown className="w-4 h-4 text-neutral-600" />
+                    <span className="text-neutral-700 font-medium">{!filter ? "APLICACIÓN" : filter.toUpperCase()}</span>
+                    <ChevronDown className={`w-4 h-4 text-neutral-600 transition-transform ${categoryOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {categoryOpen && (
                     <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-300 shadow-lg z-10 min-w-[200px]">
@@ -189,7 +189,7 @@ export default function Portfolio() {
                         <button
                           key={category}
                           onClick={() => {
-                            setFilter(category);
+                            setFilter(filter === category ? null : category);
                             setCategoryOpen(false);
                           }}
                           className={`w-full text-left px-4 py-2 text-sm uppercase tracking-wider hover:bg-neutral-100 transition-colors ${
@@ -204,16 +204,16 @@ export default function Portfolio() {
                 </div>
 
                 {/* Filtro de Ubicación */}
-                <div className="relative">
+                <div className="relative" onMouseLeave={() => setLocationOpen(false)}>
                   <button
                     onClick={() => {
                       setLocationOpen(!locationOpen);
                       setCategoryOpen(false);
                     }}
-                    className="flex items-center gap-2 px-4 py-2 border-0 hover:opacity-70 transition-opacity text-sm uppercase tracking-wider bg-transparent"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 transition-colors text-sm uppercase tracking-wider bg-stone-200 border border-neutral-300 rounded-sm"
                   >
-                    <span className="text-neutral-700">UBICACIÓN</span>
-                    <ChevronDown className="w-4 h-4 text-neutral-600" />
+                    <span className="text-neutral-700 font-medium">{locationFilter === "Todas" ? "UBICACIÓN" : locationFilter.toUpperCase()}</span>
+                    <ChevronDown className={`w-4 h-4 text-neutral-600 transition-transform ${locationOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {locationOpen && (
                     <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-300 shadow-lg z-10 min-w-[200px]">

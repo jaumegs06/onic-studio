@@ -8,7 +8,6 @@ export default function ProjectDetail() {
   const [, params] = useRoute("/portfolio/:id");
   const projectId = params?.id ? parseInt(params.id) : null;
 
-  const [selectedSection, setSelectedSection] = useState(0);
   const [selectedImage, setSelectedImage] = useState(0);
 
   // Array de proyectos (mismo que en Portfolio.tsx)
@@ -124,6 +123,9 @@ export default function ProjectDetail() {
 
   const project = allProjects.find(p => p.id === projectId);
 
+  // Combinar todas las imágenes de todas las secciones
+  const allImages = project?.sections.flatMap(section => section.images) || [];
+
   if (!project) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -140,9 +142,6 @@ export default function ProjectDetail() {
       </div>
     );
   }
-
-  const currentSection = project.sections[selectedSection];
-  const currentImages = currentSection.images;
 
   const relatedProjects = allProjects
     .filter(p => p.category === project.category && p.id !== project.id)
@@ -169,7 +168,7 @@ export default function ProjectDetail() {
         </section>
 
         {/* Project Header */}
-        <section className="py-12 bg-white border-b border-neutral-200">
+        <section className="py-12 bg-white">
           <div className="container-full">
             <h1 className="text-6xl md:text-7xl lg:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
               PROYECTOS
@@ -202,69 +201,38 @@ export default function ProjectDetail() {
           </div>
         </section>
 
-        {/* Section Tabs */}
-        {project.sections.length > 1 && (
-          <section className="py-6 bg-white border-y border-neutral-300">
-            <div className="container">
-              <div className="flex gap-6 overflow-x-auto">
-                {project.sections.map((section, index) => (
-                  <button
+        {/* Gallery */}
+        <section className="py-16 bg-stone-200">
+          <div className="container-full">
+            {/* Scroll horizontal con snap */}
+            <div className="overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
+              <div className="flex gap-4 md:gap-6">
+                {allImages.map((img, index) => (
+                  <div
                     key={index}
-                    onClick={() => {
-                      setSelectedSection(index);
-                      setSelectedImage(0);
-                    }}
-                    className={`relative px-6 py-3 text-sm uppercase tracking-widest transition-all whitespace-nowrap ${
-                      selectedSection === index
-                        ? "text-black font-medium"
-                        : "text-neutral-400 hover:text-neutral-600"
-                    }`}
-                    style={{ fontFamily: "'Lato', sans-serif" }}
+                    className="flex-shrink-0 snap-start first:ml-6 last:mr-6"
+                    style={{ width: 'calc(100vw - 120px)', maxWidth: '1200px' }}
                   >
-                    {section.name}
-                    {selectedSection === index && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-black"></span>
-                    )}
-                  </button>
+                    <div className="aspect-[16/10] overflow-hidden bg-white shadow-lg">
+                      <img
+                        src={img}
+                        alt={`${project.title} - ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="text-sm text-neutral-500 mt-4 text-center">
+                      {index + 1} / {allImages.length}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
-          </section>
-        )}
 
-        {/* Gallery */}
-        <section className="py-16">
-          <div className="container">
-            {/* Section info */}
-            <div className="mb-8">
-              <h2 className="text-3xl mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-                {currentSection.name}
-              </h2>
-              <p className="text-neutral-600 italic">Material: {currentSection.material}</p>
-            </div>
-
-            {/* Main image */}
-            <div className="aspect-[16/9] mb-6 overflow-hidden bg-white">
-              <img
-                src={currentImages[selectedImage]}
-                alt={`${project.title} - ${currentSection.name}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-              {currentImages.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`aspect-square overflow-hidden border-2 transition-all ${
-                    selectedImage === index ? 'border-black' : 'border-neutral-300 hover:border-neutral-400'
-                  }`}
-                >
-                  <img src={img} alt={`Vista ${index + 1}`} className="w-full h-full object-cover" />
-                </button>
-              ))}
+            {/* Indicador de scroll */}
+            <div className="flex justify-center items-center gap-2 mt-8">
+              <span className="text-xs text-neutral-400 uppercase tracking-wider">
+                Desliza para ver más →
+              </span>
             </div>
           </div>
         </section>

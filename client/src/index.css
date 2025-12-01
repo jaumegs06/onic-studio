@@ -42,6 +42,16 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Ocultar scrollbar pero mantener funcionalidad */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 :root {
   --primary: oklch(0.2 0 0);
   --primary-foreground: oklch(0.98 0 0);
