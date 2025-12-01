@@ -19,17 +19,17 @@ export default function Home() {
     {
       title: "Residencial",
       description: "Diseño de espacios residenciales exclusivos que reflejan el estilo de vida de nuestros clientes.",
-      image: "/images/residential.jpg",
+      image: "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
     },
     {
       title: "Hoteles",
       description: "Creación de experiencias únicas en espacios hoteleros de lujo y boutique.",
-      image: "/images/hotel.jpg",
+      image: "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8827.jpg",
     },
     {
       title: "Restauración",
       description: "Ambientes gastronómicos que combinan funcionalidad y estética sofisticada.",
-      image: "/images/restaurant.jpg",
+      image: "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
     },
   ];
 
@@ -177,9 +177,9 @@ export default function Home() {
 
           <div className="text-center mt-8 md:mt-12">
             <Link href="/servicios">
-              <Button variant="outline" size="lg" className="px-6 md:px-8 text-sm md:text-base">
+              <a className="inline-block px-8 py-3 border border-neutral-800 hover:bg-neutral-800 hover:text-white transition-colors duration-300 text-sm uppercase tracking-wider">
                 Ver Todos los Servicios
-              </Button>
+              </a>
             </Link>
           </div>
         </div>

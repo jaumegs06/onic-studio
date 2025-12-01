@@ -12,7 +12,7 @@ export default function Portfolio() {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
 
-  const categories = ["Residencial", "Hoteles"];
+  const categories = ["Todos", "Residencial", "Hoteles"];
   const locations = ["Todas", "Mallorca"];
 
   const projects = [
@@ -126,7 +126,7 @@ export default function Portfolio() {
   ];
 
   const filteredProjects = projects.filter((project) => {
-    const matchesCategory = !filter || project.category === filter;
+    const matchesCategory = !filter || filter === "Todos" || project.category === filter;
     const matchesLocation = locationFilter === "Todas" || project.location === locationFilter;
     const matchesSearch = searchTerm === "" || 
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -254,59 +254,87 @@ export default function Portfolio() {
         {/* Projects Grid */}
         <section className="py-12 md:py-16">
           <div className="container-full">
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                visible: {
-                  transition: {
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
-            >
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
+            {filteredProjects.length === 0 ? (
+              <div className="text-center py-24">
+                <p className="text-2xl text-neutral-400 mb-4">No se encontraron proyectos</p>
+                <p className="text-neutral-500 mb-8">Intenta ajustar los filtros o la búsqueda</p>
+                <button
+                  onClick={() => {
+                    setFilter(null);
+                    setLocationFilter("Todas");
+                    setSearchTerm("");
                   }}
-                  transition={{ duration: 0.5 }}
+                  className="px-6 py-2 border border-neutral-800 hover:bg-neutral-800 hover:text-white transition-colors text-sm uppercase tracking-wider"
                 >
-                  <Link href={`/portfolio/${project.id}`}>
-                    <a className="block group cursor-pointer">
-                      <motion.div 
-                        className="relative h-80 mb-4 overflow-hidden"
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <img
-                          src={project.image}
-                          alt={project.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                      </motion.div>
-                      <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground uppercase tracking-wider">
-                          {project.category}
-                        </p>
-                        <h3 className="text-xl">{project.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {project.location} · {project.year}
-                        </p>
-                        <p className="text-xs text-muted-foreground italic">
-                          {project.materials}
-                        </p>
-                      </div>
-                    </a>
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
+                  Limpiar Filtros
+                </button>
+              </div>
+            ) : (
+              <motion.div 
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.05
+                    }
+                  }
+                }}
+              >
+                {filteredProjects.map((project) => {
+                  const totalImages = project.sections.reduce((acc, section) => acc + section.images.length, 0);
+                  
+                  return (
+                    <motion.div
+                      key={project.id}
+                      variants={{
+                        hidden: { opacity: 0, y: 20 },
+                        visible: { opacity: 1, y: 0 }
+                      }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <Link href={`/portfolio/${project.id}`}>
+                        <a className="block group cursor-pointer">
+                          <motion.div 
+                            className="relative aspect-[3/4] mb-6 overflow-hidden bg-neutral-100"
+                            whileHover={{ scale: 1.01 }}
+                            transition={{ duration: 0.4 }}
+                          >
+                            <img
+                              src={project.image}
+                              alt={project.title}
+                              loading="lazy"
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            {/* Overlay con información */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                <p className="text-sm uppercase tracking-widest mb-2 text-white/80">
+                                  {totalImages} imágenes
+                                </p>
+                                <p className="text-base leading-relaxed text-white/90">
+                                  {project.materials}
+                                </p>
+                              </div>
+                            </div>
+                          </motion.div>
+                          <div className="space-y-2">
+                            <p className="text-xs uppercase tracking-widest text-neutral-500">
+                              {project.category}
+                            </p>
+                            <h3 className="text-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>{project.title}</h3>
+                            <p className="text-sm text-neutral-600">
+                              {project.location} · {project.year}
+                            </p>
+                          </div>
+                        </a>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            )}
           </div>
         </section>
 
