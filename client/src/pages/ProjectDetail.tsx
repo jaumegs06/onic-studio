@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoute, Link } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ProjectDetail() {
   const [, params] = useRoute("/portfolio/:id");
   const projectId = params?.id ? parseInt(params.id) : null;
 
-  const [selectedSection, setSelectedSection] = useState(0);
   const [selectedImage, setSelectedImage] = useState(0);
 
   // Array de proyectos (mismo que en Portfolio.tsx)
@@ -22,27 +22,15 @@ export default function ProjectDetail() {
       materials: "Techlam, Quarzo",
       image: "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
       description: "Renovación integral de espacios del hotel con materiales de alta gama. El proyecto incluye la reforma completa de baños con Techlam y la instalación de una nueva barra de bar en Quarzo, combinando funcionalidad y diseño premium.",
-      sections: [
-        {
-          name: "Baños",
-          material: "Techlam",
-          images: [
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8811.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8820.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8821.jpg",
-          ]
-        },
-        {
-          name: "Barra",
-          material: "Quarzo",
-          images: [
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8827.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8845 ret.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8861 ret.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8868 ret.jpg",
-          ]
-        }
+      images: [
+        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
+        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8811.jpg",
+        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8820.jpg",
+        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8821.jpg",
+        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8827.jpg",
+        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8845 ret.jpg",
+        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8861 ret.jpg",
+        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8868 ret.jpg",
       ]
     },
     {
@@ -54,22 +42,16 @@ export default function ProjectDetail() {
       materials: "Granito Negro Zimbabwe",
       image: "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
       description: "Diseño y ejecución de buffet en granito Negro Zimbabwe. Un espacio gastronómico que destaca por la elegancia atemporal de la piedra natural, su resistencia y acabado impecable.",
-      sections: [
-        {
-          name: "Buffet",
-          material: "Granito Negro Zimbabwe",
-          images: [
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8965.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8971.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8976.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8977.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8982.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8995.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8997.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_9006.jpg",
-          ]
-        }
+      images: [
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8965.jpg",
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8971.jpg",
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8976.jpg",
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8977.jpg",
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8982.jpg",
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8995.jpg",
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8997.jpg",
+        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_9006.jpg",
       ]
     },
     {
@@ -81,48 +63,56 @@ export default function ProjectDetail() {
       materials: "Techlam",
       image: "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
       description: "Reforma integral de apartamentos con material Techlam en cocinas, baños y espacios comunes. Un proyecto residencial que apuesta por la innovación, calidad en cada detalle y durabilidad.",
-      sections: [
-        {
-          name: "General",
-          material: "Techlam",
-          images: [
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8593.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8596.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8598.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8603.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8611.jpg",
-          ]
-        },
-        {
-          name: "Cocinas",
-          material: "Techlam",
-          images: [
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8624.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8626.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8632.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8637.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8639.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8641.jpg",
-          ]
-        },
-        {
-          name: "Baños",
-          material: "Techlam",
-          images: [
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8657.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8662.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8664.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8665.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8669.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8671.jpg",
-          ]
-        }
+      images: [
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8593.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8596.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8598.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8603.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8611.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8624.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8626.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8632.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8637.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8639.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8641.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8657.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8662.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8664.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8665.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8669.jpg",
+        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8671.jpg",
       ]
     },
   ];
 
   const project = allProjects.find(p => p.id === projectId);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (!project) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        setSelectedImage((prev) => (prev > 0 ? prev - 1 : project.images.length - 1));
+      } else if (e.key === 'ArrowRight') {
+        setSelectedImage((prev) => (prev < project.images.length - 1 ? prev + 1 : 0));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [project]);
+
+  const goToPrevious = () => {
+    if (!project) return;
+    setSelectedImage((prev) => (prev > 0 ? prev - 1 : project.images.length - 1));
+  };
+
+  const goToNext = () => {
+    if (!project) return;
+    setSelectedImage((prev) => (prev < project.images.length - 1 ? prev + 1 : 0));
+  };
 
   if (!project) {
     return (
@@ -140,9 +130,6 @@ export default function ProjectDetail() {
       </div>
     );
   }
-
-  const currentSection = project.sections[selectedSection];
-  const currentImages = currentSection.images;
 
   const relatedProjects = allProjects
     .filter(p => p.category === project.category && p.id !== project.id)
@@ -202,59 +189,42 @@ export default function ProjectDetail() {
           </div>
         </section>
 
-        {/* Section Tabs */}
-        {project.sections.length > 1 && (
-          <section className="py-6 bg-white border-y border-neutral-300">
-            <div className="container">
-              <div className="flex gap-6 overflow-x-auto">
-                {project.sections.map((section, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      setSelectedSection(index);
-                      setSelectedImage(0);
-                    }}
-                    className={`relative px-6 py-3 text-sm uppercase tracking-widest transition-all whitespace-nowrap ${
-                      selectedSection === index
-                        ? "text-black font-medium"
-                        : "text-neutral-400 hover:text-neutral-600"
-                    }`}
-                    style={{ fontFamily: "'Lato', sans-serif" }}
-                  >
-                    {section.name}
-                    {selectedSection === index && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-black"></span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* Gallery */}
         <section className="py-16">
           <div className="container">
-            {/* Section info */}
-            <div className="mb-8">
-              <h2 className="text-3xl mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-                {currentSection.name}
-              </h2>
-              <p className="text-neutral-600 italic">Material: {currentSection.material}</p>
-            </div>
-
             {/* Main image */}
-            <div className="aspect-[16/9] mb-6 overflow-hidden bg-white">
+            <div className="aspect-[16/9] mb-6 overflow-hidden bg-white relative group">
               <img
-                src={currentImages[selectedImage]}
-                alt={`${project.title} - ${currentSection.name}`}
+                src={project.images[selectedImage]}
+                alt={`${project.title} - Imagen ${selectedImage + 1}`}
                 className="w-full h-full object-cover"
               />
+              
+              {/* Navigation arrows */}
+              <button
+                onClick={goToPrevious}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                aria-label="Imagen anterior"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={goToNext}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                aria-label="Siguiente imagen"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+              
+              {/* Image counter */}
+              <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded text-sm">
+                {selectedImage + 1} / {project.images.length}
+              </div>
             </div>
 
             {/* Thumbnails */}
             <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-              {currentImages.map((img, index) => (
+              {project.images.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
