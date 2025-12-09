@@ -20,6 +20,7 @@ export default function Products() {
   });
   const [colorOpen, setColorOpen] = useState(false);
   const [finishOpen, setFinishOpen] = useState(false);
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
 
   const colorRef = useRef<HTMLDivElement>(null);
   const finishRef = useRef<HTMLDivElement>(null);
@@ -61,8 +62,18 @@ export default function Products() {
       }
     };
 
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setFilterPanelOpen(false);
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
   }, []);
 
   const clearAllFilters = () => {
@@ -160,7 +171,7 @@ export default function Products() {
     { id: 75, name: "Teak Wood", category: "Caliza", color: "Marrón", finish: "Apomazado", image: "/images/products/CALIZA TEAK WOOD.jpg" },
   ];
 
-  const categories = ["Best Sellers", "Granito", "Mármol", "Cuarcita", "Caliza"];
+  const categories = ["Best Sellers", "All", "Granito", "Mármol", "Cuarcita", "Caliza"];
   const colors = ["Todos", "Blanco", "Negro", "Beige", "Rojo", "Rosa", "Verde", "Azul", "Marrón"];
   const finishes = ["Todos", "Pulido", "Apomazado", "Vintage/Leather", "Bruto", "Flameado", "Granallado"];
 
@@ -170,6 +181,8 @@ export default function Products() {
   const filteredProducts = products.filter((product) => {
     const matchesCategory = selectedCategory === "Best Sellers" 
       ? bestSellerIds.includes(product.id)
+      : selectedCategory === "All"
+      ? true
       : product.category === selectedCategory;
     const matchesColor = selectedColor === "Todos" || product.color === selectedColor;
     const matchesFinish = selectedFinish === "Todos" || product.finish === selectedFinish;
@@ -186,7 +199,7 @@ export default function Products() {
     >
       <Navigation />
 
-      <main className="bg-white min-h-screen pt-28">
+      <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
         <section className="py-12 md:py-16 bg-stone-200">
           <div className="container-full">
@@ -203,200 +216,189 @@ export default function Products() {
         </section>
 
         {/* Category Tabs */}
-        <section className="py-8 bg-stone-200 border-b border-neutral-300">
+        <section className="py-10 bg-white border-y border-neutral-200">
           <div className="container-full">
-            <div className="flex flex-wrap items-center gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-3 text-sm uppercase tracking-widest transition-all ${
-                    selectedCategory === category 
-                      ? "bg-black text-white" 
-                      : "bg-white text-black hover:bg-stone-100 border border-neutral-200"
-                  }`}
-                  style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: selectedCategory === category ? 600 : 500 }}
-                >
-                  {category}
-                </button>
-              ))}
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {categories.map((category) => {
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`group relative px-8 py-3 border text-sm uppercase tracking-[0.15em] overflow-hidden ${
+                      selectedCategory === category 
+                        ? "border-black bg-black text-white transition-all duration-300" 
+                        : "border-neutral-300 bg-white text-neutral-700 hover:border-blue-600 hover:text-white"
+                    }`}
+                    style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: selectedCategory === category ? 600 : 500 }}
+                  >
+                    {/* Hover background slide effect */}
+                    {selectedCategory !== category && (
+                      <span className="absolute inset-0 bg-blue-600 transform -translate-x-full group-hover:translate-x-0 transition-none group-hover:transition-transform group-hover:duration-300 group-hover:ease-out"></span>
+                    )}
+                    <span className="relative z-10">{category}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
 
         {/* Filter Section */}
-        <section className="py-8 bg-white border-b border-neutral-200">
+        <section className="py-6 bg-white border-b border-neutral-200">
           <div className="container">
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4">
-                {/* Filtros desplegables */}
-                <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center justify-between gap-4">
+              {/* Botón FILTROS */}
+              <div className="relative">
+                <button
+                  onClick={() => setFilterPanelOpen(!filterPanelOpen)}
+                  className="flex items-center gap-3 px-6 py-3 bg-white border border-neutral-300 hover:border-black transition-all text-sm uppercase tracking-[0.2em]"
+                  style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                  <span>FILTROS</span>
+                </button>
 
-                  {/* Filtro de Color */}
-                  <div className="relative" ref={colorRef}>
-                    <button
-                      onClick={() => {
-                        setColorOpen(!colorOpen);
-                        setCategoryOpen(false);
-                        setFinishOpen(false);
-                      }}
-                      className={`group flex items-center gap-2 px-5 py-2.5 bg-stone-50 hover:bg-stone-100 border border-neutral-200 transition-all text-xs uppercase tracking-widest ${
-                        selectedColor !== "Todos" ? "border-black bg-stone-100" : ""
-                      }`}
-                      style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
-                    >
-                      <span className={selectedColor !== "Todos" ? "font-semibold" : ""}>
-                        {selectedColor !== "Todos" ? selectedColor : "Color"}
-                      </span>
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform ${
-                        colorOpen ? "rotate-180" : ""
-                      }`} />
-                    </button>
-                    {colorOpen && (
-                      <div className="absolute top-full left-0 mt-2 bg-white border border-neutral-200 shadow-xl z-20 min-w-[220px] max-h-[320px] overflow-y-auto">
-                        {colors.map((color) => (
+                {/* Panel Dropdown */}
+                {filterPanelOpen && (
+                  <>
+                    {/* Backdrop */}
+                    <div 
+                      className="fixed inset-0 z-40"
+                      onClick={() => setFilterPanelOpen(false)}
+                    ></div>
+                    
+                    {/* Panel */}
+                    <div className="absolute top-full left-0 mt-2 bg-white border border-neutral-200 shadow-2xl z-50">
+                      {/* Filters Content */}
+                      <div className="p-4 flex gap-8">
+                        {/* Color Filter */}
+                        <div className="min-w-[200px]">
                           <button
-                            key={color}
-                            onClick={() => {
-                              setSelectedColor(color);
-                              setColorOpen(false);
-                            }}
-                            className={`w-full text-left px-5 py-3 text-xs uppercase tracking-widest hover:bg-stone-50 transition-colors border-b border-neutral-100 last:border-0 ${
-                              selectedColor === color ? "bg-stone-50 font-semibold" : ""
-                            }`}
-                            style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: selectedColor === color ? 600 : 400 }}
+                            onClick={() => setColorOpen(!colorOpen)}
+                            className="w-full flex items-center justify-between py-2 border-b border-neutral-200 text-left"
                           >
-                            {color}
+                            <span className="text-sm uppercase tracking-[0.15em] text-neutral-700" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}>
+                              Color
+                            </span>
+                            <ChevronDown className={`w-4 h-4 transition-transform ${colorOpen ? "rotate-180" : ""}`} />
                           </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                          {colorOpen && (
+                            <div className="mt-3 space-y-2 max-h-[300px] overflow-y-auto">
+                              {colors.map((color) => (
+                                <button
+                                  key={color}
+                                  onClick={() => {
+                                    setSelectedColor(color);
+                                  }}
+                                  className="w-full flex items-center gap-3 py-2 text-left group"
+                                >
+                                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                    selectedColor === color ? "border-black" : "border-neutral-300"
+                                  }`}>
+                                    {selectedColor === color && (
+                                      <div className="w-2 h-2 rounded-full bg-black"></div>
+                                    )}
+                                  </div>
+                                  <span className={`text-xs ${
+                                    selectedColor === color ? "font-medium text-black" : "text-neutral-600"
+                                  }`}>
+                                    {color}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
 
-                  {/* Filtro de Acabado */}
-                  <div className="relative" ref={finishRef}>
-                    <button
-                      onClick={() => {
-                        setFinishOpen(!finishOpen);
-                        setCategoryOpen(false);
-                        setColorOpen(false);
-                      }}
-                      className={`group flex items-center gap-2 px-5 py-2.5 bg-stone-50 hover:bg-stone-100 border border-neutral-200 transition-all text-xs uppercase tracking-widest ${
-                        selectedFinish !== "Todos" ? "border-black bg-stone-100" : ""
-                      }`}
-                      style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
-                    >
-                      <span className={selectedFinish !== "Todos" ? "font-semibold" : ""}>
-                        {selectedFinish !== "Todos" ? selectedFinish : "Acabado"}
-                      </span>
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform ${
-                        finishOpen ? "rotate-180" : ""
-                      }`} />
-                    </button>
-                    {finishOpen && (
-                      <div className="absolute top-full left-0 mt-2 bg-white border border-neutral-200 shadow-xl z-20 min-w-[220px] max-h-[320px] overflow-y-auto">
-                        {finishes.map((finish) => (
+                        {/* Finish Filter */}
+                        <div className="min-w-[200px]">
                           <button
-                            key={finish}
-                            onClick={() => {
-                              setSelectedFinish(finish);
-                              setFinishOpen(false);
-                            }}
-                            className={`w-full text-left px-5 py-3 text-xs uppercase tracking-widest hover:bg-stone-50 transition-colors border-b border-neutral-100 last:border-0 ${
-                              selectedFinish === finish ? "bg-stone-50 font-semibold" : ""
-                            }`}
-                            style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: selectedFinish === finish ? 600 : 400 }}
+                            onClick={() => setFinishOpen(!finishOpen)}
+                            className="w-full flex items-center justify-between py-2 border-b border-neutral-200 text-left"
                           >
-                            {finish}
+                            <span className="text-sm uppercase tracking-[0.15em] text-neutral-700" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}>
+                              Acabado
+                            </span>
+                            <ChevronDown className={`w-4 h-4 transition-transform ${finishOpen ? "rotate-180" : ""}`} />
                           </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                          {finishOpen && (
+                            <div className="mt-3 space-y-2 max-h-[300px] overflow-y-auto">
+                              {finishes.map((finish) => (
+                                <button
+                                  key={finish}
+                                  onClick={() => {
+                                    setSelectedFinish(finish);
+                                  }}
+                                  className="w-full flex items-center gap-3 py-2 text-left group"
+                                >
+                                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                    selectedFinish === finish ? "border-black" : "border-neutral-300"
+                                  }`}>
+                                    {selectedFinish === finish && (
+                                      <div className="w-2 h-2 rounded-full bg-black"></div>
+                                    )}
+                                  </div>
+                                  <span className={`text-xs ${
+                                    selectedFinish === finish ? "font-medium text-black" : "text-neutral-600"
+                                  }`}>
+                                    {finish}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
 
-                {/* Barra de búsqueda */}
-                <div className="relative lg:ml-auto">
-                  <input
-                    type="text"
-                    placeholder="Buscar..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full lg:w-80 pl-4 pr-10 py-2.5 bg-stone-50 border border-neutral-200 focus:border-black focus:outline-none transition-colors text-xs uppercase tracking-widest placeholder:text-neutral-400"
-                    style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 400 }}
-                  />
-                  {searchTerm ? (
-                    <button
-                      onClick={() => setSearchTerm("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  ) : (
-                    <Search className="w-4 h-4 text-neutral-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  )}
-                </div>
+                        {/* Clear Filters Button */}
+                        <div className="min-w-[150px] flex items-start pt-2">
+                          <button
+                            onClick={clearAllFilters}
+                            className={`w-full py-2 px-4 transition-colors text-xs uppercase tracking-[0.2em] ${
+                              hasActiveFilters 
+                                ? "bg-black text-white hover:bg-neutral-800" 
+                                : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
+                            }`}
+                            style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
+                            disabled={!hasActiveFilters}
+                          >
+                            Limpiar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
 
-              {/* Active Filters */}
-              {hasActiveFilters && (
-                <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-neutral-200">
-                  <span className="text-[10px] uppercase tracking-widest text-neutral-400 mr-1" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}>Activos:</span>
-                  {selectedCategory !== "Todos" && (
-                    <button
-                      onClick={() => setSelectedCategory("Todos")}
-                      className="group flex items-center gap-1.5 px-3 py-1.5 bg-black text-white hover:bg-neutral-800 transition-colors text-[10px] uppercase tracking-widest"
-                      style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
-                    >
-                      <span>{selectedCategory}</span>
-                      <X className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                    </button>
-                  )}
-                  {selectedColor !== "Todos" && (
-                    <button
-                      onClick={() => setSelectedColor("Todos")}
-                      className="group flex items-center gap-1.5 px-3 py-1.5 bg-black text-white hover:bg-neutral-800 transition-colors text-[10px] uppercase tracking-widest"
-                      style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
-                    >
-                      <span>{selectedColor}</span>
-                      <X className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                    </button>
-                  )}
-                  {selectedFinish !== "Todos" && (
-                    <button
-                      onClick={() => setSelectedFinish("Todos")}
-                      className="group flex items-center gap-1.5 px-3 py-1.5 bg-black text-white hover:bg-neutral-800 transition-colors text-[10px] uppercase tracking-widest"
-                      style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
-                    >
-                      <span>{selectedFinish}</span>
-                      <X className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                    </button>
-                  )}
-                  {searchTerm && (
-                    <button
-                      onClick={() => setSearchTerm("")}
-                      className="group flex items-center gap-1.5 px-3 py-1.5 bg-black text-white hover:bg-neutral-800 transition-colors text-[10px] uppercase tracking-widest"
-                      style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
-                    >
-                      <span>"{searchTerm}"</span>
-                      <X className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                    </button>
-                  )}
+              {/* Barra de búsqueda */}
+              <div className="relative flex-1 max-w-md ml-auto">
+                <input
+                  type="text"
+                  placeholder="BUSCAR..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-4 pr-10 py-3 bg-white border border-neutral-300 focus:border-black focus:outline-none transition-colors text-sm uppercase tracking-[0.15em] placeholder:text-neutral-400"
+                  style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 400 }}
+                />
+                {searchTerm ? (
                   <button
-                    onClick={clearAllFilters}
-                    className="ml-2 px-3 py-1.5 border border-neutral-300 hover:border-black hover:bg-stone-50 transition-colors text-[10px] uppercase tracking-widest"
-                    style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black transition-colors"
                   >
-                    Limpiar
+                    <X className="w-4 h-4" />
                   </button>
-                </div>
-              )}
+                ) : (
+                  <Search className="w-4 h-4 text-neutral-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                )}
+              </div>
             </div>
           </div>
         </section>
 
         {/* Products Grid */}
-        <section className="py-12 md:py-16">
+        <section className="py-12 md:py-16 bg-stone-200">
           <div className="container-full">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {filteredProducts.map((product) => (

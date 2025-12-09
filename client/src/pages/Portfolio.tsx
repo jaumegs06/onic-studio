@@ -247,7 +247,7 @@ export default function Portfolio() {
                 }}
               >
                 {filteredProjects.map((project) => {
-                  const totalImages = project.sections.reduce((acc, section) => acc + section.images.length, 0);
+                  const totalImages = project.images.length;
                   
                   return (
                     <motion.div
