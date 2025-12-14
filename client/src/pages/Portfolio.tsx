@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ChevronDown, Search, X } from "lucide-react";
@@ -42,6 +42,8 @@ export default function Portfolio() {
   };
 
   const hasActiveFilters = locationFilter !== "Todas" || searchTerm !== "";
+
+  const { scrollY } = useScroll();
 
   const categories = ["Todos", "Residencial", "Hoteles"];
   const locations = ["Todas", "Mallorca"];
@@ -140,11 +142,23 @@ export default function Portfolio() {
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-16 md:py-24 bg-stone-200">
-          <div className="container-full">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}>
+        <section className="py-16 md:py-24 bg-stone-200 relative overflow-hidden">
+          {/* Parallax Background */}
+          <motion.div
+            style={{ y: useTransform(scrollY, [0, 500], [0, -150]) }}
+            className="absolute inset-0 bg-gradient-to-b from-stone-100 to-stone-200 opacity-50"
+          />
+
+          <div className="container-full relative z-10">
+            <motion.h1
+              initial={{ filter: "blur(10px)", opacity: 0 }}
+              animate={{ filter: "blur(0px)", opacity: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight"
+              style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}
+            >
               PORTFOLIO
-            </h1>
+            </motion.h1>
             <p className="text-xs md:text-sm text-neutral-600 mb-4 md:mb-6" style={{ letterSpacing: "0.2em" }}>
               ({filteredProjects.length}) PROYECTOS
             </p>

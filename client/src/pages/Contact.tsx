@@ -38,7 +38,7 @@ export default function Contact() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -48,11 +48,17 @@ export default function Contact() {
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-12 md:py-16 bg-stone-200">
+        <section className="py-16 md:py-24 bg-stone-200">
           <div className="container-full">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+            <motion.h1
+              initial={{ filter: "blur(10px)", opacity: 0 }}
+              animate={{ filter: "blur(0px)", opacity: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight"
+              style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}
+            >
               CONTACTO
-            </h1>
+            </motion.h1>
             <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl">
               ¿Tienes un proyecto en mente? Nos encantaría conocer tus ideas
               y ayudarte a crear el espacio perfecto.

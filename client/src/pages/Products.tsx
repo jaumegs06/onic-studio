@@ -148,9 +148,15 @@ export default function Products() {
         {/* Hero Section */}
         <section className="py-16 md:py-24 bg-stone-200">
           <div className="container-full">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}>
+            <motion.h1
+              initial={{ filter: "blur(10px)", opacity: 0 }}
+              animate={{ filter: "blur(0px)", opacity: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight"
+              style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}
+            >
               MATERIALES
-            </h1>
+            </motion.h1>
             <p className="text-xs md:text-sm text-neutral-600 mb-4 md:mb-6" style={{ letterSpacing: "0.2em" }}>
               ({filteredProducts.length}) MATERIALES
             </p>

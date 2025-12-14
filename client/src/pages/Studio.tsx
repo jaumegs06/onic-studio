@@ -48,7 +48,7 @@ export default function Studio() {
   ];
 
   return (
-    <motion.div 
+    <motion.div
       className="min-h-screen flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -58,11 +58,17 @@ export default function Studio() {
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-12 md:py-16 bg-stone-200">
+        <section className="py-16 md:py-24 bg-stone-200">
           <div className="container-full">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+            <motion.h1
+              initial={{ filter: "blur(10px)", opacity: 0 }}
+              animate={{ filter: "blur(0px)", opacity: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight"
+              style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}
+            >
               EL ESTUDIO
-            </h1>
+            </motion.h1>
             <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl">
               Somos un estudio de arquitectura y diseño de interiores
               especializado en proyectos de alto standing. Nuestra pasión es
@@ -113,7 +119,7 @@ export default function Studio() {
         <section className="py-24">
           <div className="container">
             <h2 className="text-4xl mb-16 text-center">Nuestros Valores</h2>
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
               initial="hidden"
               whileInView="visible"
@@ -127,8 +133,8 @@ export default function Studio() {
               }}
             >
               {values.map((value, index) => (
-                <motion.div 
-                  key={index} 
+                <motion.div
+                  key={index}
                   className="text-center"
                   variants={{
                     hidden: { opacity: 0, y: 20 },
@@ -150,7 +156,7 @@ export default function Studio() {
         <section className="py-24 bg-white">
           <div className="container">
             <h2 className="text-4xl mb-16 text-center">Nuestro Equipo</h2>
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 md:grid-cols-3 gap-12"
               initial="hidden"
               whileInView="visible"
@@ -164,8 +170,8 @@ export default function Studio() {
               }}
             >
               {team.map((member, index) => (
-                <motion.div 
-                  key={index} 
+                <motion.div
+                  key={index}
                   className="text-center"
                   variants={{
                     hidden: { opacity: 0, scale: 0.95 },
