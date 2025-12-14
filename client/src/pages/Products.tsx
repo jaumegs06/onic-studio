@@ -123,7 +123,7 @@ export default function Products() {
   // IDs de los productos Best Sellers
   const bestSellerIds = [76, 35, 41, 43, 45, 77, 57, 13];
 
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = (products || []).filter((product) => {
     const matchesCategory = selectedCategory === "Best Sellers"
       ? bestSellerIds.includes(product.id)
       : selectedCategory === "All"
@@ -375,61 +375,63 @@ export default function Products() {
         {/* Products Grid */}
 
         {/* Products Grid */}
-        <section className="py-12 md:py-16 bg-stone-200">
-          <div className="container-full">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-              {filteredProducts.map((product) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Link href={`/productos/${product.id}`}>
-                    <a
-                      className="block group cursor-pointer"
-                      onClick={() => {
-                        sessionStorage.setItem('productsScrollPosition', window.scrollY.toString());
-                      }}
-                    >
-                      <motion.div
-                        className="relative aspect-[3/4] overflow-hidden mb-4 bg-white"
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ duration: 0.3 }}
+        {!loading && !error && (
+          <section className="py-12 md:py-16 bg-stone-200">
+            <div className="container-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+                {filteredProducts.map((product) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Link href={`/productos/${product.id}`}>
+                      <a
+                        className="block group cursor-pointer"
+                        onClick={() => {
+                          sessionStorage.setItem('productsScrollPosition', window.scrollY.toString());
+                        }}
                       >
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        {/* Overlay con información al hover */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                          <p className="text-xs text-white/80 uppercase tracking-widest mb-1">
+                        <motion.div
+                          className="relative aspect-[3/4] overflow-hidden mb-4 bg-white"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          {/* Overlay con información al hover */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <p className="text-xs text-white/80 uppercase tracking-widest mb-1">
+                              {product.category}
+                            </p>
+                            <h3 className="text-white text-2xl font-serif">
+                              {product.name}
+                            </h3>
+                          </div>
+                        </motion.div>
+                        {/* Información visible siempre */}
+                        <div className="opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                          <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
                             {product.category}
                           </p>
-                          <h3 className="text-white text-2xl font-serif">
+                          <h3 className="text-foreground text-xl font-serif">
                             {product.name}
                           </h3>
                         </div>
-                      </motion.div>
-                      {/* Información visible siempre */}
-                      <div className="opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                        <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
-                          {product.category}
-                        </p>
-                        <h3 className="text-foreground text-xl font-serif">
-                          {product.name}
-                        </h3>
-                      </div>
-                    </a>
-                  </Link>
-                </motion.div>
-              ))}
+                      </a>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
 
       <Footer />
