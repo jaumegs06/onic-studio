@@ -1,0 +1,697 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "name": "Alaska",
+            "category": "Granito",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/ALASKA - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 2,
+            "name": "Amarula",
+            "category": "Granito",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/AMARULA - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 3,
+            "name": "Angola Black",
+            "category": "Granito",
+            "color": "Negro",
+            "finish": "Pulido",
+            "image": "/images/products/ANGOLA BLACK - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 4,
+            "name": "Aquabella",
+            "category": "Granito",
+            "color": "Azul",
+            "finish": "Pulido",
+            "image": "/images/products/AQUABELLA - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 5,
+            "name": "Azul Noche",
+            "category": "Granito",
+            "color": "Azul",
+            "finish": "Pulido",
+            "image": "/images/products/AZUL NOCHE - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 6,
+            "name": "Belvedere",
+            "category": "Granito",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/BELVEDERE - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 7,
+            "name": "Blanco Cristal",
+            "category": "Granito",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/BLANCO CRISTAL - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 8,
+            "name": "Blue Mare",
+            "category": "Granito",
+            "color": "Azul",
+            "finish": "Pulido",
+            "image": "/images/products/BLUE MARE GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 9,
+            "name": "Cheyene",
+            "category": "Granito",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/CHEYENE - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 10,
+            "name": "Labrador Oscuro",
+            "category": "Granito",
+            "color": "Negro",
+            "finish": "Pulido",
+            "image": "/images/products/LABRADOR OSCURO - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 11,
+            "name": "Lennon",
+            "category": "Granito",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/LENNON - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 12,
+            "name": "Negro Tezal",
+            "category": "Granito",
+            "color": "Negro",
+            "finish": "Pulido",
+            "image": "/images/products/NEGRO TEZAL - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 13,
+            "name": "Negro Zimbawe",
+            "category": "Granito",
+            "color": "Negro",
+            "finish": "Pulido",
+            "image": "/images/products/NEGRO ZIMBAWE - GRANITO .jpg",
+            "bestSeller": true
+        },
+        {
+            "id": 14,
+            "name": "Olimpo",
+            "category": "Granito",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/OLIMPO - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 15,
+            "name": "Perla Venata",
+            "category": "Granito",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/PERLA VENATA - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 16,
+            "name": "Portobello",
+            "category": "Granito",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/PORTOBELLO - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 17,
+            "name": "Rojo Balmoral",
+            "category": "Granito",
+            "color": "Rojo",
+            "finish": "Pulido",
+            "image": "/images/products/ROJO BALMORAL - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 18,
+            "name": "Rosa Porriño",
+            "category": "Granito",
+            "color": "Rosa",
+            "finish": "Pulido",
+            "image": "/images/products/ROSA PORRIÑO - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 19,
+            "name": "Rosavel",
+            "category": "Granito",
+            "color": "Rosa",
+            "finish": "Pulido",
+            "image": "/images/products/ROSAVEL - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 20,
+            "name": "Sahara Nights",
+            "category": "Granito",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/SAHARA NIGHTS - GRANITO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 21,
+            "name": "Stromboli",
+            "category": "Granito",
+            "color": "Negro",
+            "finish": "Pulido",
+            "image": "/images/products/STROMBOLI - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 22,
+            "name": "Tropical Storm",
+            "category": "Granito",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/TROPICAL STORM - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 23,
+            "name": "Verde Lara",
+            "category": "Granito",
+            "color": "Verde",
+            "finish": "Pulido",
+            "image": "/images/products/VERDE LARA. - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 24,
+            "name": "Warwick Rubi",
+            "category": "Granito",
+            "color": "Rojo",
+            "finish": "Pulido",
+            "image": "/images/products/WARWICK RUBI - GRANITO .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 25,
+            "name": "Blanco Carrara",
+            "category": "Mármol",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/BLANCO CARRARA - MARMOL .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 26,
+            "name": "Blanco Dolomita",
+            "category": "Mármol",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/BLANCO DOLOMITA - MARMOL .webp",
+            "bestSeller": false
+        },
+        {
+            "id": 27,
+            "name": "Blanco Ibiza",
+            "category": "Mármol",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/BLANCO IBIZA MARMOL .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 28,
+            "name": "Blanco Thasos",
+            "category": "Mármol",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/BLANCO THASOS .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 29,
+            "name": "Boticcino",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/BOTICCINO - MARMOL .webp",
+            "bestSeller": false
+        },
+        {
+            "id": 30,
+            "name": "Calacatta Violet",
+            "category": "Mármol",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/CALACATTA VIOLET - MARMOL .webp",
+            "bestSeller": false
+        },
+        {
+            "id": 31,
+            "name": "Calcatta Verde",
+            "category": "Mármol",
+            "color": "Verde",
+            "finish": "Pulido",
+            "image": "/images/products/CALCATTA VERDE - MARMOL .webp",
+            "bestSeller": false
+        },
+        {
+            "id": 32,
+            "name": "Emperador Claro",
+            "category": "Mármol",
+            "color": "Marrón",
+            "finish": "Pulido",
+            "image": "/images/products/EMPERADOR CLARO - MARMOL .webp",
+            "bestSeller": false
+        },
+        {
+            "id": 33,
+            "name": "Emperador Oscuro",
+            "category": "Mármol",
+            "color": "Marrón",
+            "finish": "Pulido",
+            "image": "/images/products/EMPERADRO OSCURO - MARMOL .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 34,
+            "name": "Blanco Macael",
+            "category": "Mármol",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/MACAEL - MARMOL .webp",
+            "bestSeller": false
+        },
+        {
+            "id": 35,
+            "name": "Crema Marfil Clásico",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/MARMOL MARFIL CLASICO .jpg",
+            "bestSeller": true
+        },
+        {
+            "id": 36,
+            "name": "Mistral",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/MISTRAL - MARMOLES .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 37,
+            "name": "Negro Marquina",
+            "category": "Mármol",
+            "color": "Negro",
+            "finish": "Pulido",
+            "image": "/images/products/NEGRO MARQUINA - MARMOL .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 38,
+            "name": "Rojo Alicante",
+            "category": "Mármol",
+            "color": "Rojo",
+            "finish": "Pulido",
+            "image": "/images/products/ROJO ALICANTE - MARMOL .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 39,
+            "name": "Rojo Levante",
+            "category": "Mármol",
+            "color": "Rojo",
+            "finish": "Pulido",
+            "image": "/images/products/ROJO LEVANTE - MARMOL .webp",
+            "bestSeller": false
+        },
+        {
+            "id": 40,
+            "name": "Rosa Portugués",
+            "category": "Mármol",
+            "color": "Rosa",
+            "finish": "Pulido",
+            "image": "/images/products/ROSA PORTUGUES - MARMOL .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 41,
+            "name": "Sinai Pearl / Beig Levante",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/SIENAI PERAL - MARMOL .jpg",
+            "bestSeller": true
+        },
+        {
+            "id": 42,
+            "name": "Travertino Rojo",
+            "category": "Mármol",
+            "color": "Rojo",
+            "finish": "Apomazado",
+            "image": "/images/products/TRAVERINO ROJO - MARMOL .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 43,
+            "name": "Travertino Turco Light Cross Cut",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Apomazado",
+            "image": "/images/products/TRAVERTINO CROSS CUT LIGHT .webp",
+            "bestSeller": true
+        },
+        {
+            "id": 44,
+            "name": "Travertino Egipcio",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Apomazado",
+            "image": "/images/products/TRAVERTINO EGIPCIO - MARMOL .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 45,
+            "name": "Travertino Turco Light Vein Cut",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Apomazado",
+            "image": "/images/products/TRAVERTINO LIGHT VEIN CUT .webp",
+            "bestSeller": true
+        },
+        {
+            "id": 46,
+            "name": "Travertino Vallanca",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Apomazado",
+            "image": "/images/products/TRAVERTINO VALLANCA .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 47,
+            "name": "Verde Antique",
+            "category": "Mármol",
+            "color": "Verde",
+            "finish": "Pulido",
+            "image": "/images/products/VERDE ANTIQUE - MARMOL .webp",
+            "bestSeller": false
+        },
+        {
+            "id": 48,
+            "name": "Verde India",
+            "category": "Mármol",
+            "color": "Verde",
+            "finish": "Pulido",
+            "image": "/images/products/VERDE INDIA - MARMOL .jpeg",
+            "bestSeller": false
+        },
+        {
+            "id": 49,
+            "name": "Blue Deep",
+            "category": "Cuarcita",
+            "color": "Azul",
+            "finish": "Pulido",
+            "image": "/images/products/BLUE DEEP - CUARCITA.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 50,
+            "name": "Blue Roma",
+            "category": "Cuarcita",
+            "color": "Azul",
+            "finish": "Pulido",
+            "image": "/images/products/BLUE ROMA - CUARCITA .jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 51,
+            "name": "Diamond Black",
+            "category": "Cuarcita",
+            "color": "Negro",
+            "finish": "Vintage/Leather",
+            "image": "/images/products/DIAMOND BLACK - CUARCITA.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 52,
+            "name": "Basaltina",
+            "category": "Caliza",
+            "color": "Negro",
+            "finish": "Apomazado",
+            "image": "/images/products/CALIZA BASALTINA.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 53,
+            "name": "Beauharnais",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA BEAUHARNAIS.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 54,
+            "name": "Beaumaniere Classic",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA BEAUMANIERE CLASSIC.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 55,
+            "name": "Beaurnais",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA BEAURNAIS.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 56,
+            "name": "Blue Chevernie",
+            "category": "Caliza",
+            "color": "Azul",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA BLUE CHEVERNIE.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 57,
+            "name": "Capri",
+            "category": "Caliza",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/CALIZA CAPRI.jpg",
+            "bestSeller": true
+        },
+        {
+            "id": 58,
+            "name": "Damask Gold",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA DAMASK GOLD.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 59,
+            "name": "Fountaine Clare",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA FOUNTAINE CLARE.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 60,
+            "name": "Gascogne Blue",
+            "category": "Caliza",
+            "color": "Azul",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA GASCOGNE BLUE.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 61,
+            "name": "Heliodoro",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Apomazado",
+            "image": "/images/products/CALIZA HELIODORO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 62,
+            "name": "Limestone Bianco",
+            "category": "Caliza",
+            "color": "Blanco",
+            "finish": "Pulido",
+            "image": "/images/products/CALIZA LIMESTONE BIANCO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 63,
+            "name": "Magny Louvre",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA MAGNY LOUVRE.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 64,
+            "name": "Moca Creme",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/CALIZA MOCA CREME.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 65,
+            "name": "Moleanos",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Apomazado",
+            "image": "/images/products/CALIZA MOLEANOS.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 66,
+            "name": "Peperino Grigio",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Flameado",
+            "image": "/images/products/CALIZA PEPERINO GRIGIO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 67,
+            "name": "Picture Stone",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA PICTURE STONE.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 68,
+            "name": "Pietra del Cardoso",
+            "category": "Caliza",
+            "color": "Negro",
+            "finish": "Flameado",
+            "image": "/images/products/CALIZA PIETRA DEL CARDOSO.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 69,
+            "name": "Pietra di Bedonia",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA PIETRA DI BEDONIA.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 70,
+            "name": "Pietra di Vicenza",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA PIETRA DI VICENZA.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 71,
+            "name": "Pietra Dorata",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA PIETRA DORATA.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 72,
+            "name": "Pietra Serena",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Apomazado",
+            "image": "/images/products/CALIZA PIETRA SERENA.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 73,
+            "name": "Richeval",
+            "category": "Caliza",
+            "color": "Beige",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA RICHEVAL.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 74,
+            "name": "Rose Laurents",
+            "category": "Caliza",
+            "color": "Rosa",
+            "finish": "Bruto",
+            "image": "/images/products/CALIZA ROSE LAURENTS.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 75,
+            "name": "Teak Wood",
+            "category": "Caliza",
+            "color": "Marrón",
+            "finish": "Apomazado",
+            "image": "/images/products/CALIZA TEAK WOOD.jpg",
+            "bestSeller": false
+        },
+        {
+            "id": 76,
+            "name": "Gris Zarzi",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Pulido",
+            "image": "/images/products/GRIS ZARZI - MARMOL.jpg",
+            "bestSeller": true
+        },
+        {
+            "id": 77,
+            "name": "Piedra de Binissalem",
+            "category": "Mármol",
+            "color": "Beige",
+            "finish": "Apomazado",
+            "image": "/images/products/PIEDRA BINISSALEM - MARMOL.jpg",
+            "bestSeller": true
+        }
+    ]
+}

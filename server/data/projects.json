@@ -1,0 +1,21 @@
+{
+    "projects": [
+        {
+            "id": 1,
+            "title": "Sa Coma Residential Complex",
+            "location": "Mallorca",
+            "category": "Residencial",
+            "description": "Reforma integral de complejo residencial con materiales de primera calidad. Un proyecto que combina diseño moderno y funcionalidad en cada detalle.",
+            "thumbnail": "/images/projects/sa-coma-1.jpg",
+            "sections": [
+                {
+                    "title": "Exteriores",
+                    "images": [
+                        "/images/projects/sa-coma-ext-1.jpg",
+                        "/images/projects/sa-coma-ext-2.jpg"
+                    ]
+                }
+            ]
+        }
+    ]
+}

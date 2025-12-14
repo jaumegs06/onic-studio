@@ -1,0 +1,19 @@
+{
+    "hero": {
+        "title": "ONIC STUDIO",
+        "subtitle": "Diseño de interiores & Materiales premium",
+        "images": [
+            "/images/hero/main-1.jpg",
+            "/images/hero/main-2.jpg"
+        ],
+        "cta": {
+            "text": "Descubre nuestros proyectos",
+            "link": "/portfolio"
+        }
+    },
+    "seo": {
+        "title": "Onic Studio - Diseño de Interiores Mallorca",
+        "description": "Estudio de diseño de interiores premium en Mallorca. Materiales de alta calidad y proyectos exclusivos.",
+        "keywords": "diseño interiores mallorca, materiales premium, reformas lujo"
+    }
+}

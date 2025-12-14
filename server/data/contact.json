@@ -1,0 +1,13 @@
+{
+    "contact": {
+        "email": "info@onic-studio.com",
+        "phone": "+34 971 XXX XXX",
+        "address": "Mallorca, España",
+        "socialMedia": {
+            "instagram": "https://instagram.com/onic-studio",
+            "facebook": "",
+            "linkedin": ""
+        },
+        "hours": "Lunes - Viernes: 9:00 - 18:00"
+    }
+}

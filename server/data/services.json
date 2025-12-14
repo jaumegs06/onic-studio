@@ -1,0 +1,16 @@
+{
+    "services": [
+        {
+            "id": 1,
+            "title": "Diseño de Interiores",
+            "subtitle": "Espacios únicos",
+            "description": "Creamos ambientes que reflejan tu personalidad y necesidades, combinando estética y funcionalidad."
+        },
+        {
+            "id": 2,
+            "title": "Reformas Integrales",
+            "subtitle": "Renovación completa",
+            "description": "Transformamos espacios con materiales premium y atención al detalle."
+        }
+    ]
+}
