@@ -114,8 +114,8 @@ export default function Home() {
               key={index}
               onClick={() => setCurrentHeroImage(index)}
               className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-300 ${currentHeroImage === index
-                  ? 'bg-white w-6 md:w-8'
-                  : 'bg-white/50 hover:bg-white/75'
+                ? 'bg-white w-6 md:w-8'
+                : 'bg-white/50 hover:bg-white/75'
                 }`}
               aria-label={`Ir a imagen ${index + 1}`}
             />
@@ -245,8 +245,8 @@ export default function Home() {
                 key={project.id}
                 onClick={() => setActiveProject(project)}
                 className={`relative text-xs md:text-sm lg:text-base uppercase tracking-widest transition-all duration-300 py-3 md:py-4 whitespace-nowrap flex-shrink-0 ${activeProject.id === project.id
-                    ? "text-black font-medium"
-                    : "text-neutral-400 hover:text-neutral-600"
+                  ? "text-black font-medium"
+                  : "text-neutral-400 hover:text-neutral-600"
                   }`}
                 style={{ fontFamily: "'Lato', sans-serif" }}
               >
