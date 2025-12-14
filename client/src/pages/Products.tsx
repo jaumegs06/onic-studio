@@ -368,10 +368,24 @@ export default function Products() {
           </div>
         </section>
 
+        {/* Loading State with Skeleton Screens */}
         {loading && (
-          <div className="flex justify-center items-center h-64">
-            <p>Loading...</p>
-          </div>
+          <section className="py-12 md:py-16 bg-stone-200">
+            <div className="container-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-12 md:gap-16 lg:gap-20 xl:gap-24">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    {/* Image skeleton */}
+                    <div className="bg-neutral-300 aspect-[4/3] mb-6" />
+                    {/* Title skeleton */}
+                    <div className="h-5 bg-neutral-300 w-3/4 mb-3" />
+                    {/* Subtitle skeleton */}
+                    <div className="h-4 bg-neutral-300 w-1/2" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
         )}
         {error && (
           <div className="text-center text-red-500 py-4">
@@ -384,7 +398,7 @@ export default function Products() {
         {!loading && !error && (
           <section className="py-12 md:py-16 bg-stone-200">
             <div className="container-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-12 md:gap-16 lg:gap-20 xl:gap-24">
                 {filteredProducts.map((product) => (
                   <motion.div
                     key={product.id}

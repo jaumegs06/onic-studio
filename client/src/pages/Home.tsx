@@ -113,20 +113,24 @@ export default function Home() {
             <button
               key={index}
               onClick={() => setCurrentHeroImage(index)}
-              className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-300 ${
-                currentHeroImage === index 
-                  ? 'bg-white w-6 md:w-8' 
+              className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-300 ${currentHeroImage === index
+                  ? 'bg-white w-6 md:w-8'
                   : 'bg-white/50 hover:bg-white/75'
-              }`}
+                }`}
               aria-label={`Ir a imagen ${index + 1}`}
             />
           ))}
         </div>
 
         <div className="relative z-10 text-center text-white px-4 flex flex-col items-center justify-center pb-20 md:pb-24">
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-white max-w-2xl mx-auto font-medium drop-shadow-md">
+          <motion.p
+            initial={{ filter: "blur(10px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-white max-w-2xl mx-auto font-medium drop-shadow-md"
+          >
             Descubre la esencia de la piedra natural en nuestro showroom.
-          </p>
+          </motion.p>
           <Link href="/contact">
             <button className="group flex items-center justify-between rounded-full border border-white bg-transparent p-1 pr-1 transition-all duration-300 hover:bg-white hover:text-black">
               <span className="px-4 md:px-6 text-xs md:text-sm font-medium tracking-widest text-white transition-colors duration-300 group-hover:text-black">
@@ -240,11 +244,10 @@ export default function Home() {
               <button
                 key={project.id}
                 onClick={() => setActiveProject(project)}
-                className={`relative text-xs md:text-sm lg:text-base uppercase tracking-widest transition-all duration-300 py-3 md:py-4 whitespace-nowrap flex-shrink-0 ${
-                  activeProject.id === project.id
+                className={`relative text-xs md:text-sm lg:text-base uppercase tracking-widest transition-all duration-300 py-3 md:py-4 whitespace-nowrap flex-shrink-0 ${activeProject.id === project.id
                     ? "text-black font-medium"
                     : "text-neutral-400 hover:text-neutral-600"
-                }`}
+                  }`}
                 style={{ fontFamily: "'Lato', sans-serif" }}
               >
                 {project.title}

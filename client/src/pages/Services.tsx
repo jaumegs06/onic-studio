@@ -146,12 +146,22 @@ export default function Services() {
               Nos encantaría conocer tus ideas y ayudarte a crear el espacio
               perfecto para tu proyecto.
             </p>
-            <a
+            <motion.a
               href="/contacto"
-              className="inline-block bg-background text-foreground px-8 py-4 text-base font-medium hover:opacity-90 transition-opacity"
+              whileHover={{ scale: 1.02, y: -2 }}
+              transition={{ duration: 0.3 }}
+              className="inline-block relative overflow-hidden border-2 border-white px-10 py-4 group cursor-pointer"
             >
-              Contactar
-            </a>
+              <span className="relative z-10 uppercase tracking-wider text-sm transition-colors duration-400 group-hover:text-black">
+                Contactar
+              </span>
+              <motion.div
+                className="absolute inset-0 bg-white"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              />
+            </motion.a>
           </div>
         </section>
       </main>

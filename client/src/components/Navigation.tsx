@@ -35,15 +35,15 @@ export default function Navigation() {
     : 'bg-transparent text-white shadow-none';
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ease-in-out ${headerClass}`}>
+    <nav className={`fixed w-full z-50 transition-all duration-500 ease-out ${headerClass}`}>
       <div className="container-full">
         <div className="flex items-center justify-between h-20">
           <Link href="/">
-            <span 
+            <span
               className="text-2xl md:text-3xl cursor-pointer hover:opacity-70 transition-opacity uppercase"
               style={{
                 fontFamily: "'Oswald', sans-serif",
-                fontWeight: 700,
+                fontWeight: 500,
                 letterSpacing: "0",
                 color: "inherit"
               }}
@@ -52,23 +52,29 @@ export default function Navigation() {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-12 xl:gap-16">
             {navItems.map((item) => (
               <Link key={item.path} href={item.path}>
                 <span
-                  className={`text-sm tracking-widest uppercase transition-colors cursor-pointer ${
-                    location === item.path
+                  className={`relative text-sm tracking-widest uppercase transition-colors duration-400 cursor-pointer group ${location === item.path
                       ? (isScrolled || !isHomePage) ? "text-black font-medium" : "text-white font-medium"
                       : (isScrolled || !isHomePage) ? "text-gray-600 hover:text-black" : "text-white/80 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {item.label}
+                  {/* Animated underline */}
+                  <span
+                    className={`absolute -bottom-1 left-0 h-0.5 transition-all duration-400 ease-out ${location === item.path
+                        ? "w-full bg-current"
+                        : "w-0 bg-current group-hover:w-full"
+                      }`}
+                  />
                 </span>
               </Link>
             ))}
           </div>
 
-          <button 
+          <button
             className="md:hidden text-current transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
@@ -99,19 +105,17 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className={`md:hidden absolute top-20 left-0 right-0 ${
-            (isScrolled || !isHomePage) ? 'bg-white text-black border-b border-border' : 'bg-background text-white border-b border-border'
-          }`}>
+          <div className={`md:hidden absolute top-20 left-0 right-0 ${(isScrolled || !isHomePage) ? 'bg-white text-black border-b border-border' : 'bg-background text-white border-b border-border'
+            }`}>
             <div className="flex flex-col py-4">
               {navItems.map((item) => (
                 <Link key={item.path} href={item.path}>
                   <span
                     onClick={() => setIsMenuOpen(false)}
-                    className={`block px-6 py-3 text-sm tracking-widest uppercase transition-colors cursor-pointer ${
-                      location === item.path
-                        ? (isScrolled || !isHomePage) ? "text-black font-medium bg-muted" : "text-white font-medium bg-muted"
-                        : (isScrolled || !isHomePage) ? "text-muted-foreground hover:text-foreground hover:bg-muted/50" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    }`}
+                    className={`block px-6 py-3 text-sm tracking-widest uppercase transition-colors cursor-pointer ${location === item.path
+                      ? (isScrolled || !isHomePage) ? "text-black font-medium bg-muted" : "text-white font-medium bg-muted"
+                      : (isScrolled || !isHomePage) ? "text-muted-foreground hover:text-foreground hover:bg-muted/50" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      }`}
                   >
                     {item.label}
                   </span>

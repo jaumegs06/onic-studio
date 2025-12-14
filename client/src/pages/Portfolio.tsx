@@ -341,7 +341,7 @@ export default function Portfolio() {
               </div>
             ) : (
               <motion.div
-                className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16"
+                className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 md:gap-16 lg:gap-20 xl:gap-24"
                 initial="hidden"
                 animate="visible"
                 variants={{
@@ -417,12 +417,22 @@ export default function Portfolio() {
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Cuéntanos tu visión y trabajaremos juntos para hacerla realidad.
             </p>
-            <a
+            <motion.a
               href="/contacto"
-              className="inline-block bg-foreground text-background px-8 py-4 text-base font-medium hover:opacity-90 transition-opacity"
+              whileHover={{ scale: 1.02, y: -2 }}
+              transition={{ duration: 0.3 }}
+              className="inline-block relative overflow-hidden border-2 border-black px-10 py-4 group cursor-pointer"
             >
-              Contactar
-            </a>
+              <span className="relative z-10 uppercase tracking-wider text-sm transition-colors duration-400 group-hover:text-white">
+                Contactar
+              </span>
+              <motion.div
+                className="absolute inset-0 bg-black"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              />
+            </motion.a>
           </div>
         </section>
       </main>
