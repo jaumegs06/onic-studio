@@ -14,9 +14,26 @@ import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import ProjectDetail from "./pages/ProjectDetail";
 
+// Admin imports
+import Login from "./admin/Login";
+import Dashboard from "./admin/Dashboard";
+import ProtectedRoute from "./admin/components/ProtectedRoute";
+import ProductsList from "./admin/products/ProductsList";
+
 function Router() {
   return (
     <Switch>
+      {/* Admin Routes */}
+      <Route path={"/admin/login"} component={Login} />
+      <Route path={"/admin/dashboard"}>
+        <ProtectedRoute>
+          <Dashboard>
+            <ProductsList />
+          </Dashboard>
+        </ProtectedRoute>
+      </Route>
+
+      {/* Public Routes */}
       <Route path={"/"} component={Home} />
       <Route path={"/servicios"} component={Services} />
       <Route path={"/portfolio"} component={Portfolio} />
@@ -42,7 +59,7 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="light"
-        // switchable
+      // switchable
       >
         <TooltipProvider>
           <ScrollToTop />

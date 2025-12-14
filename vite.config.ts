@@ -34,8 +34,15 @@ export default defineConfig({
       ".manuscomputer.ai",
       ".manusvm.computer",
       "localhost",
-      "127.0.0.1",
+      "127.0.1",
     ],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
     fs: {
       strict: true,
       deny: ["**/.*"],
