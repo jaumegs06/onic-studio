@@ -140,13 +140,13 @@ export default function Portfolio() {
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Hero Section */}
-        <section className="py-12 md:py-16 bg-stone-200">
+        <section className="py-16 md:py-24 bg-stone-200">
           <div className="container-full">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, letterSpacing: "-0.02em" }}>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-4 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}>
               PORTFOLIO
             </h1>
-            <p className="text-xs md:text-sm text-neutral-600 mb-4 md:mb-6">
-              ({filteredProjects.length}) Proyectos
+            <p className="text-xs md:text-sm text-neutral-600 mb-4 md:mb-6" style={{ letterSpacing: "0.2em" }}>
+              ({filteredProjects.length}) PROYECTOS
             </p>
             <p className="text-lg text-neutral-600 leading-relaxed max-w-3xl">
               Una selección de nuestros proyectos más destacados en
@@ -164,11 +164,11 @@ export default function Portfolio() {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`px-8 py-3 border text-sm uppercase tracking-[0.15em] transition-all duration-300 ease-out ${selectedCategory === category
+                    className={`px-8 py-3 border text-sm uppercase tracking-[0.2em] transition-all duration-700 ease-out ${selectedCategory === category
                       ? "border-black bg-black text-white shadow-md"
                       : "border-neutral-300 bg-white text-neutral-700 hover:bg-gradient-to-r hover:from-slate-700 hover:to-slate-900 hover:border-slate-600 hover:text-white hover:shadow-[0_8px_30px_rgba(51,65,85,0.4)] hover:-translate-y-0.5 hover:scale-[1.02]"
                       }`}
-                    style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: selectedCategory === category ? 600 : 500 }}
+                    style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: selectedCategory === category ? 500 : 400 }}
                   >
                     {category}
                   </button>
@@ -361,7 +361,7 @@ export default function Portfolio() {
                               src={project.image}
                               alt={project.title}
                               loading="lazy"
-                              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                              className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                             />
                             {/* Overlay con información */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
