@@ -353,7 +353,7 @@ export default function Portfolio() {
                       <Link href={`/portfolio/${project.id}`}>
                         <a className="block group cursor-pointer">
                           <motion.div
-                            className="relative aspect-[3/4] mb-6 overflow-hidden bg-neutral-100"
+                            className="relative aspect-[4/3] mb-6 overflow-hidden bg-neutral-100"
                             whileHover={{ scale: 1.01 }}
                             transition={{ duration: 0.4 }}
                           >
@@ -361,7 +361,7 @@ export default function Portfolio() {
                               src={project.image}
                               alt={project.title}
                               loading="lazy"
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                             />
                             {/* Overlay con información */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
