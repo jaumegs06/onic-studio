@@ -1,7 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
+import { AnimatePresence, motion } from "framer-motion";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -21,31 +22,43 @@ import ProtectedRoute from "./admin/components/ProtectedRoute";
 import ProductsList from "./admin/products/ProductsList";
 
 function Router() {
-  return (
-    <Switch>
-      {/* Admin Routes */}
-      <Route path={"/admin/login"} component={Login} />
-      <Route path={"/admin/dashboard"}>
-        <ProtectedRoute>
-          <Dashboard>
-            <ProductsList />
-          </Dashboard>
-        </ProtectedRoute>
-      </Route>
+  const [location] = useLocation();
 
-      {/* Public Routes */}
-      <Route path={"/"} component={Home} />
-      <Route path={"/servicios"} component={Services} />
-      <Route path={"/portfolio"} component={Portfolio} />
-      <Route path={"/portfolio/:id"} component={ProjectDetail} />
-      <Route path={"/productos"} component={Products} />
-      <Route path={"/productos/:id"} component={ProductDetail} />
-      <Route path={"/estudio"} component={Studio} />
-      <Route path={"/contacto"} component={Contact} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+      >
+        <Switch location={location}>
+          {/* Admin Routes */}
+          <Route path={"/admin/login"} component={Login} />
+          <Route path={"/admin/dashboard"}>
+            <ProtectedRoute>
+              <Dashboard>
+                <ProductsList />
+              </Dashboard>
+            </ProtectedRoute>
+          </Route>
+
+          {/* Public Routes */}
+          <Route path={"/"} component={Home} />
+          <Route path={"/servicios"} component={Services} />
+          <Route path={"/portfolio"} component={Portfolio} />
+          <Route path={"/portfolio/:id"} component={ProjectDetail} />
+          <Route path={"/productos"} component={Products} />
+          <Route path={"/productos/:id"} component={ProductDetail} />
+          <Route path={"/estudio"} component={Studio} />
+          <Route path={"/contacto"} component={Contact} />
+          <Route path={"/404"} component={NotFound} />
+          {/* Final fallback route */}
+          <Route component={NotFound} />
+        </Switch>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 

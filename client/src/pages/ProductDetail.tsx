@@ -132,12 +132,14 @@ export default function ProductDetail() {
           <div className="container-full">
             <div className="flex gap-2 text-xs uppercase tracking-widest text-neutral-500">
               <Link href="/">
-                <a className="hover:text-black transition-colors">Home</a>
+                <a className="hover:text-black transition-colors">Inicio</a>
               </Link>
-              <span>&gt;</span>
+              <span>/</span>
               <Link href="/productos">
                 <a className="hover:text-black transition-colors">Materiales</a>
               </Link>
+              <span>/</span>
+              <span className="text-black">{product.name}</span>
             </div>
           </div>
         </section>
@@ -162,9 +164,8 @@ export default function ProductDetail() {
                       <button
                         key={index}
                         onClick={() => setSelectedImage(index)}
-                        className={`w-20 h-20 overflow-hidden border-2 ${
-                          selectedImage === index ? 'border-black' : 'border-neutral-300'
-                        }`}
+                        className={`w-20 h-20 overflow-hidden border-2 ${selectedImage === index ? 'border-black' : 'border-neutral-300'
+                          }`}
                       >
                         <img src={img} alt={`Vista ${index + 1}`} className="w-full h-full object-cover" />
                       </button>
