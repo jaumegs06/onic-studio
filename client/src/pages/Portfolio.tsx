@@ -1,16 +1,47 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
 
 export default function Portfolio() {
-  const [filter, setFilter] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [locationFilter, setLocationFilter] = useState("Todas");
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
+
+  const locationRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (locationRef.current && !locationRef.current.contains(event.target as Node)) {
+        setLocationOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setFilterPanelOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
+  const clearAllFilters = () => {
+    setLocationFilter("Todas");
+    setSearchTerm("");
+  };
+
+  const hasActiveFilters = locationFilter !== "Todas" || searchTerm !== "";
 
   const categories = ["Todos", "Residencial", "Hoteles"];
   const locations = ["Todas", "Mallorca"];
@@ -90,16 +121,16 @@ export default function Portfolio() {
   ];
 
   const filteredProjects = projects.filter((project) => {
-    const matchesCategory = !filter || filter === "Todos" || project.category === filter;
+    const matchesCategory = selectedCategory === "Todos" || project.category === selectedCategory;
     const matchesLocation = locationFilter === "Todas" || project.location === locationFilter;
-    const matchesSearch = searchTerm === "" || 
+    const matchesSearch = searchTerm === "" ||
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.materials.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesLocation && matchesSearch;
   });
 
   return (
-    <motion.div 
+    <motion.div
       className="flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -124,92 +155,153 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Filter Section */}
-        <section className="py-8 bg-stone-200 relative">
-          <div className="container">
-            {/* Línea superior */}
-            <div className="absolute top-8 left-0 right-0 h-px bg-neutral-300"></div>
-            {/* Línea inferior */}
-            <div className="absolute bottom-8 left-0 right-0 h-px bg-neutral-300"></div>
-            
-            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4">
-              {/* Filtros desplegables */}
-              <div className="flex flex-wrap items-center gap-3 p-3 md:p-4 border border-neutral-300 bg-stone-200">
-                {/* Filtro de Aplicación/Categoría */}
-                <div className="relative" onMouseLeave={() => setCategoryOpen(false)}>
+        {/* Category Tabs */}
+        <section className="py-10 bg-white border-y border-neutral-200">
+          <div className="container-full">
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {categories.map((category) => {
+                return (
                   <button
-                    onClick={() => {
-                      setCategoryOpen(!categoryOpen);
-                      setLocationOpen(false);
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 transition-colors text-sm uppercase tracking-wider bg-stone-200 border border-neutral-300 rounded-sm"
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-8 py-3 border text-sm uppercase tracking-[0.15em] transition-all duration-300 ease-out ${selectedCategory === category
+                      ? "border-black bg-black text-white shadow-md"
+                      : "border-neutral-300 bg-white text-neutral-700 hover:bg-gradient-to-r hover:from-slate-700 hover:to-slate-900 hover:border-slate-600 hover:text-white hover:shadow-[0_8px_30px_rgba(51,65,85,0.4)] hover:-translate-y-0.5 hover:scale-[1.02]"
+                      }`}
+                    style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: selectedCategory === category ? 600 : 500 }}
                   >
-                    <span className="text-neutral-700 font-medium">{!filter ? "APLICACIÓN" : filter.toUpperCase()}</span>
-                    <ChevronDown className={`w-4 h-4 text-neutral-600 transition-transform ${categoryOpen ? 'rotate-180' : ''}`} />
+                    {category}
                   </button>
-                  {categoryOpen && (
-                    <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-300 shadow-lg z-10 min-w-[200px]">
-                      {categories.map((category) => (
-                        <button
-                          key={category}
-                          onClick={() => {
-                            setFilter(filter === category ? null : category);
-                            setCategoryOpen(false);
-                          }}
-                          className={`w-full text-left px-4 py-2 text-sm uppercase tracking-wider hover:bg-neutral-100 transition-colors ${
-                            filter === category ? "bg-neutral-100 font-semibold" : ""
-                          }`}
-                        >
-                          {category}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
 
-                {/* Filtro de Ubicación */}
-                <div className="relative" onMouseLeave={() => setLocationOpen(false)}>
-                  <button
-                    onClick={() => {
-                      setLocationOpen(!locationOpen);
-                      setCategoryOpen(false);
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 transition-colors text-sm uppercase tracking-wider bg-stone-200 border border-neutral-300 rounded-sm"
-                  >
-                    <span className="text-neutral-700 font-medium">{locationFilter === "Todas" ? "UBICACIÓN" : locationFilter.toUpperCase()}</span>
-                    <ChevronDown className={`w-4 h-4 text-neutral-600 transition-transform ${locationOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {locationOpen && (
-                    <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-300 shadow-lg z-10 min-w-[200px]">
-                      {locations.map((location) => (
-                        <button
-                          key={location}
-                          onClick={() => {
-                            setLocationFilter(location);
-                            setLocationOpen(false);
-                          }}
-                          className={`w-full text-left px-4 py-2 text-sm uppercase tracking-wider hover:bg-neutral-100 transition-colors ${
-                            locationFilter === location ? "bg-neutral-100 font-semibold" : ""
-                          }`}
-                        >
-                          {location}
-                        </button>
-                      ))}
+        {/* Filter Section */}
+        <section className="py-6 bg-white border-b border-neutral-200">
+          <div className="container">
+            <div className="flex items-center justify-between gap-4">
+              {/* Botón FILTROS */}
+              <div className="relative">
+                <button
+                  onClick={() => setFilterPanelOpen(!filterPanelOpen)}
+                  className="flex items-center gap-3 px-6 py-3 bg-white border border-neutral-300 hover:border-black transition-all text-sm uppercase tracking-[0.2em]"
+                  style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                  <span>FILTROS</span>
+                </button>
+
+                {/* Panel Dropdown */}
+                {filterPanelOpen && (
+                  <>
+                    {/* Backdrop */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setFilterPanelOpen(false)}
+                    ></div>
+
+                    {/* Panel */}
+                    <div className="absolute top-full left-0 mt-2 bg-white border border-neutral-200 shadow-2xl z-50">
+                      {/* Filters Content */}
+                      <div className="p-4 flex gap-8">
+                        {/* Location Filter */}
+                        <div className="min-w-[200px]" ref={locationRef}>
+                          <button
+                            onClick={() => setLocationOpen(!locationOpen)}
+                            className="w-full flex items-center justify-between py-2 border-b border-neutral-200 text-left"
+                          >
+                            <span className="text-sm uppercase tracking-[0.15em] text-neutral-700" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}>
+                              Ubicación
+                            </span>
+                            <ChevronDown className={`w-4 h-4 transition-transform ${locationOpen ? "rotate-180" : ""}`} />
+                          </button>
+                          {locationOpen && (
+                            <div className="mt-3 space-y-2 max-h-[300px] overflow-y-auto">
+                              {locations.map((location) => (
+                                <button
+                                  key={location}
+                                  onClick={() => {
+                                    setLocationFilter(location);
+                                  }}
+                                  className="w-full flex items-center gap-3 py-2 text-left group"
+                                >
+                                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${locationFilter === location ? "border-black" : "border-neutral-300"
+                                    }`}>
+                                    {locationFilter === location && (
+                                      <div className="w-2 h-2 rounded-full bg-black"></div>
+                                    )}
+                                  </div>
+                                  <span className={`text-xs ${locationFilter === location ? "font-medium text-black" : "text-neutral-600"
+                                    }`}>
+                                    {location}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Clear Filters Button */}
+                        <div className="min-w-[150px] flex items-start pt-2">
+                          <button
+                            onClick={clearAllFilters}
+                            className={`w-full py-2 px-4 transition-colors text-xs uppercase tracking-[0.2em] ${hasActiveFilters
+                              ? "bg-black text-white hover:bg-neutral-800"
+                              : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
+                              }`}
+                            style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
+                            disabled={!hasActiveFilters}
+                          >
+                            Limpiar
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
+                  </>
+                )}
+              </div>
+
+              {/* Active Filter Badges */}
+              <div className="flex items-center gap-2 flex-1">
+                {locationFilter !== "Todas" && (
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-neutral-100 border border-neutral-200 text-xs uppercase tracking-wider">
+                    <span className="text-neutral-700" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}>
+                      Ubicación: {locationFilter}
+                    </span>
+                    <button
+                      onClick={() => setLocationFilter("Todas")}
+                      className="text-neutral-500 hover:text-black transition-colors"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Barra de búsqueda */}
-              <div className="relative w-full md:w-auto p-3 md:p-4 border border-neutral-300 bg-stone-200 md:ml-auto">
+              <div className="relative flex-1 max-w-md ml-auto">
                 <input
                   type="text"
-                  placeholder="Buscar proyectos..."
+                  placeholder="BUSCAR..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-4 pr-10 py-2 border-0 focus:outline-none focus:ring-0 transition-colors text-sm uppercase tracking-wider w-full bg-transparent"
+                  className="w-full pl-4 pr-10 py-3 bg-white border border-neutral-300 focus:border-black focus:outline-none transition-colors text-sm uppercase tracking-[0.15em] placeholder:text-neutral-400"
+                  style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 400 }}
                 />
-                <Search className="w-4 h-4 text-neutral-500 absolute right-5 md:right-6 top-1/2 -translate-y-1/2 pointer-events-none" />
+                {searchTerm ? (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <Search className="w-4 h-4 text-neutral-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                )}
               </div>
             </div>
           </div>
@@ -224,7 +316,7 @@ export default function Portfolio() {
                 <p className="text-neutral-500 mb-8">Intenta ajustar los filtros o la búsqueda</p>
                 <button
                   onClick={() => {
-                    setFilter(null);
+                    setSelectedCategory("Todos");
                     setLocationFilter("Todas");
                     setSearchTerm("");
                   }}
@@ -234,7 +326,7 @@ export default function Portfolio() {
                 </button>
               </div>
             ) : (
-              <motion.div 
+              <motion.div
                 className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16"
                 initial="hidden"
                 animate="visible"
@@ -248,7 +340,7 @@ export default function Portfolio() {
               >
                 {filteredProjects.map((project) => {
                   const totalImages = project.images.length;
-                  
+
                   return (
                     <motion.div
                       key={project.id}
@@ -260,7 +352,7 @@ export default function Portfolio() {
                     >
                       <Link href={`/portfolio/${project.id}`}>
                         <a className="block group cursor-pointer">
-                          <motion.div 
+                          <motion.div
                             className="relative aspect-[3/4] mb-6 overflow-hidden bg-neutral-100"
                             whileHover={{ scale: 1.01 }}
                             transition={{ duration: 0.4 }}
