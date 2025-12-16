@@ -20,6 +20,7 @@ import Login from "./admin/Login";
 import Dashboard from "./admin/Dashboard";
 import ProtectedRoute from "./admin/components/ProtectedRoute";
 import ProductsList from "./admin/products/ProductsList";
+import ContactMessages from "./admin/messages/ContactMessages";
 
 function Router() {
   const [location] = useLocation();
@@ -40,6 +41,13 @@ function Router() {
             <ProtectedRoute>
               <Dashboard>
                 <ProductsList />
+              </Dashboard>
+            </ProtectedRoute>
+          </Route>
+          <Route path={"/admin/messages"}>
+            <ProtectedRoute>
+              <Dashboard>
+                <ContactMessages />
               </Dashboard>
             </ProtectedRoute>
           </Route>

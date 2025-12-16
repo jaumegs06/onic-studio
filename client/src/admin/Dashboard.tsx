@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Package, LogOut, Menu, X } from 'lucide-react';
+import { Package, LogOut, Menu, X, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface DashboardProps {
@@ -18,6 +18,7 @@ export default function Dashboard({ children }: DashboardProps) {
 
     const navItems = [
         { icon: Package, label: 'Productos', path: '/admin/dashboard' },
+        { icon: Mail, label: 'Mensajes', path: '/admin/messages' },
     ];
 
     const isActive = (path: string) => location === path;
@@ -34,7 +35,7 @@ export default function Dashboard({ children }: DashboardProps) {
                         {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </button>
                     <h1 className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
-                        ONIC STUDIO
+                        ONICE
                     </h1>
                 </div>
 
@@ -65,8 +66,8 @@ export default function Dashboard({ children }: DashboardProps) {
                                         <Link key={item.path} href={item.path}>
                                             <a
                                                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive(item.path)
-                                                        ? 'bg-black text-white'
-                                                        : 'text-neutral-700 hover:bg-neutral-100'
+                                                    ? 'bg-black text-white'
+                                                    : 'text-neutral-700 hover:bg-neutral-100'
                                                     }`}
                                             >
                                                 <Icon className="w-5 h-5" />

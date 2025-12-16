@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { contactAPI } from "@/lib/api";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -15,17 +16,37 @@ export default function Contact() {
     projectType: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.");
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      projectType: "",
-      message: "",
-    });
+    setIsSubmitting(true);
+
+    try {
+      const response = await contactAPI.submit(formData);
+
+      if (response.success) {
+        toast.success("¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.");
+        // Clear form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          projectType: "",
+          message: "",
+        });
+      } else {
+        toast.error(response.error || "Error al enviar el mensaje. Por favor, inténtalo de nuevo.");
+      }
+    } catch (error: any) {
+      console.error("Error submitting contact form:", error);
+      toast.error(
+        error.response?.data?.error ||
+        "Error al enviar el mensaje. Por favor, verifica tu conexión e inténtalo de nuevo."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -204,8 +225,8 @@ export default function Contact() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.6 }}
                   >
-                    <Button type="submit" size="lg" className="w-full">
-                      Enviar Mensaje
+                    <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                      {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
                     </Button>
                   </motion.div>
                 </form>

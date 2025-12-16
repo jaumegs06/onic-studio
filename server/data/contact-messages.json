@@ -1,0 +1,14 @@
+{
+  "messages": [
+    {
+      "id": "msg_1765879790098_g1vrgfrrc",
+      "name": "Juan Pérez",
+      "email": "juan@example.com",
+      "phone": "",
+      "projectType": "hoteles",
+      "message": "Estoy interesado en renovar mi hotel",
+      "timestamp": "2025-12-16T10:09:50.098Z",
+      "emailSent": true
+    }
+  ]
+}

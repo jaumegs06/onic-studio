@@ -86,4 +86,22 @@ export const uploadAPI = {
     },
 };
 
+// Contact API
+export const contactAPI = {
+    submit: async (data: {
+        name: string;
+        email: string;
+        phone?: string;
+        projectType: string;
+        message: string;
+    }) => {
+        const response = await api.post('/contact', data);
+        return response.data;
+    },
+    getMessages: async () => {
+        const response = await api.get('/contact/messages');
+        return response.data;
+    },
+};
+
 export default api;

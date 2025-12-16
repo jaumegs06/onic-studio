@@ -8,6 +8,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import productsRoutes from "./routes/products.js";
 import uploadRoutes from "./routes/upload.js";
+import contactRoutes from "./routes/contact.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,6 +33,7 @@ async function startServer() {
   app.use("/api/auth", authRoutes);
   app.use("/api/products", productsRoutes);
   app.use("/api/upload", uploadRoutes);
+  app.use("/api/contact", contactRoutes);
 
   // Handle client-side routing - serve index.html for all routes
   // This must be AFTER API routes
