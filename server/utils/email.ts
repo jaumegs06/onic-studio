@@ -2,34 +2,34 @@ import { Resend } from 'resend';
 
 // Initialize Resend only if API key is available
 const resend = process.env.RESEND_API_KEY
-    ? new Resend(process.env.RESEND_API_KEY)
-    : null;
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 interface ContactFormData {
-    name: string;
-    email: string;
-    phone?: string;
-    projectType: string;
-    message: string;
+  name: string;
+  email: string;
+  phone?: string;
+  projectType: string;
+  message: string;
 }
 
 /**
  * Sends notification email to company when a new contact form is submitted
  */
 export async function sendCompanyNotification(data: ContactFormData) {
-    try {
-        // If no API key or resend not initialized, skip sending email (but don't fail)
-        if (!resend) {
-            console.log('⚠️  Resend API key not configured. Email not sent.');
-            console.log('📧  Would have sent email with data:', data);
-            return { success: false, reason: 'no_api_key' };
-        }
+  try {
+    // If no API key or resend not initialized, skip sending email (but don't fail)
+    if (!resend) {
+      console.log('⚠️  Resend API key not configured. Email not sent.');
+      console.log('📧  Would have sent email with data:', data);
+      return { success: false, reason: 'no_api_key' };
+    }
 
-        const { data: emailData, error } = await resend.emails.send({
-            from: 'Onic Studio Contact <onboarding@resend.dev>', // You'll update this when you verify your domain
-            to: ['info@onicstudio.com'], // Company email
-            subject: `🔔 Nuevo mensaje de contacto - ${data.name}`,
-            html: `
+    const { data: emailData, error } = await resend.emails.send({
+      from: 'Onic Studio Contact <onboarding@resend.dev>', // You'll update this when you verify your domain
+      to: ['info@onicestudio.com'], // Company email
+      subject: `🔔 Nuevo mensaje de contacto - ${data.name}`,
+      html: `
         <!DOCTYPE html>
         <html>
           <head>
@@ -136,45 +136,45 @@ export async function sendCompanyNotification(data: ContactFormData) {
               
               <div class="footer">
                 <p>Recibido el ${new Date().toLocaleString('es-ES', {
-                dateStyle: 'full',
-                timeStyle: 'short'
-            })}</p>
+        dateStyle: 'full',
+        timeStyle: 'short'
+      })}</p>
               </div>
             </div>
           </body>
         </html>
       `,
-        });
+    });
 
-        if (error) {
-            console.error('❌ Error sending company notification:', error);
-            return { success: false, error };
-        }
-
-        console.log('✅ Company notification sent:', emailData);
-        return { success: true, data: emailData };
-    } catch (error) {
-        console.error('❌ Exception sending company notification:', error);
-        return { success: false, error };
+    if (error) {
+      console.error('❌ Error sending company notification:', error);
+      return { success: false, error };
     }
+
+    console.log('✅ Company notification sent:', emailData);
+    return { success: true, data: emailData };
+  } catch (error) {
+    console.error('❌ Exception sending company notification:', error);
+    return { success: false, error };
+  }
 }
 
 /**
  * Sends confirmation email to the client who submitted the form
  */
 export async function sendClientConfirmation(data: ContactFormData) {
-    try {
-        // If no API key or resend not initialized, skip sending email (but don't fail)
-        if (!resend) {
-            console.log('⚠️  Resend API key not configured. Confirmation email not sent.');
-            return { success: false, reason: 'no_api_key' };
-        }
+  try {
+    // If no API key or resend not initialized, skip sending email (but don't fail)
+    if (!resend) {
+      console.log('⚠️  Resend API key not configured. Confirmation email not sent.');
+      return { success: false, reason: 'no_api_key' };
+    }
 
-        const { data: emailData, error } = await resend.emails.send({
-            from: 'Onic Studio <onboarding@resend.dev>',
-            to: [data.email],
-            subject: '✅ Hemos recibido tu mensaje - Onic Studio',
-            html: `
+    const { data: emailData, error } = await resend.emails.send({
+      from: 'Onic Studio <onboarding@resend.dev>',
+      to: [data.email],
+      subject: '✅ Hemos recibido tu mensaje - Onic Studio',
+      html: `
         <!DOCTYPE html>
         <html>
           <head>
@@ -275,7 +275,7 @@ export async function sendClientConfirmation(data: ContactFormData) {
               <div class="footer">
                 <p style="margin: 10px 0;">
                   <strong>Onic Studio</strong><br>
-                  Email: info@onicstudio.com<br>
+                  Email: info@onicestudio.com<br>
                   Tel: +34 123 456 789
                 </p>
                 <p style="margin: 20px 0 0 0; font-size: 12px; color: #9ca3af;">
@@ -286,17 +286,17 @@ export async function sendClientConfirmation(data: ContactFormData) {
           </body>
         </html>
       `,
-        });
+    });
 
-        if (error) {
-            console.error('❌ Error sending client confirmation:', error);
-            return { success: false, error };
-        }
-
-        console.log('✅ Client confirmation sent:', emailData);
-        return { success: true, data: emailData };
-    } catch (error) {
-        console.error('❌ Exception sending client confirmation:', error);
-        return { success: false, error };
+    if (error) {
+      console.error('❌ Error sending client confirmation:', error);
+      return { success: false, error };
     }
+
+    console.log('✅ Client confirmation sent:', emailData);
+    return { success: true, data: emailData };
+  } catch (error) {
+    console.error('❌ Exception sending client confirmation:', error);
+    return { success: false, error };
+  }
 }
