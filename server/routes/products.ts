@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { readJSON, writeJSON } from '../utils/db.js';
+import { supabase } from '../config/supabase.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = Router();
@@ -11,18 +11,20 @@ interface Product {
     color: string;
     finish: string;
     image: string;
-    bestSeller?: boolean;
-}
-
-interface ProductsData {
-    products: Product[];
+    best_seller?: boolean;
 }
 
 // Get all products (public)
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const data = await readJSON<ProductsData>('products.json');
-        res.json(data.products || []);
+        const { data: products, error } = await supabase
+            .from('products')
+            .select('*')
+            .order('id', { ascending: true });
+
+        if (error) throw error;
+
+        res.json(products || []);
     } catch (error) {
         console.error('Error fetching products:', error);
         res.status(500).json({ error: 'Failed to fetch products' });
@@ -32,10 +34,13 @@ router.get('/', async (req: Request, res: Response) => {
 // Get single product (public)
 router.get('/:id', async (req: Request, res: Response) => {
     try {
-        const data = await readJSON<ProductsData>('products.json');
-        const product = data.products?.find(p => p.id === parseInt(req.params.id));
+        const { data: product, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('id', parseInt(req.params.id))
+            .single();
 
-        if (!product) {
+        if (error || !product) {
             return res.status(404).json({ error: 'Product not found' });
         }
 
@@ -46,22 +51,24 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 });
 
+
 // Create product (protected)
 router.post('/', authenticateToken, async (req: Request, res: Response) => {
     try {
-        const data = await readJSON<ProductsData>('products.json');
-        const products = data.products || [];
+        const { data: newProduct, error } = await supabase
+            .from('products')
+            .insert([{
+                name: req.body.name,
+                category: req.body.category,
+                color: req.body.color,
+                finish: req.body.finish,
+                image: req.body.image,
+                best_seller: req.body.bestSeller || false
+            }])
+            .select()
+            .single();
 
-        // Generate new ID
-        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-
-        const newProduct: Product = {
-            id: newId,
-            ...req.body
-        };
-
-        products.push(newProduct);
-        await writeJSON('products.json', { products });
+        if (error) throw error;
 
         res.status(201).json(newProduct);
     } catch (error) {
@@ -73,22 +80,25 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
 // Update product (protected)
 router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
     try {
-        const data = await readJSON<ProductsData>('products.json');
-        const products = data.products || [];
-        const index = products.findIndex(p => p.id === parseInt(req.params.id));
+        const { data: updatedProduct, error } = await supabase
+            .from('products')
+            .update({
+                name: req.body.name,
+                category: req.body.category,
+                color: req.body.color,
+                finish: req.body.finish,
+                image: req.body.image,
+                best_seller: req.body.bestSeller
+            })
+            .eq('id', parseInt(req.params.id))
+            .select()
+            .single();
 
-        if (index === -1) {
+        if (error || !updatedProduct) {
             return res.status(404).json({ error: 'Product not found' });
         }
 
-        products[index] = {
-            ...products[index],
-            ...req.body,
-            id: parseInt(req.params.id) // Ensure ID doesn't change
-        };
-
-        await writeJSON('products.json', { products });
-        res.json(products[index]);
+        res.json(updatedProduct);
     } catch (error) {
         console.error('Error updating product:', error);
         res.status(500).json({ error: 'Failed to update product' });
@@ -98,15 +108,13 @@ router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
 // Delete product (protected)
 router.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
     try {
-        const data = await readJSON<ProductsData>('products.json');
-        const products = data.products || [];
-        const filtered = products.filter(p => p.id !== parseInt(req.params.id));
+        const { error } = await supabase
+            .from('products')
+            .delete()
+            .eq('id', parseInt(req.params.id));
 
-        if (filtered.length === products.length) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
+        if (error) throw error;
 
-        await writeJSON('products.json', { products: filtered });
         res.json({ message: 'Product deleted successfully' });
     } catch (error) {
         console.error('Error deleting product:', error);

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { readJSON, writeJSON } from '../utils/db.js';
+import { supabase } from '../config/supabase.js';
 import { generateToken, authenticateToken, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
@@ -8,12 +8,8 @@ const router = Router();
 interface User {
     id: number;
     username: string;
-    passwordHash: string;
+    password_hash: string;
     role: string;
-}
-
-interface UsersData {
-    users: User[];
 }
 
 // Login
@@ -25,16 +21,19 @@ router.post('/login', async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Username and password required' });
         }
 
-        // Read users from database
-        const data = await readJSON<UsersData>('users.json');
-        const user = data.users?.find(u => u.username === username);
+        // Query user from Supabase
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('username', username)
+            .single();
 
-        if (!user) {
+        if (error || !user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         // Verify password
-        const validPassword = await bcrypt.compare(password, user.passwordHash);
+        const validPassword = await bcrypt.compare(password, user.password_hash);
         if (!validPassword) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }

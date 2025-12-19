@@ -1,15 +1,8 @@
 import { Router } from 'express';
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { supabaseAdmin } from '../config/supabase.js';
 import { sendCompanyNotification, sendClientConfirmation } from '../utils/email.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const router = Router();
-
-const CONTACT_MESSAGES_FILE = path.join(__dirname, '..', 'data', 'contact-messages.json');
 
 interface ContactFormData {
     name: string;
@@ -62,27 +55,25 @@ router.post('/', async (req, res) => {
             emailSent: false,
         };
 
-        // Read existing messages
-        let messagesData: { messages: ContactMessage[] };
-        try {
-            const fileContent = await fs.readFile(CONTACT_MESSAGES_FILE, 'utf-8');
-            messagesData = JSON.parse(fileContent);
-        } catch (error) {
-            // If file doesn't exist or is corrupted, start fresh
-            messagesData = { messages: [] };
+        // Save to Supabase (PRIMARY - this must succeed)
+        const { error: insertError } = await supabaseAdmin!
+            .from('contact_messages')
+            .insert([{
+                id: contactMessage.id,
+                name: contactMessage.name,
+                email: contactMessage.email,
+                phone: contactMessage.phone || null,
+                project_type: contactMessage.projectType,
+                message: contactMessage.message,
+                timestamp: contactMessage.timestamp,
+                email_sent: contactMessage.emailSent
+            }]);
+
+        if (insertError) {
+            throw new Error(`Failed to save message: ${insertError.message}`);
         }
 
-        // Add new message
-        messagesData.messages.push(contactMessage);
-
-        // Save to file (PRIMARY - this must succeed)
-        await fs.writeFile(
-            CONTACT_MESSAGES_FILE,
-            JSON.stringify(messagesData, null, 2),
-            'utf-8'
-        );
-
-        console.log('✅ Contact message saved to database:', contactMessage.id);
+        console.log('✅ Contact message saved to Supabase:', contactMessage.id);
 
         // Try to send emails (SECONDARY - can fail without breaking the flow)
         let emailSuccess = false;
@@ -112,11 +103,10 @@ router.post('/', async (req, res) => {
                 console.log('✅ Emails sent successfully');
                 // Update the message to mark email as sent
                 contactMessage.emailSent = true;
-                await fs.writeFile(
-                    CONTACT_MESSAGES_FILE,
-                    JSON.stringify(messagesData, null, 2),
-                    'utf-8'
-                );
+                await supabaseAdmin!
+                    .from('contact_messages')
+                    .update({ email_sent: true })
+                    .eq('id', contactMessage.id);
             }
         } catch (emailError) {
             console.error('⚠️  Email sending failed, but message was saved:', emailError);
@@ -148,12 +138,28 @@ router.post('/', async (req, res) => {
  */
 router.get('/messages', async (req, res) => {
     try {
-        const fileContent = await fs.readFile(CONTACT_MESSAGES_FILE, 'utf-8');
-        const messagesData = JSON.parse(fileContent);
+        const { data: messages, error } = await supabaseAdmin!
+            .from('contact_messages')
+            .select('*')
+            .order('timestamp', { ascending: false });
+
+        if (error) throw error;
+
+        // Transform snake_case to camelCase for frontend
+        const transformedMessages = messages?.map(msg => ({
+            id: msg.id,
+            name: msg.name,
+            email: msg.email,
+            phone: msg.phone,
+            projectType: msg.project_type,  // Transform to camelCase
+            message: msg.message,
+            timestamp: msg.timestamp,
+            emailSent: msg.email_sent        // Transform to camelCase
+        })) || [];
 
         return res.status(200).json({
             success: true,
-            data: messagesData.messages,
+            data: transformedMessages,
         });
     } catch (error) {
         console.error('❌ Error reading contact messages:', error);
