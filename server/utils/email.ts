@@ -26,8 +26,9 @@ export async function sendCompanyNotification(data: ContactFormData) {
     }
 
     const { data: emailData, error } = await resend.emails.send({
-      from: 'Onic Studio Contact <onboarding@resend.dev>', // You'll update this when you verify your domain
-      to: ['info@onicestudio.com'], // Company email
+      from: 'Onic Studio Contact <oficinatecnica@send.onicestudio.com>',
+      reply_to: 'oficinatecnica@onicestudio.com',
+      to: ['oficinatecnica@onicestudio.com'], // Company email
       subject: `🔔 Nuevo mensaje de contacto - ${data.name}`,
       html: `
         <!DOCTYPE html>
@@ -171,7 +172,8 @@ export async function sendClientConfirmation(data: ContactFormData) {
     }
 
     const { data: emailData, error } = await resend.emails.send({
-      from: 'Onic Studio <onboarding@resend.dev>',
+      from: 'Onic Studio <oficinatecnica@send.onicestudio.com>',
+      reply_to: 'oficinatecnica@onicestudio.com',
       to: [data.email],
       subject: '✅ Hemos recibido tu mensaje - Onic Studio',
       html: `
@@ -275,7 +277,7 @@ export async function sendClientConfirmation(data: ContactFormData) {
               <div class="footer">
                 <p style="margin: 10px 0;">
                   <strong>Onic Studio</strong><br>
-                  Email: info@onicestudio.com<br>
+                  Email: oficinatecnica@onicestudio.com<br>
                   Tel: +34 123 456 789
                 </p>
                 <p style="margin: 20px 0 0 0; font-size: 12px; color: #9ca3af;">
