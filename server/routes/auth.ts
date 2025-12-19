@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { supabase } from '../config/supabase.js';
+import { supabaseAdmin } from '../config/supabase.js';
 import { generateToken, authenticateToken, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
@@ -21,8 +21,8 @@ router.post('/login', async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Username and password required' });
         }
 
-        // Query user from Supabase
-        const { data: user, error } = await supabase
+        // Query user from Supabase using admin client to bypass RLS
+        const { data: user, error } = await supabaseAdmin!
             .from('users')
             .select('*')
             .eq('username', username)
