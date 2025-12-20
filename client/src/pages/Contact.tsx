@@ -249,8 +249,8 @@ export default function Contact() {
                   >
                     <h3 className="text-xl mb-3">Oficina</h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      Calle Serrano 123, 4º A<br />
-                      28006 Madrid, España
+                      Avinguda de l'Argentina, 12, Ponent<br />
+                      07011 Palma, Illes Balears
                     </p>
                   </motion.div>
 
@@ -262,10 +262,10 @@ export default function Contact() {
                   >
                     <h3 className="text-xl mb-3">Email</h3>
                     <a
-                      href="mailto:info@onicstudio.com"
+                      href="mailto:oficinatecnica@onicestudio.com"
                       className="text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      info@onicstudio.com
+                      oficinatecnica@onicestudio.com
                     </a>
                   </motion.div>
 
@@ -277,10 +277,10 @@ export default function Contact() {
                   >
                     <h3 className="text-xl mb-3">Teléfono</h3>
                     <a
-                      href="tel:+34123456789"
+                      href="tel:+34661206414"
                       className="text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      +34 123 456 789
+                      +34 661 20 64 14
                     </a>
                   </motion.div>
 
@@ -307,22 +307,28 @@ export default function Contact() {
                     <h3 className="text-xl mb-3">Síguenos</h3>
                     <div className="flex gap-4">
                       <a
-                        href="#"
+                        href="https://www.instagram.com/onicestudiopalma/?hl=es"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-muted-foreground hover:text-foreground transition-colors"
                       >
                         Instagram
                       </a>
                       <a
-                        href="#"
+                        href="https://www.facebook.com/people/%C3%93NICE-Studio/100066730569816/?locale=es_ES"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Facebook
+                      </a>
+                      <a
+                        href="https://www.linkedin.com/company/onice-studio/about/"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-muted-foreground hover:text-foreground transition-colors"
                       >
                         LinkedIn
-                      </a>
-                      <a
-                        href="#"
-                        className="text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        Pinterest
                       </a>
                     </div>
                   </motion.div>
@@ -333,10 +339,17 @@ export default function Contact() {
         </section>
 
         {/* Map Section */}
-        <section className="h-96 bg-muted-foreground/20">
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-            <p className="text-sm uppercase tracking-wider">Mapa de ubicación</p>
-          </div>
+        <section className="h-[500px] md:h-[600px] bg-muted-foreground/20">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3075.380543941137!2d2.638176476370277!3d39.573573106524215!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1297925db03a4385%3A0xec9636fffddc730b!2sOnice%20Studio!5e0!3m2!1ses!2ses!4v1766232884497!5m2!1ses!2ses"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Ubicación de Ónice Studio"
+          />
         </section>
       </main>
 

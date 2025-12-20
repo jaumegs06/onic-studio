@@ -70,9 +70,12 @@ export default function Studio() {
               EL ESTUDIO
             </motion.h1>
             <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl">
-              Somos un estudio de arquitectura y diseño de interiores
-              especializado en proyectos de alto standing. Nuestra pasión es
-              crear espacios únicos que inspiran y transforman.
+              Somos un estudio especializado en materiales, arquitectura y soluciones técnicas aplicadas a proyectos reales.
+            </p>
+            <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl mt-4">
+              En ÓNICE STUDIO trabajamos desde el conocimiento del material y la experiencia en obra.
+              Acompañamos a arquitectos, interioristas y clientes en la toma de decisiones técnicas y estéticas,
+              aportando criterio, control y una visión global del proyecto.
             </p>
           </div>
         </section>
