@@ -132,7 +132,7 @@ export default function Home() {
           >
             Descubre la esencia de la piedra natural en nuestro showroom.
           </motion.p>
-          <Link href="/contact">
+          <Link href="/contacto">
             <button className="group flex items-center justify-between rounded-full border border-white bg-transparent p-1 pr-1 transition-all duration-300 hover:bg-white hover:text-black">
               <span className="px-4 md:px-6 text-xs md:text-sm font-medium tracking-widest text-white transition-colors duration-300 group-hover:text-black">
                 AGENDA UNA VISITA
