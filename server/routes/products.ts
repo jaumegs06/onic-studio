@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { supabase } from '../config/supabase.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { mockProducts } from '../data/mockProducts.js';
 
 const router = Router();
 
@@ -17,6 +18,11 @@ interface Product {
 // Get all products (public)
 router.get('/', async (req: Request, res: Response) => {
     try {
+        if (!supabase) {
+            console.log('Serving mock products (Supabase client inactive)');
+            return res.json(mockProducts);
+        }
+
         const { data: products, error } = await supabase
             .from('products')
             .select('*')
@@ -34,10 +40,20 @@ router.get('/', async (req: Request, res: Response) => {
 // Get single product (public)
 router.get('/:id', async (req: Request, res: Response) => {
     try {
+        const id = parseInt(req.params.id);
+
+        if (!supabase) {
+            const product = mockProducts.find(p => p.id === id);
+            if (!product) {
+                return res.status(404).json({ error: 'Product not found' });
+            }
+            return res.json(product);
+        }
+
         const { data: product, error } = await supabase
             .from('products')
             .select('*')
-            .eq('id', parseInt(req.params.id))
+            .eq('id', id)
             .single();
 
         if (error || !product) {

@@ -5,45 +5,43 @@ import Footer from "@/components/Footer";
 export default function Studio() {
   const values = [
     {
-      title: "Excelencia",
+      title: "Criterio técnico",
       description:
-        "Buscamos la perfección en cada detalle, desde el concepto inicial hasta la ejecución final.",
+        "Decidimos desde el conocimiento del material y la experiencia en obra.",
     },
     {
-      title: "Innovación",
+      title: "Honestidad material",
       description:
-        "Combinamos técnicas tradicionales con las últimas tendencias y tecnologías en diseño.",
+        "Cada material se utiliza por lo que es y para lo que sirve.",
     },
     {
-      title: "Sostenibilidad",
+      title: "Experiencia real",
       description:
-        "Integramos prácticas sostenibles y materiales ecológicos en todos nuestros proyectos.",
+        "Soluciones contrastadas en proyectos ejecutados, en distintos contextos y países.",
     },
     {
-      title: "Personalización",
+      title: "Colaboración",
       description:
-        "Cada proyecto es único y diseñado específicamente para las necesidades de nuestros clientes.",
+        "Trabajamos en equipo con arquitectos, interioristas, constructores y proveedores.",
     },
   ];
 
   const team = [
     {
-      name: "Ana Martínez",
-      role: "Directora Creativa",
-      description:
-        "Arquitecta con más de 15 años de experiencia en proyectos de lujo internacionales.",
+      name: "Miguel",
+      role: "CEO",
     },
     {
-      name: "Carlos Ruiz",
-      role: "Director de Diseño",
-      description:
-        "Especialista en diseño de interiores con enfoque en espacios comerciales y hoteleros.",
+      name: "Javi",
+      role: "Directivo Técnico",
     },
     {
-      name: "Laura Sánchez",
-      role: "Arquitecta Senior",
-      description:
-        "Experta en arquitectura residencial sostenible y diseño bioclimático.",
+      name: "Ana",
+      role: "Arquitecta Técnica",
+    },
+    {
+      name: "Ray",
+      role: "Sales Manager",
     },
   ];
 
@@ -69,11 +67,14 @@ export default function Studio() {
             >
               EL ESTUDIO
             </motion.h1>
-            <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl">
-              Somos un estudio de arquitectura y diseño de interiores
-              especializado en proyectos de alto standing. Nuestra pasión es
-              crear espacios únicos que inspiran y transforman.
-            </p>
+            <div className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl space-y-4">
+              <p>
+                Somos un estudio especializado en materiales, arquitectura y soluciones técnicas aplicadas a proyectos reales.
+              </p>
+              <p>
+                En ONICE STUDIO trabajamos desde el conocimiento del material y la experiencia en obra. Acompañamos a arquitectos, interioristas y clientes en la toma de decisiones técnicas y estéticas, aportando criterio, control y una visión global del proyecto.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -85,21 +86,16 @@ export default function Studio() {
                 <h2 className="text-4xl mb-6">Nuestra Filosofía</h2>
                 <div className="space-y-6 text-muted-foreground leading-relaxed">
                   <p>
-                    En Onic Studio creemos que la arquitectura y el diseño de
-                    interiores van más allá de la estética. Cada espacio debe
-                    contar una historia, reflejar la identidad de quien lo
-                    habita y mejorar la calidad de vida.
+                    En ONICE STUDIO entendemos la arquitectura y el diseño como un proceso técnico y humano a la vez. Creemos en espacios bien pensados, bien ejecutados y honestos con los materiales.
                   </p>
                   <p>
-                    Nuestro enfoque minimalista no significa simplicidad, sino
-                    la búsqueda de la esencia. Eliminamos lo superfluo para
-                    destacar lo verdaderamente importante: la luz, el espacio,
-                    los materiales y la experiencia humana.
+                    Nuestro enfoque parte del análisis y la comprensión de cada proyecto, atendiendo al material, la luz, la proporción y el uso real del espacio.
                   </p>
                   <p>
-                    Trabajamos en estrecha colaboración con nuestros clientes,
-                    entendiendo sus necesidades, deseos y estilo de vida para
-                    crear espacios que sean auténticos y atemporales.
+                    Cada decisión se toma en función del contexto, las necesidades del cliente y la forma en que el espacio va a ser vivido.
+                  </p>
+                  <p>
+                    Trabajamos de manera cercana con cada cliente, escuchando y acompañando durante todo el proceso, desde la primera idea hasta la ejecución final en obra.
                   </p>
                 </div>
               </div>
@@ -118,7 +114,7 @@ export default function Studio() {
         {/* Values Section */}
         <section className="py-24">
           <div className="container">
-            <h2 className="text-4xl mb-16 text-center">Nuestros Valores</h2>
+            <h2 className="text-4xl mb-16 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>Nuestros Valores</h2>
             <motion.div
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
               initial="hidden"
@@ -135,15 +131,15 @@ export default function Studio() {
               {values.map((value, index) => (
                 <motion.div
                   key={index}
-                  className="text-center"
+                  className="text-left md:text-center"
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
                   transition={{ duration: 0.5 }}
                 >
-                  <h3 className="text-2xl mb-4">{value.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <h3 className="text-xl mb-3 font-medium">{value.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed text-sm">
                     {value.description}
                   </p>
                 </motion.div>
@@ -155,9 +151,16 @@ export default function Studio() {
         {/* Team Section */}
         <section className="py-24 bg-white">
           <div className="container">
-            <h2 className="text-4xl mb-16 text-center">Nuestro Equipo</h2>
+            <h2 className="text-4xl mb-8 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>Nuestro Equipo</h2>
+
+            <div className="max-w-4xl mx-auto mb-16 text-center space-y-4 text-muted-foreground leading-relaxed">
+              <p>Somos un equipo multidisciplinar con experiencia en arquitectura, materiales y ejecución.</p>
+              <p>Nuestro valor no está en los títulos, sino en el conocimiento acumulado tras años de trabajo en proyectos reales.</p>
+              <p>Participamos activamente en todas las fases del proyecto, aportando criterio técnico, sensibilidad estética y una actitud cercana y resolutiva.</p>
+            </div>
+
             <motion.div
-              className="grid grid-cols-1 md:grid-cols-3 gap-12"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -172,20 +175,19 @@ export default function Studio() {
               {team.map((member, index) => (
                 <motion.div
                   key={index}
-                  className="text-center"
+                  className="text-center group"
                   variants={{
                     hidden: { opacity: 0, scale: 0.95 },
                     visible: { opacity: 1, scale: 1 }
                   }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="w-48 h-48 mx-auto mb-6 bg-foreground/10" />
-                  <h3 className="text-2xl mb-2">{member.name}</h3>
-                  <p className="text-sm text-muted-foreground uppercase tracking-wider mb-4">
+                  <div className="aspect-square mx-auto mb-6 bg-stone-100 flex items-center justify-center border border-stone-200">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">Foto {member.name}</span>
+                  </div>
+                  <h3 className="text-xl mb-1 uppercase tracking-wide">{member.name}</h3>
+                  <p className="text-xs text-muted-foreground uppercase tracking-widest">
                     {member.role}
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {member.description}
                   </p>
                 </motion.div>
               ))}
@@ -196,40 +198,40 @@ export default function Studio() {
         {/* Process Section */}
         <section className="py-24">
           <div className="container">
-            <h2 className="text-4xl mb-16 text-center">Nuestro Proceso</h2>
-            <div className="max-w-3xl mx-auto space-y-12">
+            <h2 className="text-4xl mb-16 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>Nuestro Proceso</h2>
+            <div className="max-w-4xl mx-auto space-y-12">
               {[
                 {
                   step: "01",
-                  title: "Consulta Inicial",
+                  title: "Análisis inicial",
                   description:
-                    "Conocemos tu visión, necesidades y objetivos del proyecto.",
+                    "Escuchamos, analizamos el contexto y definimos las necesidades técnicas y materiales del proyecto.",
                 },
                 {
                   step: "02",
-                  title: "Concepto y Diseño",
+                  title: "Definición de soluciones",
                   description:
-                    "Desarrollamos propuestas creativas y soluciones espaciales personalizadas.",
+                    "Seleccionamos materiales y desarrollamos soluciones constructivas coherentes con el diseño.",
                 },
                 {
                   step: "03",
-                  title: "Desarrollo del Proyecto",
+                  title: "Desarrollo técnico",
                   description:
-                    "Refinamos cada detalle técnico y estético del diseño.",
+                    "Ajustamos detalles, formatos y sistemas de aplicación.",
                 },
                 {
                   step: "04",
-                  title: "Ejecución",
+                  title: "Ejecución y seguimiento",
                   description:
-                    "Supervisamos la construcción para asegurar la calidad y fidelidad al diseño.",
+                    "Acompañamos el proceso en obra para garantizar una correcta ejecución.",
                 },
               ].map((phase, index) => (
-                <div key={index} className="flex gap-8">
-                  <div className="text-5xl text-muted-foreground font-light">
-                    {phase.step}
+                <div key={index} className="flex gap-6 md:gap-10">
+                  <div className="text-xl md:text-2xl font-light text-black/40 pt-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {phase.step} ·
                   </div>
-                  <div className="flex-1 pt-2">
-                    <h3 className="text-2xl mb-3">{phase.title}</h3>
+                  <div className="flex-1">
+                    <h3 className="text-xl md:text-2xl mb-3">{phase.title}</h3>
                     <p className="text-muted-foreground leading-relaxed">
                       {phase.description}
                     </p>
@@ -243,28 +245,16 @@ export default function Studio() {
         {/* CTA Section */}
         <section className="py-24 bg-foreground text-background">
           <div className="container text-center">
-            <h2 className="text-4xl md:text-5xl mb-6">
-              Trabajemos juntos
-            </h2>
-            <p className="text-lg opacity-80 mb-8 max-w-2xl mx-auto">
-              Si buscas un estudio que entienda tu visión y la transforme en
-              realidad, nos encantaría conocerte.
+            <p className="text-xl md:text-2xl opacity-90 mb-12 max-w-4xl mx-auto" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Si buscas un equipo cercano, con experiencia real en materiales y obra, estaremos encantados de acompañarte en tu proyecto.
             </p>
             <motion.a
               href="/contacto"
               whileHover={{ scale: 1.02, y: -2 }}
               transition={{ duration: 0.3 }}
-              className="inline-block relative overflow-hidden border-2 border-white px-10 py-4 group cursor-pointer"
+              className="inline-block border border-white px-10 py-4 uppercase tracking-wider text-sm text-white hover:bg-white hover:text-black transition-colors duration-300"
             >
-              <span className="relative z-10 uppercase tracking-wider text-sm transition-colors duration-400 group-hover:text-black">
-                Contactar
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-white"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              />
+              Contactar
             </motion.a>
           </div>
         </section>

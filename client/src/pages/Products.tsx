@@ -158,7 +158,7 @@ export default function Products() {
               MATERIALES
             </motion.h1>
             <p className="text-xs md:text-sm text-neutral-600 mb-4 md:mb-6" style={{ letterSpacing: "0.2em" }}>
-              ({filteredProducts.length}) MATERIALES
+              ({filteredProducts.length}) {selectedCategory.toUpperCase()}
             </p>
             <p className="text-lg text-neutral-600 leading-relaxed max-w-3xl">
               Selección exclusiva de materiales premium para proyectos de lujo

@@ -6,13 +6,15 @@ const supabaseKey = process.env.SUPABASE_ANON_KEY;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Missing Supabase environment variables. Please check your .env file.');
+    console.warn('⚠️  Missing Supabase environment variables. Running in MOCK mode.');
 }
 
 // Client for general operations (uses anon key with RLS)
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+export const supabase = (supabaseUrl && supabaseKey)
+    ? createClient<Database>(supabaseUrl, supabaseKey)
+    : null;
 
 // Admin client for operations that bypass RLS (uses service role key)
-export const supabaseAdmin = supabaseServiceKey
+export const supabaseAdmin = (supabaseUrl && supabaseServiceKey)
     ? createClient<Database>(supabaseUrl, supabaseServiceKey)
     : null;

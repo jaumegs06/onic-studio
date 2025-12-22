@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
+  const [, setLocation] = useLocation();
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
 
   const heroImages = [
@@ -150,11 +151,20 @@ export default function Home() {
       <section className="py-12 md:py-16 lg:py-24 bg-stone-200">
         <div className="container">
           <div className="text-center mb-8 md:mb-12 lg:mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl mb-3 md:mb-4 font-serif">Servicios</h2>
-            <p className="text-muted-foreground text-sm md:text-base lg:text-lg max-w-2xl mx-auto">
-              Ofrecemos soluciones integrales de arquitectura y diseño de interiores
-              para proyectos de lujo
-            </p>
+            <h2
+              className="text-3xl md:text-4xl lg:text-5xl mb-3 md:mb-4 uppercase tracking-tight"
+              style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}
+            >
+              SERVICIOS
+            </h2>
+            <div className="max-w-3xl mx-auto space-y-4 text-neutral-600 text-sm md:text-base lg:text-lg leading-relaxed">
+              <p>
+                Especialistas en piedra natural y materiales técnicos aplicados a proyectos reales, en cualquier parte del mundo.
+              </p>
+              <p>
+                Aportamos conocimiento del material, criterio técnico y soluciones constructivas reales, acompañando al proyecto desde la selección del material hasta su correcta ejecución en obra.
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
@@ -162,6 +172,10 @@ export default function Home() {
               <div
                 key={index}
                 className="group cursor-pointer"
+                onClick={() => {
+                  sessionStorage.setItem('portfolioSelectedCategory', service.title);
+                  setLocation('/portfolio');
+                }}
               >
                 <div className="relative h-64 md:h-80 mb-4 md:mb-6 overflow-hidden">
                   <img
@@ -181,7 +195,10 @@ export default function Home() {
 
           <div className="text-center mt-8 md:mt-12">
             <Link href="/servicios">
-              <a className="inline-block px-8 py-3 border border-neutral-800 hover:bg-neutral-800 hover:text-white transition-colors duration-300 text-sm uppercase tracking-wider">
+              <a
+                className="inline-block px-10 py-4 border border-black bg-transparent text-black text-xs md:text-sm uppercase tracking-[0.25em] transition-all duration-500 ease-out hover:bg-black hover:text-white hover:px-12"
+                style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
+              >
                 Ver Todos los Servicios
               </a>
             </Link>

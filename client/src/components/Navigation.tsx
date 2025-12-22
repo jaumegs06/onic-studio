@@ -57,16 +57,16 @@ export default function Navigation() {
               <Link key={item.path} href={item.path}>
                 <span
                   className={`relative text-sm tracking-widest uppercase transition-colors duration-400 cursor-pointer group ${location === item.path
-                      ? (isScrolled || !isHomePage) ? "text-black font-medium" : "text-white font-medium"
-                      : (isScrolled || !isHomePage) ? "text-gray-600 hover:text-black" : "text-white/80 hover:text-white"
+                    ? (isScrolled || !isHomePage) ? "text-black font-medium" : "text-white font-medium"
+                    : (isScrolled || !isHomePage) ? "text-gray-600 hover:text-black" : "text-white/80 hover:text-white"
                     }`}
                 >
                   {item.label}
                   {/* Animated underline */}
                   <span
                     className={`absolute -bottom-1 left-0 h-0.5 transition-all duration-400 ease-out ${location === item.path
-                        ? "w-full bg-current"
-                        : "w-0 bg-current group-hover:w-full"
+                      ? "w-full bg-current"
+                      : "w-0 bg-current group-hover:w-full"
                       }`}
                   />
                 </span>

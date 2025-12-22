@@ -1,0 +1,56 @@
+export const mockMaterials = [
+    {
+        id: 1,
+        name: "Granito Negro Zimbabwe",
+        category: "Granito",
+        color: "Negro",
+        finish: "Apomazado",
+        image: "/images/hero-1.jpg", // Using existing hero images as placeholders
+        bestSeller: true,
+    },
+    {
+        id: 2,
+        name: "Mármol Blanco Ibiza",
+        category: "Mármol",
+        color: "Blanco",
+        finish: "Pulido",
+        image: "/images/hero-2.jpg",
+        bestSeller: true,
+    },
+    {
+        id: 3,
+        name: "Cuarcita Taj Mahal",
+        category: "Cuarcita",
+        color: "Beige",
+        finish: "Pulido",
+        image: "/images/hero-3.jpg",
+        bestSeller: false,
+    },
+    {
+        id: 4,
+        name: "Caliza Capri",
+        category: "Caliza",
+        color: "Beige",
+        finish: "Apomazado",
+        image: "/images/hero-4.jpg",
+        bestSeller: false,
+    },
+    {
+        id: 5,
+        name: "Mármol Travertino",
+        category: "Mármol",
+        color: "Beige",
+        finish: "Bruto",
+        image: "/images/hero.jpg",
+        bestSeller: true,
+    },
+    {
+        id: 6,
+        name: "Granito Azul Noche",
+        category: "Granito",
+        color: "Azul",
+        finish: "Pulido",
+        image: "/images/residential.jpg",
+        bestSeller: false,
+    }
+];

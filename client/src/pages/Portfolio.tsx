@@ -6,13 +6,20 @@ import Footer from "@/components/Footer";
 import { ChevronDown, Search, X } from "lucide-react";
 
 export default function Portfolio() {
-  const [selectedCategory, setSelectedCategory] = useState("Todos");
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    return sessionStorage.getItem('portfolioSelectedCategory') || "Todos";
+  });
   const [locationFilter, setLocationFilter] = useState("Todas");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
 
   const locationRef = useRef<HTMLDivElement>(null);
+
+  // Save filter to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('portfolioSelectedCategory', selectedCategory);
+  }, [selectedCategory]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -39,13 +46,14 @@ export default function Portfolio() {
   const clearAllFilters = () => {
     setLocationFilter("Todas");
     setSearchTerm("");
+    setSelectedCategory("Todos");
   };
 
-  const hasActiveFilters = locationFilter !== "Todas" || searchTerm !== "";
+  const hasActiveFilters = locationFilter !== "Todas" || searchTerm !== "" || selectedCategory !== "Todos";
 
   const { scrollY } = useScroll();
 
-  const categories = ["Todos", "Residencial", "Hoteles"];
+  const categories = ["Todos", "Residencial", "Hoteles", "Restauración"];
   const locations = ["Todas", "Mallorca"];
 
   const projects = [
@@ -73,7 +81,7 @@ export default function Portfolio() {
     {
       id: 2,
       title: "Hotel Katmandu",
-      category: "Hoteles",
+      category: "Restauración",
       location: "Mallorca",
       year: "2024",
       materials: "Granito Negro Zimbabwe",
@@ -140,7 +148,7 @@ export default function Portfolio() {
     >
       <Navigation />
 
-      <main className="bg-stone-200 min-h-screen pt-28">
+      <main className="bg-stone-200 min-h-screen pt-20">
         {/* Hero Section */}
         <section className="py-16 md:py-24 bg-stone-200 relative overflow-hidden">
           {/* Parallax Background */}

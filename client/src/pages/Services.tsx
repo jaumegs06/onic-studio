@@ -5,40 +5,64 @@ import Footer from "@/components/Footer";
 export default function Services() {
   const services = [
     {
-      title: "Arquitectura Residencial",
+      title: "Conocimiento del material desde su origen hasta su aplicación",
       description:
-        "Diseñamos viviendas exclusivas que combinan funcionalidad, estética y sostenibilidad. Cada proyecto residencial es único y refleja la personalidad y estilo de vida de nuestros clientes.",
+        "Asesoramos en la selección y uso de piedra natural, porcelánicos técnicos, cuarzos y solid surface, evaluando cada proyecto según su uso, entorno y exigencias técnicas.",
       features: [
-        "Diseño arquitectónico integral",
-        "Planificación espacial optimizada",
-        "Selección de materiales premium",
-        "Supervisión de obra completa",
+        "Selección de materiales según origen y prestaciones",
+        "Comparativa técnica entre materiales",
+        "Recomendaciones según clima, tránsito y mantenimiento",
+        "Definición del material más adecuado para cada aplicación",
       ],
-      image: "/images/residential.jpg",
+      image: "/images/services/technical-advisory.jpg",
     },
     {
-      title: "Hoteles y Hospitalidad",
+      title: "Soluciones técnicas y acompañamiento en obra",
       description:
-        "Creamos espacios hoteleros que ofrecen experiencias memorables. Desde hoteles boutique hasta resorts de lujo, diseñamos ambientes que combinan confort, elegancia y funcionalidad operativa.",
+        "Desarrollamos soluciones técnicas para la correcta aplicación de los materiales en obra, anticipando incidencias y optimizando los sistemas constructivos. Trabajamos junto a arquitectos, interioristas, constructores y proveedores, tanto a nivel local como internacional.",
       features: [
-        "Diseño de espacios públicos y privados",
-        "Optimización de flujos operativos",
-        "Experiencia de usuario integral",
-        "Identidad visual coherente",
+        "Sistemas de colocación y anclaje",
+        "Definición de espesores, formatos y acabados",
+        "Resolución de encuentros y detalles constructivos",
+        "Asistencia técnica durante la ejecución",
       ],
-      image: "/images/hotel.jpg",
+      image: "/images/services/technical-execution.jpg",
     },
     {
-      title: "Restauración y Gastronomía",
+      title: "Piedra natural en proyectos",
       description:
-        "Diseñamos restaurantes, bares y espacios gastronómicos que crean atmósferas únicas. Nuestros proyectos equilibran estética, acústica, iluminación y funcionalidad para ofrecer experiencias culinarias excepcionales.",
+        "Aplicación técnica y control del material. Aplicamos piedra natural en proyectos residenciales, hoteleros, comerciales y contract, cuidando su comportamiento técnico y su integración en cada contexto.",
       features: [
-        "Diseño de ambientes gastronómicos",
-        "Planificación de cocinas profesionales",
-        "Iluminación y acústica especializada",
-        "Mobiliario y decoración a medida",
+        "Interior y exterior",
+        "Zonas de alto tránsito",
+        "Espacios húmedos y fachadas",
+        "Proyectos en distintos países y climas",
       ],
-      image: "/images/restaurant.jpg",
+      image: "/images/services/natural-stone-projects.png",
+    },
+    {
+      title: "Porcelánico de gran formato",
+      description:
+        "Precisión técnica y control en obra. Nos hemos especializado en la aplicación de porcelánico de gran formato, respondiendo a las exigencias del diseño contemporáneo y a las necesidades funcionales del proyecto.",
+      features: [
+        "Aplacados y solados de gran formato",
+        "Superficies continuas",
+        "Definición de sistemas de colocación",
+        "Resolución técnica de juntas y encuentros",
+      ],
+      image: "/images/services/large-format-porcelain.png",
+    },
+    {
+      title: "Encimeras y superficies técnicas",
+      description:
+        "Materiales adecuados para un uso intensivo. Trabajamos con encimeras y superficies técnicas en porcelánico, cuarzo técnico y solid surface, ofreciendo soluciones precisas, resistentes y adaptadas al uso real.",
+      features: [
+        "Encimeras de cocina en porcelánico",
+        "Superficies en cuarzo técnico",
+        "Solid surface para soluciones continuas",
+        "Asesoramiento técnico y ejecución",
+      ],
+      image: "/images/services/technical-surfaces.jpg",
     },
   ];
 
@@ -64,11 +88,17 @@ export default function Services() {
             >
               SERVICIOS
             </motion.h1>
-            <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-3xl">
-              Ofrecemos servicios integrales de arquitectura y diseño de
-              interiores para proyectos de alto standing. Nuestro enfoque
-              combina creatividad, funcionalidad y atención al detalle.
-            </p>
+            <div className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-4xl space-y-4">
+              <p>
+                Especialistas en piedra natural y materiales técnicos aplicados a proyectos reales, en cualquier parte del mundo.
+              </p>
+              <p>
+                En ONICE STUDIO contamos con experiencia internacional trabajando con piedra natural de distintos orígenes y materiales técnicos de última generación.
+              </p>
+              <p>
+                Aportamos conocimiento del material, criterio técnico y soluciones constructivas reales, acompañando al proyecto desde la selección del material hasta su correcta ejecución en obra.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -76,7 +106,7 @@ export default function Services() {
         {services.map((service, index) => (
           <motion.section
             key={index}
-            className="py-24"
+            className="py-24 bg-white"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -150,17 +180,9 @@ export default function Services() {
               href="/contacto"
               whileHover={{ scale: 1.02, y: -2 }}
               transition={{ duration: 0.3 }}
-              className="inline-block relative overflow-hidden border-2 border-white px-10 py-4 group cursor-pointer"
+              className="inline-block border border-white px-10 py-4 uppercase tracking-wider text-sm text-white hover:bg-white hover:text-black transition-colors duration-300"
             >
-              <span className="relative z-10 uppercase tracking-wider text-sm transition-colors duration-400 group-hover:text-black">
-                Contactar
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-white"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              />
+              Contactar
             </motion.a>
           </div>
         </section>
