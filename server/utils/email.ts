@@ -26,7 +26,7 @@ export async function sendCompanyNotification(data: ContactFormData) {
     }
 
     const { data: emailData, error } = await resend.emails.send({
-      from: 'Onic Studio Contact <oficinatecnica@send.onicestudio.com>',
+      from: 'Onic Studio Contact <onboarding@resend.dev>',
       reply_to: 'oficinatecnica@onicestudio.com',
       to: ['oficinatecnica@onicestudio.com'], // Company email
       subject: `🔔 Nuevo mensaje de contacto - ${data.name}`,
@@ -172,7 +172,7 @@ export async function sendClientConfirmation(data: ContactFormData) {
     }
 
     const { data: emailData, error } = await resend.emails.send({
-      from: 'Onic Studio <oficinatecnica@send.onicestudio.com>',
+      from: 'Onic Studio <onboarding@resend.dev>',
       reply_to: 'oficinatecnica@onicestudio.com',
       to: [data.email],
       subject: '✅ Hemos recibido tu mensaje - Onic Studio',

@@ -338,69 +338,6 @@ export default function Contact() {
           </div>
         </section>
 
-        {/* Showroom Section */}
-        <section className="py-24 bg-stone-100">
-          <div className="container-full">
-            <div className="flex flex-col md:flex-row-reverse gap-12 md:gap-24 mb-16">
-              <div className="md:w-1/3">
-                <h2 className="text-4xl md:text-5xl mb-6 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Visita nuestro<br />Showroom
-                </h2>
-                <div className="w-12 h-1 bg-black mb-8"></div>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    Un espacio diseñado para inspirar. En nuestro showroom podrás tocar y sentir
-                    la textura de nuestras piedras naturales, apreciar los matices de color y
-                    descubrir las infinitas posibilidades que ofrecen nuestros materiales exclusivos.
-                  </p>
-                  <p>
-                    Contamos con una amplia exposición de muestras de gran formato,
-                    aplicaciones reales en mobiliario y un equipo de expertos listos para
-                    asesorarte en tu proyecto.
-                  </p>
-                </div>
-              </div>
-
-              <div className="md:w-2/3">
-                <div className="grid grid-cols-2 gap-4 h-[600px]">
-                  <div className="col-span-1 h-full flex flex-col gap-4">
-                    <div className="relative h-2/3 overflow-hidden group">
-                      <img
-                        src="/images/showroom/showroom-meeting.jpg"
-                        alt="Zona de reuniones showroom"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="relative h-1/3 overflow-hidden group">
-                      <img
-                        src="/images/showroom/showroom-detail.jpg"
-                        alt="Detalle de materiales"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-1 h-full flex flex-col gap-4">
-                    <div className="relative h-1/3 overflow-hidden group">
-                      <img
-                        src="/images/showroom/showroom-rack.jpg"
-                        alt="Muestrario de piedras"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="relative h-2/3 overflow-hidden group">
-                      <img
-                        src="/images/showroom/showroom-facade.jpg"
-                        alt="Fachada Onic Studio"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Map Section */}
         <section className="h-[500px] md:h-[600px] bg-muted-foreground/20">
           <iframe

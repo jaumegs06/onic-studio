@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  const [, setLocation] = useLocation();
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
 
   const heroImages = [
@@ -14,24 +12,6 @@ export default function Home() {
     "/images/hero-2.jpg",
     "/images/hero-3.jpg",
     "/images/hero-4.jpg"
-  ];
-
-  const services = [
-    {
-      title: "Residencial",
-      description: "Diseño de espacios residenciales exclusivos que reflejan el estilo de vida de nuestros clientes.",
-      image: "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
-    },
-    {
-      title: "Hoteles",
-      description: "Creación de experiencias únicas en espacios hoteleros de lujo y boutique.",
-      image: "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8827.jpg",
-    },
-    {
-      title: "Restauración",
-      description: "Ambientes gastronómicos que combinan funcionalidad y estética sofisticada.",
-      image: "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
-    },
   ];
 
   const featuredProjects = [
@@ -147,61 +127,65 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-12 md:py-16 lg:py-24 bg-stone-200">
-        <div className="container">
-          <div className="text-center mb-8 md:mb-12 lg:mb-16">
-            <h2
-              className="text-3xl md:text-4xl lg:text-5xl mb-3 md:mb-4 uppercase tracking-tight"
-              style={{ fontFamily: "'Playfair Display', serif", fontWeight: 300, letterSpacing: "-0.03em" }}
-            >
-              SERVICIOS
-            </h2>
-            <div className="max-w-3xl mx-auto space-y-4 text-neutral-600 text-sm md:text-base lg:text-lg leading-relaxed">
-              <p>
-                Especialistas en piedra natural y materiales técnicos aplicados a proyectos reales, en cualquier parte del mundo.
-              </p>
-              <p>
-                Aportamos conocimiento del material, criterio técnico y soluciones constructivas reales, acompañando al proyecto desde la selección del material hasta su correcta ejecución en obra.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className="group cursor-pointer"
-                onClick={() => {
-                  sessionStorage.setItem('portfolioSelectedCategory', service.title);
-                  setLocation('/portfolio');
-                }}
-              >
-                <div className="relative h-64 md:h-80 mb-4 md:mb-6 overflow-hidden">
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                </div>
-                <h3 className="text-xl md:text-2xl mb-2 md:mb-3">{service.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
-                  {service.description}
+      {/* Showroom Section */}
+      <section className="py-24 bg-stone-100">
+        <div className="container-full">
+          <div className="flex flex-col md:flex-row-reverse gap-12 md:gap-24 mb-16">
+            <div className="md:w-1/3">
+              <h2 className="text-4xl md:text-5xl mb-6 uppercase tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                Visita nuestro<br />Showroom
+              </h2>
+              <div className="w-12 h-1 bg-black mb-8"></div>
+              <div className="space-y-4 text-muted-foreground leading-relaxed">
+                <p>
+                  Un espacio diseñado para inspirar. En nuestro showroom podrás tocar y sentir
+                  la textura de nuestras piedras naturales, apreciar los matices de color y
+                  descubrir las infinitas posibilidades que ofrecen nuestros materiales exclusivos.
+                </p>
+                <p>
+                  Contamos con una amplia exposición de muestras de gran formato,
+                  aplicaciones reales en mobiliario y un equipo de expertos listos para
+                  asesorarte en tu proyecto.
                 </p>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="text-center mt-8 md:mt-12">
-            <Link href="/servicios">
-              <a
-                className="inline-block px-10 py-4 border border-black bg-transparent text-black text-xs md:text-sm uppercase tracking-[0.25em] transition-all duration-500 ease-out hover:bg-black hover:text-white hover:px-12"
-                style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}
-              >
-                Ver Todos los Servicios
-              </a>
-            </Link>
+            <div className="md:w-2/3">
+              <div className="grid grid-cols-2 gap-4 h-[600px]">
+                <div className="col-span-1 h-full flex flex-col gap-4">
+                  <div className="relative h-2/3 overflow-hidden group">
+                    <img
+                      src="/images/showroom/showroom-facade.jpg"
+                      alt="Fachada Onic Studio"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="relative h-1/3 overflow-hidden group">
+                    <img
+                      src="/images/showroom/showroom-rack.jpg"
+                      alt="Muestrario de piedras"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                </div>
+                <div className="col-span-1 h-full flex flex-col gap-4">
+                  <div className="relative h-1/3 overflow-hidden group">
+                    <img
+                      src="/images/showroom/showroom-detail.jpg"
+                      alt="Detalle de materiales"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="relative h-2/3 overflow-hidden group">
+                    <img
+                      src="/images/showroom/showroom-meeting.jpg"
+                      alt="Zona de reuniones showroom"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

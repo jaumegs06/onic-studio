@@ -1,9 +1,15 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+
+// Load .env file explicitly
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '.env') }); // Load from server/.env
+dotenv.config({ path: path.join(__dirname, '..', '.env') }); // Load from root .env
 
 // Import routes
 import authRoutes from "./routes/auth.js";
@@ -11,10 +17,15 @@ import productsRoutes from "./routes/products.js";
 import uploadRoutes from "./routes/upload.js";
 import contactRoutes from "./routes/contact.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 async function startServer() {
+  // Debug: Check if RESEND_API_KEY is loaded
+  console.log('🔍 RESEND_API_KEY loaded?', !!process.env.RESEND_API_KEY);
+  if (process.env.RESEND_API_KEY) {
+    console.log('✅ RESEND_API_KEY detected! First 10 chars:', process.env.RESEND_API_KEY.substring(0, 10));
+  } else {
+    console.log('❌ RESEND_API_KEY NOT FOUND in environment variables');
+  }
+
   const app = express();
   const server = createServer(app);
 
