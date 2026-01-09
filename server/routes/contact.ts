@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { supabaseAdmin } from '../config/supabase.js';
-import { sendCompanyNotification, sendClientConfirmation } from '../utils/email.js';
+import { sendCompanyNotification } from '../utils/email.js';
 
 const router = Router();
 
@@ -43,42 +43,11 @@ router.post('/', async (req, res) => {
             });
         }
 
-        // Create message object
-        const contactMessage: ContactMessage = {
-            id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            name,
-            email,
-            phone: phone || '',
-            projectType,
-            message,
-            timestamp: new Date().toISOString(),
-            emailSent: false,
-        };
-
-        // Save to Supabase (PRIMARY - this must succeed)
-        const { error: insertError } = await supabaseAdmin!
-            .from('contact_messages')
-            .insert([{
-                id: contactMessage.id,
-                name: contactMessage.name,
-                email: contactMessage.email,
-                phone: contactMessage.phone || null,
-                project_type: contactMessage.projectType,
-                message: contactMessage.message,
-                timestamp: contactMessage.timestamp,
-                email_sent: contactMessage.emailSent
-            }]);
-
-        if (insertError) {
-            throw new Error(`Failed to save message: ${insertError.message}`);
-        }
-
-        console.log('✅ Contact message saved to Supabase:', contactMessage.id);
-
-        // Try to send emails (SECONDARY - can fail without breaking the flow)
+        // Try to send email to company - this is the PRIMARY goal
         let emailSuccess = false;
+        let emailError = null;
+
         try {
-            // Send notification to company
             const companyResult = await sendCompanyNotification({
                 name,
                 email,
@@ -87,30 +56,54 @@ router.post('/', async (req, res) => {
                 message,
             });
 
-            // Send confirmation to client
-            const clientResult = await sendClientConfirmation({
-                name,
-                email,
-                phone,
-                projectType,
-                message,
-            });
+            emailSuccess = companyResult.success || companyResult.reason === 'no_api_key';
 
-            emailSuccess = (companyResult.success || companyResult.reason === 'no_api_key') &&
-                (clientResult.success || clientResult.reason === 'no_api_key');
-
-            if (emailSuccess) {
-                console.log('✅ Emails sent successfully');
-                // Update the message to mark email as sent
-                contactMessage.emailSent = true;
-                await supabaseAdmin!
-                    .from('contact_messages')
-                    .update({ email_sent: true })
-                    .eq('id', contactMessage.id);
+            if (!companyResult.success) {
+                console.log('⚠️  Email not sent:', companyResult.reason || companyResult.error);
+                emailError = companyResult.error;
+            } else {
+                console.log('✅ Company notification email sent successfully');
             }
-        } catch (emailError) {
-            console.error('⚠️  Email sending failed, but message was saved:', emailError);
-            // Continue - we don't fail the request if email fails
+        } catch (emailErr) {
+            console.error('⚠️  Email sending failed:', emailErr);
+            emailError = emailErr;
+            emailSuccess = false;
+        }
+
+        // Try to save to database if Supabase is available (OPTIONAL - not mission critical)
+        const contactMessage = {
+            id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            name,
+            email,
+            phone: phone || '',
+            projectType,
+            message,
+            timestamp: new Date().toISOString(),
+            emailSent: emailSuccess,
+        };
+
+        if (supabaseAdmin) {
+            try {
+                await supabaseAdmin
+                    .from('contact_messages')
+                    .insert([{
+                        id: contactMessage.id,
+                        name: contactMessage.name,
+                        email: contactMessage.email,
+                        phone: contactMessage.phone || null,
+                        project_type: contactMessage.projectType,
+                        message: contactMessage.message,
+                        timestamp: contactMessage.timestamp,
+                        email_sent: contactMessage.emailSent
+                    }]);
+
+                console.log('✅ Contact message saved to Supabase');
+            } catch (dbError) {
+                console.warn('⚠️  Failed to save to database, but continuing:', dbError);
+                // Don't fail the request if database save fails
+            }
+        } else {
+            console.log('ℹ️  Supabase not configured - message not saved to database');
         }
 
         // Return success response

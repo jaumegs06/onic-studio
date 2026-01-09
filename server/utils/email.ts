@@ -1,9 +1,13 @@
 import { Resend } from 'resend';
 
-// Initialize Resend only if API key is available
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+// Function to get Resend client (initialized on first use)
+function getResendClient() {
+  if (!process.env.RESEND_API_KEY) {
+    console.log('⚠️  RESEND_API_KEY not found in environment');
+    return null;
+  }
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 interface ContactFormData {
   name: string;
@@ -18,6 +22,9 @@ interface ContactFormData {
  */
 export async function sendCompanyNotification(data: ContactFormData) {
   try {
+    // Get Resend client at runtime, not at module import time
+    const resend = getResendClient();
+
     // If no API key or resend not initialized, skip sending email (but don't fail)
     if (!resend) {
       console.log('⚠️  Resend API key not configured. Email not sent.');
@@ -27,7 +34,7 @@ export async function sendCompanyNotification(data: ContactFormData) {
 
     const { data: emailData, error } = await resend.emails.send({
       from: 'Onic Studio Contact <onboarding@resend.dev>',
-      reply_to: 'oficinatecnica@onicestudio.com',
+      replyTo: 'oficinatecnica@onicestudio.com',
       to: ['oficinatecnica@onicestudio.com'], // Company email
       subject: `🔔 Nuevo mensaje de contacto - ${data.name}`,
       html: `
@@ -160,145 +167,4 @@ export async function sendCompanyNotification(data: ContactFormData) {
   }
 }
 
-/**
- * Sends confirmation email to the client who submitted the form
- */
-export async function sendClientConfirmation(data: ContactFormData) {
-  try {
-    // If no API key or resend not initialized, skip sending email (but don't fail)
-    if (!resend) {
-      console.log('⚠️  Resend API key not configured. Confirmation email not sent.');
-      return { success: false, reason: 'no_api_key' };
-    }
 
-    const { data: emailData, error } = await resend.emails.send({
-      from: 'Onic Studio <onboarding@resend.dev>',
-      reply_to: 'oficinatecnica@onicestudio.com',
-      to: [data.email],
-      subject: '✅ Hemos recibido tu mensaje - Onic Studio',
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <style>
-              body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                line-height: 1.6;
-                color: #333;
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-              }
-              .header {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 40px;
-                border-radius: 10px 10px 0 0;
-                text-align: center;
-              }
-              .content {
-                background: white;
-                padding: 40px;
-                border-radius: 0 0 10px 10px;
-                border: 1px solid #e5e7eb;
-                border-top: none;
-              }
-              .message-box {
-                background: #f9fafb;
-                padding: 20px;
-                border-radius: 8px;
-                border-left: 4px solid #667eea;
-                margin: 20px 0;
-              }
-              .footer {
-                text-align: center;
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid #e5e7eb;
-                color: #6b7280;
-                font-size: 14px;
-              }
-              .cta-button {
-                display: inline-block;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 12px 30px;
-                text-decoration: none;
-                border-radius: 6px;
-                margin: 20px 0;
-                font-weight: 600;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1 style="margin: 0; font-size: 32px;">¡Gracias por contactarnos!</h1>
-              <p style="margin: 15px 0 0 0; opacity: 0.9; font-size: 18px;">
-                Hemos recibido tu mensaje
-              </p>
-            </div>
-            <div class="content">
-              <p style="font-size: 16px; color: #1f2937;">
-                Hola <strong>${data.name}</strong>,
-              </p>
-              
-              <p style="font-size: 16px; color: #4b5563;">
-                Gracias por ponerte en contacto con <strong>Onic Studio</strong>. 
-                Hemos recibido tu mensaje sobre <strong>${data.projectType}</strong> 
-                y nuestro equipo lo está revisando.
-              </p>
-              
-              <div class="message-box">
-                <p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: 600;">
-                  TU MENSAJE:
-                </p>
-                <p style="margin: 10px 0 0 0; color: #1f2937;">
-                  ${data.message.replace(/\n/g, '<br>')}
-                </p>
-              </div>
-              
-              <p style="font-size: 16px; color: #4b5563;">
-                Nos pondremos en contacto contigo lo antes posible, normalmente 
-                en menos de 24-48 horas laborables.
-              </p>
-              
-              <p style="font-size: 16px; color: #4b5563;">
-                Mientras tanto, te invitamos a explorar nuestro portfolio y descubrir 
-                algunos de nuestros proyectos más destacados.
-              </p>
-              
-              <center>
-                <a href="https://onicstudio.com/portfolio" class="cta-button">
-                  Ver nuestro Portfolio
-                </a>
-              </center>
-              
-              <div class="footer">
-                <p style="margin: 10px 0;">
-                  <strong>Onic Studio</strong><br>
-                  Email: oficinatecnica@onicestudio.com<br>
-                  Tel: +34 123 456 789
-                </p>
-                <p style="margin: 20px 0 0 0; font-size: 12px; color: #9ca3af;">
-                  Este es un email automático generado por nuestro sistema de contacto.
-                </p>
-              </div>
-            </div>
-          </body>
-        </html>
-      `,
-    });
-
-    if (error) {
-      console.error('❌ Error sending client confirmation:', error);
-      return { success: false, error };
-    }
-
-    console.log('✅ Client confirmation sent:', emailData);
-    return { success: true, data: emailData };
-  } catch (error) {
-    console.error('❌ Exception sending client confirmation:', error);
-    return { success: false, error };
-  }
-}
