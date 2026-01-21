@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { projectsAPI } from "@/lib/api";
 
 export default function Home() {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
@@ -14,31 +15,38 @@ export default function Home() {
     "/images/hero-4.jpg"
   ];
 
-  const featuredProjects = [
-    {
-      id: 1,
-      title: "HOTEL MELIÁ BEACH",
-      category: "Hospitalidad",
-      description: "Renovación integral de baños con Techlam y barra de bar en Quarzo. Un proyecto que combina funcionalidad y diseño de alto nivel para espacios de hospitalidad premium.",
-      image: "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
-    },
-    {
-      id: 2,
-      title: "HOTEL KATMANDU",
-      category: "Hospitalidad",
-      description: "Buffet realizado en granito Negro Zimbabwe. Un espacio gastronómico que destaca por la elegancia atemporal de la piedra natural y su acabado impecable.",
-      image: "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
-    },
-    {
-      id: 3,
-      title: "APARTAMENTOS CALA MAJOR",
-      category: "Residencial",
-      description: "Reforma integral con material Techlam en cocinas, baños y espacios comunes. Un proyecto residencial que apuesta por la innovación y la calidad en cada detalle.",
-      image: "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
-    },
-  ];
+  const [featuredProjects, setFeaturedProjects] = useState<any[]>([]);
 
-  const [activeProject, setActiveProject] = useState(featuredProjects[0]);
+  useEffect(() => {
+    loadFeaturedProjects();
+  }, []);
+
+  const loadFeaturedProjects = async () => {
+    try {
+      // En un caso ideal tendríamos un endpoint específico /projects/featured
+      // Por ahora traemos todos y filtramos en cliente
+      const allProjects = await projectsAPI.getAll();
+      const featured = allProjects.filter((p: any) => p.is_featured).slice(0, 3);
+
+      // Si no hay destacados, mostramos los 3 más recientes como fallback
+      if (featured.length === 0) {
+        setFeaturedProjects(allProjects.slice(0, 3));
+      } else {
+        setFeaturedProjects(featured);
+      }
+    } catch (error) {
+      console.error("Failed to load featured projects", error);
+    }
+  };
+
+  const [activeProject, setActiveProject] = useState<any>(null);
+
+  // Set initial active project when data loads
+  useEffect(() => {
+    if (featuredProjects.length > 0 && !activeProject) {
+      setActiveProject(featuredProjects[0]);
+    }
+  }, [featuredProjects]);
 
   // Autoplay hero carousel: cambio cada 6 segundos
   useEffect(() => {
@@ -53,6 +61,7 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveProject((current) => {
+        if (!current || featuredProjects.length === 0) return featuredProjects[0];
         const currentIndex = featuredProjects.findIndex((p) => p.id === current.id);
         const nextIndex = (currentIndex + 1) % featuredProjects.length;
         return featuredProjects[nextIndex];
@@ -197,44 +206,48 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-8 md:mb-12 lg:mb-16">
             {/* Columna Izquierda - Texto */}
             <AnimatePresence mode="wait">
-              <motion.div
-                key={activeProject.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-                className="space-y-4 md:space-y-6"
-              >
-                <p className="text-xs md:text-sm uppercase tracking-widest text-neutral-500" style={{ fontFamily: "'Lato', sans-serif" }}>
-                  {activeProject.category}
-                </p>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl tracking-wider" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
-                  {activeProject.title}
-                </h2>
-                <p className="text-gray-600 leading-relaxed text-sm md:text-base lg:text-lg" style={{ fontFamily: "'Lato', sans-serif" }}>
-                  {activeProject.description}
-                </p>
-                <Link href="/portfolio">
-                  <a className="inline-block text-xs md:text-sm uppercase tracking-wider border-b border-black pb-1 hover:opacity-70 transition-opacity">
-                    Ver Proyecto
-                  </a>
-                </Link>
-              </motion.div>
+              {activeProject && (
+                <motion.div
+                  key={activeProject.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-4 md:space-y-6"
+                >
+                  <p className="text-xs md:text-sm uppercase tracking-widest text-neutral-500" style={{ fontFamily: "'Lato', sans-serif" }}>
+                    {activeProject.category}
+                  </p>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl tracking-wider" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+                    {activeProject.title}
+                  </h2>
+                  <p className="text-gray-600 leading-relaxed text-sm md:text-base lg:text-lg" style={{ fontFamily: "'Lato', sans-serif" }}>
+                    {activeProject.description}
+                  </p>
+                  <Link href="/portfolio">
+                    <a className="inline-block text-xs md:text-sm uppercase tracking-wider border-b border-black pb-1 hover:opacity-70 transition-opacity">
+                      Ver Proyecto
+                    </a>
+                  </Link>
+                </motion.div>
+              )}
             </AnimatePresence>
 
             {/* Columna Derecha - Imagen */}
             <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
               <AnimatePresence mode="wait">
-                <motion.img
-                  key={activeProject.id}
-                  src={activeProject.image}
-                  alt={activeProject.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
-                  className="w-full h-full object-cover"
-                />
+                {activeProject && (
+                  <motion.img
+                    key={activeProject.id}
+                    src={activeProject.image}
+                    alt={activeProject.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </AnimatePresence>
             </div>
           </div>
@@ -245,14 +258,14 @@ export default function Home() {
               <button
                 key={project.id}
                 onClick={() => setActiveProject(project)}
-                className={`relative text-xs md:text-sm lg:text-base uppercase tracking-widest transition-all duration-300 py-3 md:py-4 whitespace-nowrap flex-shrink-0 ${activeProject.id === project.id
+                className={`relative text-xs md:text-sm lg:text-base uppercase tracking-widest transition-all duration-300 py-3 md:py-4 whitespace-nowrap flex-shrink-0 ${activeProject?.id === project.id
                   ? "text-black font-medium"
                   : "text-neutral-400 hover:text-neutral-600"
                   }`}
                 style={{ fontFamily: "'Lato', sans-serif" }}
               >
                 {project.title}
-                {activeProject.id === project.id && (
+                {activeProject?.id === project.id && (
                   <span className="absolute top-0 left-0 w-full h-0.5 bg-black"></span>
                 )}
               </button>

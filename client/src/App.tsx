@@ -21,6 +21,8 @@ import Dashboard from "./admin/Dashboard";
 import ProtectedRoute from "./admin/components/ProtectedRoute";
 import ProductsList from "./admin/products/ProductsList";
 import ContactMessages from "./admin/messages/ContactMessages";
+import ProjectsList from "./admin/projects/ProjectsList";
+import ProjectEditor from "./admin/projects/ProjectEditor";
 
 function Router() {
   const [location] = useLocation();
@@ -48,6 +50,27 @@ function Router() {
             <ProtectedRoute>
               <Dashboard>
                 <ContactMessages />
+              </Dashboard>
+            </ProtectedRoute>
+          </Route>
+          <Route path={"/admin/projects"}>
+            <ProtectedRoute>
+              <Dashboard>
+                <ProjectsList />
+              </Dashboard>
+            </ProtectedRoute>
+          </Route>
+          <Route path={"/admin/projects/new"}>
+            <ProtectedRoute>
+              <Dashboard>
+                <ProjectEditor />
+              </Dashboard>
+            </ProtectedRoute>
+          </Route>
+          <Route path={"/admin/projects/edit/:id"}>
+            <ProtectedRoute>
+              <Dashboard>
+                <ProjectEditor />
               </Dashboard>
             </ProtectedRoute>
           </Route>

@@ -2,151 +2,64 @@ import { useState, useEffect } from "react";
 import { useRoute, Link } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Loader2, Minimize2, Maximize2 } from "lucide-react";
+import { projectsAPI, productsAPI } from "@/lib/api";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface Project {
+  id: number;
+  title: string;
+  category: string;
+  location: string;
+  year: string;
+  materials: string;
+  image: string;
+  images: string[];
+  description?: string;
+}
 
 export default function ProjectDetail() {
   const [, params] = useRoute("/portfolio/:id");
   const projectId = params?.id ? parseInt(params.id) : null;
 
+  const [project, setProject] = useState<Project | null>(null);
+  const [relatedProjects, setRelatedProjects] = useState<Project[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
-  // Array de proyectos (mismo que en Portfolio.tsx)
-  const allProjects = [
-    {
-      id: 1,
-      title: "Hotel Meliá Beach",
-      category: "Hoteles",
-      location: "Mallorca",
-      year: "2024",
-      materials: "Techlam, Quarzo",
-      image: "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
-      description: "Renovación integral de espacios del hotel con materiales de alta gama. El proyecto incluye la reforma completa de baños con Techlam y la instalación de una nueva barra de bar en Quarzo, combinando funcionalidad y diseño premium.",
-      sections: [
-        {
-          name: "Baños",
-          material: "Techlam",
-          images: [
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8811.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8820.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8821.jpg",
-          ]
-        },
-        {
-          name: "Barra",
-          material: "Quarzo",
-          images: [
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8827.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8845 ret.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8861 ret.jpg",
-            "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8868 ret.jpg",
-          ]
-        }
-      ]
-    },
-    {
-      id: 2,
-      title: "Hotel Katmandu",
-      category: "Hoteles",
-      location: "Mallorca",
-      year: "2024",
-      materials: "Granito Negro Zimbabwe",
-      image: "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
-      description: "Diseño y ejecución de buffet en granito Negro Zimbabwe. Un espacio gastronómico que destaca por la elegancia atemporal de la piedra natural, su resistencia y acabado impecable.",
-      sections: [
-        {
-          name: "Buffet",
-          material: "Granito Negro Zimbabwe",
-          images: [
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8965.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8971.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8976.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8977.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8982.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8995.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8997.jpg",
-            "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_9006.jpg",
-          ]
-        }
-      ]
-    },
-    {
-      id: 3,
-      title: "Apartamentos Cala Major",
-      category: "Residencial",
-      location: "Mallorca",
-      year: "2024",
-      materials: "Techlam",
-      image: "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
-      description: "Reforma integral de apartamentos con material Techlam en cocinas, baños y espacios comunes. Un proyecto residencial que apuesta por la innovación, calidad en cada detalle y durabilidad.",
-      sections: [
-        {
-          name: "General",
-          material: "Techlam",
-          images: [
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8593.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8596.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8598.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8603.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8611.jpg",
-          ]
-        },
-        {
-          name: "Cocinas",
-          material: "Techlam",
-          images: [
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8624.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8626.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8632.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8637.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8639.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8641.jpg",
-          ]
-        },
-        {
-          name: "Baños",
-          material: "Techlam",
-          images: [
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8657.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8662.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8664.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8665.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8669.jpg",
-            "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8671.jpg",
-          ]
-        }
-      ]
-    },
-  ];
+  useEffect(() => {
+    if (projectId) {
+      loadProject(projectId);
+    }
+  }, [projectId]);
 
-  const project = allProjects.find(p => p.id === projectId);
+  const loadProject = async (id: number) => {
+    setLoading(true);
+    try {
+      // Load current project
+      const data = await projectsAPI.getById(id);
+      setProject(data);
 
-  // Combinar todas las imágenes de todas las secciones
-  const allImages = project?.sections.flatMap(section => section.images) || [];
+      // Load all projects to find related ones (could be optimized with a specific endpoint)
+      const allData = await projectsAPI.getAll();
+      const related = allData
+        .filter((p: Project) => p.category === data.category && p.id !== data.id)
+        .slice(0, 3);
+      setRelatedProjects(related);
 
-  if (!project) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <Navigation />
-        <main className="bg-stone-200 min-h-screen pt-28 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl mb-4">Proyecto no encontrado</h1>
-            <Link href="/portfolio">
-              <Button>Volver a Portfolio</Button>
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+      // Load products for checking materials
+      const productsData = await productsAPI.getAll();
+      setProducts(productsData);
+    } catch (error) {
+      console.error("Failed to load project", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const relatedProjects = allProjects
-    .filter(p => p.category === project.category && p.id !== project.id)
-    .slice(0, 3);
+  const allImages = project?.images || (project?.image ? [project.image] : []);
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
@@ -176,6 +89,35 @@ export default function ProjectDetail() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [allImages.length, lightboxOpen]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Navigation />
+        <main className="bg-stone-200 flex-1 flex items-center justify-center pt-28">
+          <Loader2 className="w-8 h-8 animate-spin text-neutral-400" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Navigation />
+        <main className="bg-stone-200 min-h-screen pt-28 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl mb-4">Proyecto no encontrado</h1>
+            <Link href="/portfolio">
+              <a className="inline-block px-6 py-2 bg-black text-white hover:bg-neutral-800 transition-colors">Volver a Portfolio</a>
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col">
@@ -214,9 +156,32 @@ export default function ProjectDetail() {
                 <span>•</span>
                 <span>{project.year}</span>
               </div>
-              <p className="text-lg text-neutral-700 leading-relaxed">
+              <p className="text-lg text-neutral-700 leading-relaxed whitespace-pre-wrap">
                 {project.description}
               </p>
+              {project.materials && (
+                <div className="mt-4 text-neutral-500">
+                  <strong>Materiales: </strong>
+                  {project.materials.split(',').map((materialName, index) => {
+                    const name = materialName.trim();
+                    const product = products.find(p => p.name.toLowerCase() === name.toLowerCase());
+                    return (
+                      <span key={index}>
+                        {index > 0 && ", "}
+                        {product ? (
+                          <Link href={`/productos/${product.id}`}>
+                            <a className="hover:underline hover:text-black transition-colors">
+                              {name}
+                            </a>
+                          </Link>
+                        ) : (
+                          name
+                        )}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -227,48 +192,77 @@ export default function ProjectDetail() {
             {/* Gallery premium con navegación */}
             <div className="relative">
               {/* Imagen principal */}
-              <div 
-                className="relative aspect-[4/3] overflow-hidden bg-stone-200 cursor-pointer group"
+              <div
+                className="relative h-[60vh] md:h-[75vh] w-full overflow-hidden cursor-pointer group rounded-sm"
                 onClick={() => openLightbox(currentImageIndex)}
               >
-                <img
-                  src={allImages[currentImageIndex]}
-                  alt={`${project.title} - ${currentImageIndex + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                
-                {/* Contador overlay */}
-                <div className="absolute top-4 right-4 bg-black/70 text-white px-4 py-2 text-sm">
-                  {currentImageIndex + 1} / {allImages.length}
+                <AnimatePresence mode="wait">
+                  {allImages.length > 0 ? (
+                    <motion.img
+                      key={currentImageIndex}
+                      src={allImages[currentImageIndex]}
+                      alt={`${project.title} - ${currentImageIndex + 1}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-neutral-400">Sin imágenes</div>
+                  )}
+                </AnimatePresence>
+
+                {/* Cursor Zones for Desktop */}
+                <div className="absolute inset-0 hidden md:flex">
+                  <div
+                    className="w-1/3 h-full"
+                    style={{ cursor: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>') 20 20, auto` }}
+                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                    title="Anterior"
+                  />
+                  <div
+                    className="w-1/3 h-full cursor-zoom-in"
+                    onClick={() => openLightbox(currentImageIndex)}
+                    title="Ampliar"
+                  />
+                  <div
+                    className="w-1/3 h-full"
+                    style={{ cursor: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>') 20 20, auto` }}
+                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                    title="Siguiente"
+                  />
                 </div>
 
-                {/* Icono de zoom */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
-                  <div className="bg-white/90 rounded-full p-3">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                    </svg>
-                  </div>
+                {/* Contador overlay - Minimalist */}
+                <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-sm text-black px-3 py-1 text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                  {currentImageIndex + 1} / {allImages.length}
                 </div>
               </div>
 
-              {/* Flechas de navegación */}
+              {/* Flechas de navegación - Premium Fade In */}
               {allImages.length > 1 && (
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all hover:scale-110"
+                    className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-black p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hidden md:flex"
                     aria-label="Imagen anterior"
                   >
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all hover:scale-110"
+                    className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-black p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hidden md:flex"
                     aria-label="Siguiente imagen"
                   >
-                    <ChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-5 h-5" />
                   </button>
+
+                  {/* Mobile controls (always visible but subtle) */}
+                  <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between md:hidden pointer-events-none">
+                    <button onClick={(e) => { e.stopPropagation(); prevImage() }} className="bg-white/80 p-2 rounded-full shadow-sm pointer-events-auto"><ChevronLeft className="w-4 h-4" /></button>
+                    <button onClick={(e) => { e.stopPropagation(); nextImage() }} className="bg-white/80 p-2 rounded-full shadow-sm pointer-events-auto"><ChevronRight className="w-4 h-4" /></button>
+                  </div>
                 </>
               )}
             </div>
@@ -280,11 +274,10 @@ export default function ProjectDetail() {
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`flex-shrink-0 w-24 h-24 overflow-hidden border-2 transition-all ${
-                      currentImageIndex === index 
-                        ? 'border-black shadow-lg scale-105' 
-                        : 'border-neutral-300 hover:border-neutral-500 opacity-60 hover:opacity-100'
-                    }`}
+                    className={`flex-shrink-0 w-24 h-24 overflow-hidden border-2 transition-all ${currentImageIndex === index
+                      ? 'border-black shadow-lg scale-105'
+                      : 'border-neutral-300 hover:border-neutral-500 opacity-60 hover:opacity-100'
+                      }`}
                   >
                     <img src={img} alt={`Miniatura ${index + 1}`} className="w-full h-full object-cover" />
                   </button>
@@ -298,11 +291,10 @@ export default function ProjectDetail() {
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
-                  className={`transition-all ${
-                    currentImageIndex === index
-                      ? 'w-8 h-2 bg-black'
-                      : 'w-2 h-2 bg-neutral-400 hover:bg-neutral-600 rounded-full'
-                  }`}
+                  className={`transition-all ${currentImageIndex === index
+                    ? 'w-8 h-2 bg-black'
+                    : 'w-2 h-2 bg-neutral-400 hover:bg-neutral-600 rounded-full'
+                    }`}
                   aria-label={`Ir a imagen ${index + 1}`}
                 />
               ))}
@@ -312,7 +304,7 @@ export default function ProjectDetail() {
 
         {/* Lightbox Modal */}
         {lightboxOpen && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
             onClick={() => setLightboxOpen(false)}
           >
@@ -331,13 +323,20 @@ export default function ProjectDetail() {
             </div>
 
             {/* Imagen fullscreen */}
-            <div className="max-h-[90vh] max-w-[90vw] flex items-center justify-center">
-              <img
-                src={allImages[currentImageIndex]}
-                alt={`${project.title} - ${currentImageIndex + 1}`}
-                className="max-h-[90vh] max-w-[90vw] object-contain"
-                onClick={(e) => e.stopPropagation()}
-              />
+            <div className="max-h-[90vh] max-w-[90vw] flex items-center justify-center relative">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={currentImageIndex}
+                  src={allImages[currentImageIndex]}
+                  alt={`${project.title} - ${currentImageIndex + 1}`}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="max-h-[90vh] max-w-[90vw] object-contain"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </AnimatePresence>
             </div>
 
             {/* Navegación lightbox */}
@@ -414,6 +413,6 @@ export default function ProjectDetail() {
       </main>
 
       <Footer />
-    </div>
+    </div >
   );
 }

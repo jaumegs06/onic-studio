@@ -1,21 +1,19 @@
-import dotenv from 'dotenv';
+import './config/env.js'; // MUST BE FIRST
 import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 
-// Load .env file explicitly
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '.env') }); // Load from server/.env
-dotenv.config({ path: path.join(__dirname, '..', '.env') }); // Load from root .env
-
 // Import routes
 import authRoutes from "./routes/auth.js";
 import productsRoutes from "./routes/products.js";
 import uploadRoutes from "./routes/upload.js";
 import contactRoutes from "./routes/contact.js";
+import projectRoutes from "./routes/projects.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function startServer() {
   // Debug: Check if RESEND_API_KEY is loaded
@@ -46,6 +44,7 @@ async function startServer() {
   app.use("/api/products", productsRoutes);
   app.use("/api/upload", uploadRoutes);
   app.use("/api/contact", contactRoutes);
+  app.use("/api/projects", projectRoutes);
 
   // Handle client-side routing - serve index.html for all routes
   // This must be AFTER API routes

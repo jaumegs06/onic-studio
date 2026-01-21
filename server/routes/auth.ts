@@ -21,6 +21,37 @@ router.post('/login', async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Username and password required' });
         }
 
+        // --- MOCK AUTHENTICATION (Fallout for missing Supabase) ---
+        if (!supabaseAdmin) {
+            console.log('⚠️  Supabase not available. Attempting MOCK login.');
+
+            // Default mock credentials
+            const mockUser = process.env.ADMIN_USERNAME || 'admin';
+            const mockPass = process.env.ADMIN_PASSWORD || 'admin'; // Fallback to 'admin' if env missing
+
+            if (username === mockUser && password === mockPass) {
+                console.log('✅ Mock login successful for:', username);
+                const token = generateToken({
+                    userId: 0,
+                    username: username,
+                    role: 'admin'
+                });
+
+                return res.json({
+                    token,
+                    user: {
+                        id: 0,
+                        username: username,
+                        role: 'admin'
+                    }
+                });
+            } else {
+                console.log('❌ Mock login failed. Expected:', mockUser);
+                return res.status(401).json({ error: 'Invalid credentials (MOCK MODE: try admin/admin)' });
+            }
+        }
+        // ---------------------------------------------------------
+
         // Query user from Supabase using admin client to bypass RLS
         const { data: user, error } = await supabaseAdmin!
             .from('users')

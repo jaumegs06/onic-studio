@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Package, LogOut, Menu, X, Mail } from 'lucide-react';
+import { Package, LogOut, Menu, X, Mail, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface DashboardProps {
@@ -18,6 +18,7 @@ export default function Dashboard({ children }: DashboardProps) {
 
     const navItems = [
         { icon: Package, label: 'Productos', path: '/admin/dashboard' },
+        { icon: Layers, label: 'Proyectos', path: '/admin/projects' },
         { icon: Mail, label: 'Mensajes', path: '/admin/messages' },
     ];
 
@@ -34,9 +35,17 @@ export default function Dashboard({ children }: DashboardProps) {
                     >
                         {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </button>
-                    <h1 className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
-                        ONICE
-                    </h1>
+                    <span
+                        className="text-2xl uppercase"
+                        style={{
+                            fontFamily: "'Oswald', sans-serif",
+                            fontWeight: 500,
+                            letterSpacing: "0",
+                            color: "inherit"
+                        }}
+                    >
+                        ONICE STUDIO
+                    </span>
                 </div>
 
                 <button

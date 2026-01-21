@@ -4,6 +4,18 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ChevronDown, Search, X } from "lucide-react";
+import { projectsAPI } from "@/lib/api";
+
+interface Project {
+  id: number;
+  title: string;
+  category: string;
+  location: string;
+  year: string;
+  materials: string;
+  image: string;
+  images: string[];
+}
 
 export default function Portfolio() {
   const [selectedCategory, setSelectedCategory] = useState(() => {
@@ -13,8 +25,25 @@ export default function Portfolio() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const locationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const loadProjects = async () => {
+    try {
+      const data = await projectsAPI.getAll();
+      setProjects(data);
+    } catch (error) {
+      console.error("Failed to load projects", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Save filter to sessionStorage
   useEffect(() => {
@@ -53,89 +82,17 @@ export default function Portfolio() {
 
   const { scrollY } = useScroll();
 
-  const categories = ["Todos", "Residencial", "Hoteles", "Restauración"];
-  const locations = ["Todas", "Mallorca"];
+  const categories = ["Todos", "Hoteles", "Restauración", "Residencial"];
 
-  const projects = [
-    // Hotel Meliá Beach
-    {
-      id: 1,
-      title: "Hotel Meliá Beach",
-      category: "Hoteles",
-      location: "Mallorca",
-      year: "2024",
-      materials: "Techlam, Quarzo",
-      image: "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
-      images: [
-        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8806.jpg",
-        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8811.jpg",
-        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8820.jpg",
-        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8821.jpg",
-        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8827.jpg",
-        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8845 ret.jpg",
-        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8861 ret.jpg",
-        "/images/projects/HOTEL MELIA BEACH - MATERIAL BAÑOS TECHLAM - BARRA QUARZO/_MG_8868 ret.jpg",
-      ]
-    },
-    // Hotel Katmandu
-    {
-      id: 2,
-      title: "Hotel Katmandu",
-      category: "Restauración",
-      location: "Mallorca",
-      year: "2024",
-      materials: "Granito Negro Zimbabwe",
-      image: "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
-      images: [
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8961.jpg",
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8965.jpg",
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8971.jpg",
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8976.jpg",
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8977.jpg",
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8982.jpg",
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8995.jpg",
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_8997.jpg",
-        "/images/projects/HOTEL KATMANDU - BUFFET GRANITO NEGRO ZIMBAWE/_MG_9006.jpg",
-      ]
-    },
-    // Apartamentos Cala Major
-    {
-      id: 3,
-      title: "Apartamentos Cala Major",
-      category: "Residencial",
-      location: "Mallorca",
-      year: "2024",
-      materials: "Techlam",
-      image: "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
-      images: [
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8589.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8593.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8596.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8598.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8603.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8611.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8624.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8626.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8632.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8637.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8639.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8641.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8657.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8662.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8664.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8665.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8669.jpg",
-        "/images/projects/APARTAMENTOS CALA MAJOR - MATERIAL TECHLAM/_MG_8671.jpg",
-      ]
-    },
-  ];
+  // Extract unique locations from projects
+  const locations = ["Todas", ...Array.from(new Set(projects.map(p => p.location))).filter(Boolean)];
 
   const filteredProjects = projects.filter((project) => {
     const matchesCategory = selectedCategory === "Todos" || project.category === selectedCategory;
     const matchesLocation = locationFilter === "Todas" || project.location === locationFilter;
     const matchesSearch = searchTerm === "" ||
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.materials.toLowerCase().includes(searchTerm.toLowerCase());
+      (project.materials && project.materials.toLowerCase().includes(searchTerm.toLowerCase()));
     return matchesCategory && matchesLocation && matchesSearch;
   });
 

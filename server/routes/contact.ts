@@ -131,6 +131,25 @@ router.post('/', async (req, res) => {
  */
 router.get('/messages', async (req, res) => {
     try {
+        if (!supabaseAdmin) {
+            console.log('Serving mock messages (Supabase client inactive)');
+            return res.status(200).json({
+                success: true,
+                data: [
+                    {
+                        id: 'mock_1',
+                        name: 'Usuario de Prueba',
+                        email: 'test@example.com',
+                        phone: '123456789',
+                        projectType: 'Residencial',
+                        message: 'Este es un mensaje de prueba generado porque la base de datos no está conectada.',
+                        timestamp: new Date().toISOString(),
+                        emailSent: false
+                    }
+                ],
+            });
+        }
+
         const { data: messages, error } = await supabaseAdmin!
             .from('contact_messages')
             .select('*')

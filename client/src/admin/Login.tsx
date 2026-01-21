@@ -34,9 +34,17 @@ export default function Login() {
                 className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
             >
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-                        ONIC STUDIO
-                    </h1>
+                    <span
+                        className="text-4xl cursor-default uppercase block mb-2"
+                        style={{
+                            fontFamily: "'Oswald', sans-serif",
+                            fontWeight: 500,
+                            letterSpacing: "0",
+                            color: "inherit"
+                        }}
+                    >
+                        ONICE STUDIO
+                    </span>
                     <p className="text-neutral-600 text-sm uppercase tracking-wider">Panel de Administración</p>
                 </div>
 

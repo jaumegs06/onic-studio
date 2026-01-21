@@ -103,26 +103,41 @@ export interface Database {
                 Row: {
                     id: number
                     title: string
-                    description: string
+                    description: string | null
+                    location: string | null
+                    year: string | null
+                    materials: string | null
                     image: string
+                    images: Json[] | null
                     category: string
                     created_at: string
+                    is_featured: boolean | null
                 }
                 Insert: {
                     id?: number
                     title: string
-                    description: string
-                    image: string
+                    description?: string | null
+                    location?: string | null
+                    year?: string | null
+                    materials?: string | null
+                    image?: string | null
+                    images?: Json[] | null
                     category: string
                     created_at?: string
+                    is_featured?: boolean | null
                 }
                 Update: {
                     id?: number
                     title?: string
-                    description?: string
-                    image?: string
+                    description?: string | null
+                    location?: string | null
+                    year?: string | null
+                    materials?: string | null
+                    image?: string | null
+                    images?: Json[] | null
                     category?: string
                     created_at?: string
+                    is_featured?: boolean | null
                 }
             }
             services: {

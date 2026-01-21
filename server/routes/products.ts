@@ -17,6 +17,7 @@ interface Product {
 
 // Get all products (public)
 router.get('/', async (req: Request, res: Response) => {
+    console.log('🔍 GET /api/products request received');
     try {
         if (!supabase) {
             console.log('Serving mock products (Supabase client inactive)');
@@ -28,12 +29,17 @@ router.get('/', async (req: Request, res: Response) => {
             .select('*')
             .order('id', { ascending: true });
 
+        console.log(`✅ Fetched ${products?.length || 0} products from DB`);
+
         if (error) throw error;
 
         res.json(products || []);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching products:', error);
-        res.status(500).json({ error: 'Failed to fetch products' });
+        res.status(500).json({
+            error: error.message || 'Failed to fetch products',
+            details: error
+        });
     }
 });
 
