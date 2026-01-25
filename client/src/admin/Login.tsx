@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { useLocation } from 'wouter';
-import { authAPI } from '@/lib/api';
+import { supabase } from '@/lib/api';
 import { motion } from 'framer-motion';
 
 export default function Login() {
@@ -16,11 +16,17 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const data = await authAPI.login(username, password);
-            localStorage.setItem('adminToken', data.token);
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: username,
+                password: password,
+            });
+
+            if (error) throw error;
+
+            // Session is automatically handled by Supabase client
             setLocation('/admin/dashboard');
         } catch (err: any) {
-            setError(err.response?.data?.error || 'Error al iniciar sesión');
+            setError(err.message || 'Error al iniciar sesión');
         } finally {
             setLoading(false);
         }
