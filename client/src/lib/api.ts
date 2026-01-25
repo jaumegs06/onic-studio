@@ -147,6 +147,48 @@ export const contactAPI = {
     }
 };
 
+// Upload API
+export const uploadAPI = {
+    single: async (file: File) => {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('images')
+            .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('images')
+            .getPublicUrl(filePath);
+
+        return { path: publicUrl };
+    },
+    multiple: async (files: File[]) => {
+        const uploadPromises = Array.from(files).map(async (file) => {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('images')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('images')
+                .getPublicUrl(filePath);
+
+            return publicUrl;
+        });
+
+        return Promise.all(uploadPromises);
+    }
+};
+
 // Auth API is handled directly by supabase.auth
 export const authAPI = {
     // Keep for backward compatibility if needed, but Login.tsx uses supabase directly
