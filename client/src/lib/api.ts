@@ -109,19 +109,13 @@ export const contactAPI = {
 export const projectsAPI = {
     getAll: async () => {
         // Try Supabase first, fall back to API if not available
-        console.log('[Debug] Supabase client available:', !!supabase);
         if (supabase) {
-            console.log('[Debug] Using Supabase');
             const { data, error } = await supabase
                 .from('projects')
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            if (error) {
-                console.error('[Debug] Supabase error:', error);
-                throw error;
-            }
-            console.log('[Debug] Supabase returned', data?.length || 0, 'projects');
+            if (error) throw error;
             return data || [];
         } else {
             // Fallback to backend API
