@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { supabase } from './supabase';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -107,12 +108,23 @@ export const contactAPI = {
 // Projects API
 export const projectsAPI = {
     getAll: async () => {
-        const response = await api.get('/projects');
-        return response.data;
+        const { data, error } = await supabase
+            .from('projects')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
     },
     getById: async (id: number) => {
-        const response = await api.get(`/projects/${id}`);
-        return response.data;
+        const { data, error } = await supabase
+            .from('projects')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
+        return data;
     },
     create: async (data: any) => {
         const response = await api.post('/projects', data);
