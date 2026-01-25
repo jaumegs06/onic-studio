@@ -108,23 +108,37 @@ export const contactAPI = {
 // Projects API
 export const projectsAPI = {
     getAll: async () => {
-        const { data, error } = await supabase
-            .from('projects')
-            .select('*')
-            .order('created_at', { ascending: false });
+        // Try Supabase first, fall back to API if not available
+        if (supabase) {
+            const { data, error } = await supabase
+                .from('projects')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-        if (error) throw error;
-        return data || [];
+            if (error) throw error;
+            return data || [];
+        } else {
+            // Fallback to backend API
+            const response = await api.get('/projects');
+            return response.data;
+        }
     },
     getById: async (id: number) => {
-        const { data, error } = await supabase
-            .from('projects')
-            .select('*')
-            .eq('id', id)
-            .single();
+        // Try Supabase first, fall back to API if not available
+        if (supabase) {
+            const { data, error } = await supabase
+                .from('projects')
+                .select('*')
+                .eq('id', id)
+                .single();
 
-        if (error) throw error;
-        return data;
+            if (error) throw error;
+            return data;
+        } else {
+            // Fallback to backend API
+            const response = await api.get(`/projects/${id}`);
+            return response.data;
+        }
     },
     create: async (data: any) => {
         const response = await api.post('/projects', data);
