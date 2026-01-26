@@ -7,26 +7,75 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { toast } from 'sonner';
-import { Reorder, useDragControls } from 'framer-motion';
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragOverlay,
+    defaultDropAnimationSideEffects,
+    DragStartEvent,
+    DragEndEvent,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable,
+    rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const CATEGORIES = ['Hoteles', 'Restauración', 'Residencial'];
 
-const DraggableImage = ({ item, index, onRemove, setMain }: { item: { url: string, file?: File }, index: number, onRemove: () => void, setMain: () => void }) => {
-    const controls = useDragControls();
+interface ImageItem {
+    url: string;
+    file?: File;
+    id: string; // Add ID for dnd-kit
+}
+
+const SortableImage = ({
+    item,
+    index,
+    onRemove,
+    setMain
+}: {
+    item: ImageItem,
+    index: number,
+    onRemove: () => void,
+    setMain: () => void
+}) => {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging
+    } = useSortable({ id: item.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 50 : 'auto',
+        opacity: isDragging ? 0.3 : 1
+    };
 
     return (
-        <Reorder.Item
-            value={item}
-            dragListener={false}
-            dragControls={controls}
-            className="relative aspect-square bg-neutral-100 rounded-lg overflow-hidden border border-neutral-200 group"
+        <div
+            ref={setNodeRef}
+            style={style}
+            className="relative aspect-square bg-neutral-100 rounded-lg overflow-hidden border border-neutral-200 group touch-none"
         >
             <img src={item.url} alt="" className="w-full h-full object-cover" />
 
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
                 <div
-                    className="cursor-move p-1 text-white hover:bg-white/20 rounded"
-                    onPointerDown={(e) => controls.start(e)}
+                    className="cursor-grab active:cursor-grabbing p-1 text-white hover:bg-white/20 rounded"
+                    {...attributes}
+                    {...listeners}
                 >
                     <GripVertical className="w-6 h-6" />
                 </div>
@@ -51,11 +100,23 @@ const DraggableImage = ({ item, index, onRemove, setMain }: { item: { url: strin
             </div>
 
             {index === 0 && (
-                <div className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded shadow-sm">
+                <div className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded shadow-sm z-10">
                     Portada
                 </div>
             )}
-        </Reorder.Item>
+        </div>
+    );
+};
+
+// Overlay component for dragging visuals
+const ImageOverlay = ({ item }: { item: ImageItem }) => {
+    return (
+        <div className="relative aspect-square bg-neutral-100 rounded-lg overflow-hidden border border-neutral-200 shadow-xl cursor-grabbing">
+            <img src={item.url} alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                <GripVertical className="w-8 h-8 text-white" />
+            </div>
+        </div>
     );
 };
 
@@ -78,11 +139,24 @@ export default function ProjectEditor() {
         materials: '',
         is_featured: false
     });
-    const [images, setImages] = useState<{ url: string, file?: File }[]>([]);
+    const [images, setImages] = useState<ImageItem[]>([]);
+    const [activeId, setActiveId] = useState<string | null>(null);
     const [availableProducts, setAvailableProducts] = useState<any[]>([]);
     const [openMaterials, setOpenMaterials] = useState(false);
 
     const id = params?.id;
+
+    // Sensors for drag and drop
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8, // Require movement of 8px to start drag to avoid accidental clicks
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
     useEffect(() => {
         if (id) {
@@ -114,10 +188,15 @@ export default function ProjectEditor() {
                 materials: project.materials || '',
                 is_featured: project.is_featured || false
             });
+
+            // Map images to include unique IDs for dnd-kit
             if (project.images && project.images.length > 0) {
-                setImages(project.images.map((url: string) => ({ url })));
+                setImages(project.images.map((url: string) => ({
+                    url,
+                    id: url // Use URL as ID if unique, or handle duplicates better if needed
+                })));
             } else if (project.image) {
-                setImages([{ url: project.image }]);
+                setImages([{ url: project.image, id: project.image }]);
             }
         } catch (error) {
             console.error(error);
@@ -138,7 +217,10 @@ export default function ProjectEditor() {
 
             // Assuming API returns { urls: string[] } or string[]
             const newUrls: string[] = Array.isArray(data) ? data : (data.urls || []);
-            const newImages = newUrls.map(url => ({ url }));
+            const newImages: ImageItem[] = newUrls.map(url => ({
+                url,
+                id: url // using URL as ID
+            }));
 
             setImages(prev => [...prev, ...newImages]);
 
@@ -152,8 +234,23 @@ export default function ProjectEditor() {
         }
     };
 
-    const handleReorder = (newOrder: { url: string, file?: File }[]) => {
-        setImages(newOrder);
+    const handleDragStart = (event: DragStartEvent) => {
+        setActiveId(event.active.id as string);
+    };
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+
+        if (over && active.id !== over.id) {
+            setImages((items) => {
+                const oldIndex = items.findIndex((item) => item.id === active.id);
+                const newIndex = items.findIndex((item) => item.id === over.id);
+
+                return arrayMove(items, oldIndex, newIndex);
+            });
+        }
+
+        setActiveId(null);
     };
 
     const removeImage = (indexToRemove: number) => {
@@ -209,6 +306,8 @@ export default function ProjectEditor() {
             </div>
         );
     }
+
+    const activeItem = activeId ? images.find(item => item.id === activeId) : null;
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -407,29 +506,40 @@ export default function ProjectEditor() {
                             <p>Haz clic para subir imágenes</p>
                         </div>
                     ) : (
-                        <div>
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                        >
                             <p className="text-sm text-neutral-500 mb-4 flex items-center gap-1">
                                 <GripVertical className="w-4 h-4" />
                                 Arrastra las imágenes para reordenarlas. La primera será la portada.
                             </p>
-                            <Reorder.Group
-                                axis="y"
-                                values={images}
-                                onReorder={handleReorder}
-                                className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"
-                                as="div" // Render as div instead of ul for grid support
+
+                            <SortableContext
+                                items={images.map(img => img.id)}
+                                strategy={rectSortingStrategy}
                             >
-                                {images.map((item, index) => (
-                                    <DraggableImage
-                                        key={item.url}
-                                        item={item}
-                                        index={index}
-                                        onRemove={() => removeImage(index)}
-                                        setMain={() => setMainImage(index)}
-                                    />
-                                ))}
-                            </Reorder.Group>
-                        </div>
+                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    {images.map((item, index) => (
+                                        <SortableImage
+                                            key={item.id} // use id as key
+                                            item={item}
+                                            index={index}
+                                            onRemove={() => removeImage(index)}
+                                            setMain={() => setMainImage(index)}
+                                        />
+                                    ))}
+                                </div>
+                            </SortableContext>
+
+                            <DragOverlay adjustScale={true}>
+                                {activeItem ? (
+                                    <ImageOverlay item={activeItem} />
+                                ) : null}
+                            </DragOverlay>
+                        </DndContext>
                     )}
                 </div>
 
