@@ -10,7 +10,7 @@ interface Product {
     color: string;
     finish: string;
     image: string;
-    bestSeller?: boolean;
+    best_seller?: boolean;
 }
 
 interface ProductFormProps {
@@ -25,7 +25,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
         color: product?.color || 'Blanco',
         finish: product?.finish || 'Pulido',
         image: product?.image || '',
-        bestSeller: product?.bestSeller || false,
+        best_seller: product?.best_seller || false,
     });
     const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -213,8 +213,8 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                         <input
                             type="checkbox"
                             id="bestSeller"
-                            checked={formData.bestSeller}
-                            onChange={(e) => setFormData({ ...formData, bestSeller: e.target.checked })}
+                            checked={formData.best_seller}
+                            onChange={(e) => setFormData({ ...formData, best_seller: e.target.checked })}
                             className="w-4 h-4 rounded border-neutral-300"
                         />
                         <label htmlFor="bestSeller" className="text-sm font-medium text-neutral-700">
