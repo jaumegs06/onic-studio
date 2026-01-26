@@ -170,7 +170,7 @@ export default function ProjectDetail() {
                         {index > 0 && ", "}
                         {product ? (
                           <Link href={`/productos/${product.id}`}>
-                            <a className="hover:underline hover:text-black transition-colors">
+                            <a className="underline decoration-1 underline-offset-2 text-neutral-700 hover:text-black hover:decoration-2 transition-all">
                               {name}
                             </a>
                           </Link>

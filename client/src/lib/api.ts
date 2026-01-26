@@ -1,131 +1,202 @@
-import axios from 'axios';
+import { createClient } from '@supabase/supabase-js';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const api = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Missing Supabase credentials');
+}
 
-// Add token to requests if available
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('adminToken');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
-
-// Handle 401 errors (redirect to login)
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem('adminToken');
-            window.location.href = '/admin/login';
-        }
-        return Promise.reject(error);
-    }
-);
-
-// Auth API
-export const authAPI = {
-    login: async (username: string, password: string) => {
-        const response = await api.post('/auth/login', { username, password });
-        return response.data;
-    },
-    me: async () => {
-        const response = await api.get('/auth/me');
-        return response.data;
-    },
-};
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Products API
 export const productsAPI = {
     getAll: async () => {
-        const response = await api.get('/products');
-        return response.data;
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
     },
     getById: async (id: number) => {
-        const response = await api.get(`/products/${id}`);
-        return response.data;
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
+        return data;
     },
-    create: async (data: any) => {
-        const response = await api.post('/products', data);
-        return response.data;
+    create: async (product: any) => {
+        // Prepare data (remove undefined)
+        const cleanData = Object.fromEntries(
+            Object.entries(product).filter(([_, v]) => v != null)
+        );
+
+        const { data, error } = await supabase
+            .from('products')
+            .insert([cleanData])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
     },
-    update: async (id: number, data: any) => {
-        const response = await api.put(`/products/${id}`, data);
-        return response.data;
+    update: async (id: number, product: any) => {
+        const { data, error } = await supabase
+            .from('products')
+            .update(product)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
     },
     delete: async (id: number) => {
-        const response = await api.delete(`/products/${id}`);
-        return response.data;
-    },
-};
+        const { error } = await supabase
+            .from('products')
+            .delete()
+            .eq('id', id);
 
-// Upload API
-export const uploadAPI = {
-    single: async (file: File) => {
-        const formData = new FormData();
-        formData.append('image', file);
-        const response = await api.post('/upload/single', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        return response.data;
-    },
-    multiple: async (files: File[]) => {
-        const formData = new FormData();
-        files.forEach((file) => formData.append('images', file));
-        const response = await api.post('/upload/multiple', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        return response.data;
-    },
-};
-
-// Contact API
-export const contactAPI = {
-    submit: async (data: {
-        name: string;
-        email: string;
-        phone?: string;
-        projectType: string;
-        message: string;
-    }) => {
-        const response = await api.post('/contact', data);
-        return response.data;
-    },
-    getMessages: async () => {
-        const response = await api.get('/contact/messages');
-        return response.data;
+        if (error) throw error;
+        return { success: true };
     },
 };
 
 // Projects API
 export const projectsAPI = {
     getAll: async () => {
-        const response = await api.get('/projects');
-        return response.data;
+        const { data, error } = await supabase
+            .from('projects')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
     },
     getById: async (id: number) => {
-        const response = await api.get(`/projects/${id}`);
-        return response.data;
+        const { data, error } = await supabase
+            .from('projects')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
+        return data;
     },
-    create: async (data: any) => {
-        const response = await api.post('/projects', data);
-        return response.data;
+    create: async (project: any) => {
+        const { data, error } = await supabase
+            .from('projects')
+            .insert([project])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
     },
-    update: async (id: number, data: any) => {
-        const response = await api.put(`/projects/${id}`, data);
-        return response.data;
+    update: async (id: number, project: any) => {
+        const { data, error } = await supabase
+            .from('projects')
+            .update(project)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
     },
     delete: async (id: number) => {
-        const response = await api.delete(`/projects/${id}`);
-        return response.data;
+        const { error } = await supabase
+            .from('projects')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+        return { success: true };
     },
 };
 
-export default api;
+// Contact API
+export const contactAPI = {
+    submit: async (formData: any) => {
+        const { data, error } = await supabase
+            .from('contact_messages')
+            .insert([{
+                ...formData,
+                id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                email_sent: false
+            }])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+    getAll: async () => {
+        const { data, error } = await supabase
+            .from('contact_messages')
+            .select('*')
+            .order('timestamp', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+    }
+};
+
+// Upload API
+export const uploadAPI = {
+    single: async (file: File) => {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('images')
+            .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('images')
+            .getPublicUrl(filePath);
+
+        return { path: publicUrl };
+    },
+    multiple: async (files: File[]) => {
+        const uploadPromises = Array.from(files).map(async (file) => {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('images')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('images')
+                .getPublicUrl(filePath);
+
+            return publicUrl;
+        });
+
+        return Promise.all(uploadPromises);
+    }
+};
+
+// Auth API is handled directly by supabase.auth
+export const authAPI = {
+    // Keep for backward compatibility if needed, but Login.tsx uses supabase directly
+    getUser: async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        return user;
+    },
+    logout: async () => {
+        await supabase.auth.signOut();
+    }
+};
