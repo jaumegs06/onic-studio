@@ -3,9 +3,21 @@ import { Plus, Edit, Trash2, Search } from 'lucide-react';
 import { productsAPI } from '@/lib/api';
 import ProductForm from './ProductForm';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface Product {
     id: number;
+    name: string;
+    category: string;
+    color: string;
+    finish: string;
+    image: string;
+    best_seller?: boolean;
+}
+
+interface ProductWithOptionalId {
+    id?: number;
     name: string;
     category: string;
     color: string;
@@ -20,6 +32,8 @@ export default function ProductsList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [showForm, setShowForm] = useState(false);
+    const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; product: Product | null }>({ open: false, product: null });
+    const [deletingId, setDeletingId] = useState<number | null>(null);
 
     const loadProducts = async () => {
         try {
@@ -27,6 +41,7 @@ export default function ProductsList() {
             setProducts(data);
         } catch (error) {
             console.error('Error loading products:', error);
+            toast.error('Error al cargar los materiales');
         } finally {
             setLoading(false);
         }
@@ -36,15 +51,31 @@ export default function ProductsList() {
         loadProducts();
     }, []);
 
-    const handleDelete = async (id: number) => {
-        if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) return;
+    const handleDeleteClick = (product: Product) => {
+        setDeleteConfirm({ open: true, product });
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!deleteConfirm.product) return;
+
+        const productToDelete = deleteConfirm.product;
+        setDeletingId(productToDelete.id);
+
+        // Optimistic update: remove immediately from UI
+        setProducts(prev => prev.filter(p => p.id !== productToDelete.id));
+        toast.loading('Eliminando material...', { id: 'delete-product' });
 
         try {
-            await productsAPI.delete(id);
-            await loadProducts();
+            await productsAPI.delete(productToDelete.id);
+            toast.success('Material eliminado correctamente', { id: 'delete-product' });
         } catch (error) {
             console.error('Error deleting product:', error);
-            alert('Error al eliminar el producto');
+            // Rollback: restore product on error
+            setProducts(prev => [...prev, productToDelete].sort((a, b) => a.id - b.id));
+            toast.error('Error al eliminar el material', { id: 'delete-product' });
+        } finally {
+            setDeletingId(null);
+            setDeleteConfirm({ open: false, product: null });
         }
     };
 
@@ -58,10 +89,24 @@ export default function ProductsList() {
         setShowForm(true);
     };
 
-    const handleFormClose = () => {
+    const handleFormClose = (updatedProduct?: ProductWithOptionalId) => {
         setShowForm(false);
         setEditingProduct(null);
-        loadProducts();
+
+        // Optimistic update: update single product instead of reloading all
+        if (updatedProduct && updatedProduct.id) {
+            const productWithId: Product = updatedProduct as Product;
+            setProducts(prev => {
+                const existing = prev.find(p => p.id === productWithId.id);
+                if (existing) {
+                    // Update existing
+                    return prev.map(p => p.id === productWithId.id ? productWithId : p);
+                } else {
+                    // Add new
+                    return [...prev, productWithId].sort((a, b) => a.id - b.id);
+                }
+            });
+        }
     };
 
     const filteredProducts = products.filter((product) =>
@@ -156,11 +201,12 @@ export default function ProductsList() {
                                         Editar
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(product.id)}
-                                        className="inline-flex items-center gap-1 px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors"
+                                        onClick={() => handleDeleteClick(product)}
+                                        disabled={deletingId === product.id}
+                                        className="inline-flex items-center gap-1 px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Trash2 className="w-4 h-4" />
-                                        Eliminar
+                                        {deletingId === product.id ? 'Eliminando...' : 'Eliminar'}
                                     </button>
                                 </td>
                             </tr>
@@ -174,6 +220,18 @@ export default function ProductsList() {
                     </div>
                 )}
             </div>
+
+            {/* Confirm Delete Dialog */}
+            <ConfirmDialog
+                open={deleteConfirm.open}
+                title="Eliminar Material"
+                message={`¿Estás seguro de que quieres eliminar "${deleteConfirm.product?.name}"? Esta acción no se puede deshacer.`}
+                confirmText="Eliminar"
+                cancelText="Cancelar"
+                variant="danger"
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setDeleteConfirm({ open: false, product: null })}
+            />
 
             {/* Product Form Modal */}
             <AnimatePresence>
