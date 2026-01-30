@@ -97,10 +97,27 @@ export default function ProductDetail() {
       <Navigation />
 
       <main className="bg-stone-200 min-h-screen pt-28">
-        {/* Product Detail */}
-        <section className="py-16">
+        {/* Breadcrumb */}
+        <section className="py-3 bg-white">
           <div className="container-full">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div className="flex gap-2 text-xs uppercase tracking-widest text-neutral-500">
+              <Link href="/">
+                <a className="hover:text-black transition-colors">Inicio</a>
+              </Link>
+              <span>/</span>
+              <Link href="/productos">
+                <a className="hover:text-black transition-colors">Materiales</a>
+              </Link>
+              <span>/</span>
+              <span className="text-black">{product.name}</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Product Detail */}
+        <section className="py-8">
+          <div className="container-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Image */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -121,7 +138,7 @@ export default function ProductDetail() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="space-y-8"
+                className="space-y-5"
               >
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-neutral-500 mb-3">
