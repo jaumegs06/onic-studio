@@ -27,7 +27,7 @@ router.get('/', async (req: Request, res: Response) => {
         const { data: products, error } = await supabase
             .from('products')
             .select('*')
-            .order('id', { ascending: true });
+            .order('name', { ascending: true });
 
         console.log(`✅ Fetched ${products?.length || 0} products from DB`);
 
@@ -85,7 +85,7 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
                 color: req.body.color,
                 finish: req.body.finish,
                 image: req.body.image,
-                best_seller: req.body.bestSeller || false
+                best_seller: req.body.best_seller || false
             }])
             .select()
             .single();
@@ -110,7 +110,7 @@ router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
                 color: req.body.color,
                 finish: req.body.finish,
                 image: req.body.image,
-                best_seller: req.body.bestSeller
+                best_seller: req.body.best_seller
             })
             .eq('id', parseInt(req.params.id))
             .select()
