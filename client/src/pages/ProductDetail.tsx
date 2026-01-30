@@ -97,7 +97,7 @@ export default function ProductDetail() {
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Breadcrumb */}
-        <section className="py-6 bg-white border-b border-neutral-200">
+        <section className="py-6 bg-white">
           <div className="container-full">
             <div className="flex gap-2 text-xs uppercase tracking-widest text-neutral-500">
               <Link href="/">
