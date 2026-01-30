@@ -210,20 +210,14 @@ export default function ProductDetail() {
                 {/* CTA Buttons - MEJORADOS */}
                 <div className="space-y-3 pt-6">
                   <Link href="/contacto">
-                    <a className="group relative flex items-center justify-center gap-3 w-full px-8 py-4 bg-black text-white overflow-hidden transition-all hover:shadow-xl">
-                      <Mail className="w-5 h-5 relative z-10" />
+                    <a className="group flex items-center justify-center gap-3 w-full px-8 py-4 border-2 border-black bg-transparent hover:bg-black text-black hover:text-white transition-all">
+                      <Mail className="w-5 h-5" />
                       <span
-                        className="relative z-10 uppercase tracking-[0.15em] text-sm font-medium"
+                        className="uppercase tracking-[0.15em] text-sm font-medium"
                         style={{ fontFamily: "'Montserrat', sans-serif" }}
                       >
                         Solicitar Información
                       </span>
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-slate-700 to-slate-900"
-                        initial={{ x: "-100%" }}
-                        whileHover={{ x: 0 }}
-                        transition={{ duration: 0.3 }}
-                      />
                     </a>
                   </Link>
 
