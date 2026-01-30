@@ -28,7 +28,7 @@ const CATEGORY_DATA = {
     ],
     applications: ["Encimeras", "Pavimentos", "Fachadas"]
   },
-  Marmol: {
+  Mármol: {
     sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
     finishes: ["Pulido", "Natural", "Apomazado", "Arenado", "Envejecido", "Abujardado", "Abujardado y Cepillado"],
     applications: ["Encimeras", "Baños", "Pavimentos", "Fachadas"],
@@ -111,7 +111,24 @@ export default function ProductDetail() {
     );
   }
 
-  const categoryData = CATEGORY_DATA[product.category as keyof typeof CATEGORY_DATA];
+  // Robust category lookup
+  const categoryName = product.category.trim();
+  let categoryData = CATEGORY_DATA[categoryName as keyof typeof CATEGORY_DATA];
+
+  // DEBUG LOGS
+  console.log('--- PRODUCT DETAIL DEBUG ---');
+  console.log('Product Category (Raw):', `"${product.category}"`);
+  console.log('Product Category (Trimmed):', `"${categoryName}"`);
+  console.log('Available Keys:', Object.keys(CATEGORY_DATA));
+  console.log('Direct Lookup Result:', categoryData);
+
+  // Fallback: Try case-insensitive match if direct lookup fails
+  if (!categoryData) {
+    const matchingKey = Object.keys(CATEGORY_DATA).find(k => k.toLowerCase() === categoryName.toLowerCase());
+    if (matchingKey) {
+      categoryData = CATEGORY_DATA[matchingKey as keyof typeof CATEGORY_DATA];
+    }
+  }
   const availableFinishes = categoryData?.finishes || [];
   const hasExtraFinishes = product.category === "Granito" &&
     CATEGORY_DATA.Granito.graniteWithExtraFinishes.includes(product.name);
