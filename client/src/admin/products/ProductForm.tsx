@@ -216,17 +216,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                                     </p>
                                 </div>
 
-                                {/* Direct URL input */}
-                                <div>
-                                    <p className="text-xs text-neutral-600 mb-1">O pega la URL de la imagen:</p>
-                                    <input
-                                        type="text"
-                                        value={formData.image}
-                                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                        placeholder="https://ejemplo.com/imagen.jpg"
-                                        className="w-full px-3 py-2 text-sm border border-neutral-300 rounded focus:outline-none focus:border-black transition-colors"
-                                    />
-                                </div>
+
                             </div>
                         </div>
                     </div>
