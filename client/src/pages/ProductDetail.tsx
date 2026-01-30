@@ -19,7 +19,7 @@ interface Product {
 // Category-specific data
 const CATEGORY_DATA = {
   Granito: {
-    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm", "Tabla"],
     finishes: ["Pulido", "Apomazado", "Leather/Vintage"],
     extraFinishes: ["Bruto", "Flameado", "Granallado"],
     graniteWithExtraFinishes: [
@@ -29,18 +29,18 @@ const CATEGORY_DATA = {
     applications: ["Encimeras", "Pavimentos", "Fachadas"]
   },
   Mármol: {
-    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm", "Tabla"],
     finishes: ["Pulido", "Natural", "Apomazado", "Arenado", "Envejecido", "Abujardado", "Abujardado y Cepillado"],
     applications: ["Encimeras", "Baños", "Pavimentos", "Fachadas"],
     hasOpusRomano: true // For travertino materials
   },
   Caliza: {
-    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm", "Tabla"],
     finishes: ["Pulido", "Natural", "Apomazado", "Arenado", "Envejecido", "Abujardado", "Abujardado y Cepillado"],
     applications: ["Encimeras", "Baños", "Pavimentos", "Fachadas"]
   },
   Cuarcita: {
-    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm", "Tabla"],
     finishes: ["Pulido", "Apomazado", "Leather/Vintage"],
     applications: ["Encimeras", "Pavimentos", "Fachadas"]
   }
@@ -224,20 +224,10 @@ export default function ProductDetail() {
                         </button>
                       ))}
                     </div>
-                    <div className="mt-3">
-                      <label className="flex items-center gap-2 cursor-pointer w-fit">
-                        <input
-                          type="checkbox"
-                          checked={showTabla}
-                          onChange={(e) => setShowTabla(e.target.checked)}
-                          className="w-4 h-4"
-                        />
-                        <span className="text-sm">Tabla</span>
-                      </label>
-                    </div>
+
 
                     {/* Opus Romano for Travertino */}
-                    {product.category === "Marmol" && product.name.toLowerCase().includes("travertino") && (
+                    {product.category === "Mármol" && product.name.toLowerCase().includes("travertino") && (
                       <p className="mt-2 text-sm text-neutral-600">
                         → Los Mármoles que sean TRAVERTINO .... Añadir en tamaño disponible "OPUS ROMANO"
                       </p>
@@ -332,45 +322,47 @@ export default function ProductDetail() {
         </section>
 
         {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <section className="py-16 bg-white border-t border-neutral-200">
-            <div className="container-full">
-              <h2
-                className="text-4xl mb-12"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
-                Materiales Similares
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                {relatedProducts.map((relatedProduct) => (
-                  <Link key={relatedProduct.id} href={`/productos/${relatedProduct.id}`}>
-                    <a
-                      className="group"
-                      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                    >
-                      <div className="aspect-[3/4] overflow-hidden mb-3 bg-white shadow-md">
-                        <img
-                          src={relatedProduct.image}
-                          alt={relatedProduct.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-                      <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">
-                        {relatedProduct.category}
-                      </p>
-                      <h3 className="text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
-                        {relatedProduct.name}
-                      </h3>
-                    </a>
-                  </Link>
-                ))}
+        {
+          relatedProducts.length > 0 && (
+            <section className="py-16 bg-white border-t border-neutral-200">
+              <div className="container-full">
+                <h2
+                  className="text-4xl mb-12"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  Materiales Similares
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                  {relatedProducts.map((relatedProduct) => (
+                    <Link key={relatedProduct.id} href={`/productos/${relatedProduct.id}`}>
+                      <a
+                        className="group"
+                        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                      >
+                        <div className="aspect-[3/4] overflow-hidden mb-3 bg-white shadow-md">
+                          <img
+                            src={relatedProduct.image}
+                            alt={relatedProduct.name}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                        <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">
+                          {relatedProduct.category}
+                        </p>
+                        <h3 className="text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
+                          {relatedProduct.name}
+                        </h3>
+                      </a>
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          </section>
-        )}
-      </main>
+            </section>
+          )
+        }
+      </main >
 
       <Footer />
-    </motion.div>
+    </motion.div >
   );
 }
