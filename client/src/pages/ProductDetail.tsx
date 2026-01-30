@@ -97,23 +97,6 @@ export default function ProductDetail() {
       <Navigation />
 
       <main className="bg-stone-200 min-h-screen pt-28">
-        {/* Breadcrumb */}
-        <section className="py-6 bg-white">
-          <div className="container-full">
-            <div className="flex gap-2 text-xs uppercase tracking-widest text-neutral-500">
-              <Link href="/">
-                <a className="hover:text-black transition-colors">Inicio</a>
-              </Link>
-              <span>/</span>
-              <Link href="/productos">
-                <a className="hover:text-black transition-colors">Materiales</a>
-              </Link>
-              <span>/</span>
-              <span className="text-black">{product.name}</span>
-            </div>
-          </div>
-        </section>
-
         {/* Product Detail */}
         <section className="py-16">
           <div className="container-full">
