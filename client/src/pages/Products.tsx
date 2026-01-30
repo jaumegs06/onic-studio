@@ -13,7 +13,7 @@ interface Product {
   color: string;
   finish: string;
   image: string;
-  bestSeller?: boolean;
+  best_seller?: boolean;
 }
 
 export default function Products() {
@@ -120,12 +120,9 @@ export default function Products() {
   const colors = ["Todos", "Blanco", "Negro", "Beige", "Rojo", "Rosa", "Verde", "Azul", "Marrón"];
   const finishes = ["Todos", "Pulido", "Apomazado", "Vintage/Leather", "Bruto", "Flameado", "Granallado"];
 
-  // IDs de los productos Best Sellers
-  const bestSellerIds = [76, 35, 41, 43, 45, 77, 57, 13];
-
   const filteredProducts = (products || []).filter((product) => {
     const matchesCategory = selectedCategory === "Best Sellers"
-      ? bestSellerIds.includes(product.id)
+      ? product.best_seller === true
       : selectedCategory === "All"
         ? true
         : product.category === selectedCategory;
