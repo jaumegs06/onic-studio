@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRoute, Link } from "wouter";
 import { motion } from "framer-motion";
-// Updated: Border removed from breadcrumb
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { ArrowLeft, Mail, Package } from "lucide-react";
+import { Mail, Package } from "lucide-react";
 import { productsAPI } from "@/lib/api";
 
 interface Product {
@@ -17,6 +16,31 @@ interface Product {
   best_seller?: boolean;
 }
 
+// Category-specific data
+const CATEGORY_DATA = {
+  Granito: {
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
+    finishes: ["Pulido", "Apomazado", "Leather/Vintage"],
+    extraFinishes: ["Bruto", "Flameado", "Granallado"],
+    graniteWithExtraFinishes: [
+      "Angola Black", "Azul noche", "Labrador oscuro", "Negro TEzal",
+      "Negro zimbabwe", "Rojo Balmoral", "Rosa Porriño", "Rosavel", "Blanco cristal"
+    ],
+    applications: ["Encimeras", "Pavimentos", "Fachadas"]
+  },
+  Marmol: {
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
+    finishes: ["Pulido", "Natural", "Apomazado", "Arenado", "Envejecido", "Abujardado", "Abujardado y Cepillado"],
+    applications: ["Encimeras", "Baños", "Pavimentos", "Fachadas"],
+    hasOpusRomano: true // For travertino materials
+  },
+  Caliza: {
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
+    finishes: ["Pulido", "Natural", "Apomazado", "Arenado", "Envejecido", "Abujardado", "Abujardado y Cepillado"],
+    applications: ["Encimeras", "Baños", "Pavimentos", "Fachadas"]
+  }
+};
+
 export default function ProductDetail() {
   const [, params] = useRoute("/productos/:id");
   const productId = params?.id ? parseInt(params.id) : null;
@@ -24,6 +48,8 @@ export default function ProductDetail() {
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [showTabla, setShowTabla] = useState(false);
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -54,45 +80,42 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Navigation />
-        <main className="bg-stone-200 min-h-screen pt-28 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-neutral-600">Cargando...</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-stone-200 flex items-center justify-center"
+      >
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-neutral-600">Cargando...</p>
+        </div>
+      </motion.div>
     );
   }
 
   if (!product) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Navigation />
-        <main className="bg-stone-200 min-h-screen pt-28 flex items-center justify-center">
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl mb-4">Material no encontrado</h1>
-            <Link href="/productos">
-              <a className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white hover:bg-neutral-800 transition-colors">
-                <ArrowLeft className="w-4 h-4" />
-                Volver a Materiales
-              </a>
-            </Link>
-          </div>
-        </main>
-        <Footer />
+      <div className="min-h-screen bg-stone-200 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Material no encontrado</h2>
+          <Link href="/productos">
+            <a className="text-black underline">Volver a Materiales</a>
+          </Link>
+        </div>
       </div>
     );
   }
+
+  const categoryData = CATEGORY_DATA[product.category as keyof typeof CATEGORY_DATA];
+  const availableFinishes = categoryData?.finishes || [];
+  const hasExtraFinishes = product.category === "Granito" &&
+    CATEGORY_DATA.Granito.graniteWithExtraFinishes.includes(product.name);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col"
     >
       <Navigation />
 
@@ -115,16 +138,16 @@ export default function ProductDetail() {
         </section>
 
         {/* Product Detail */}
-        <section className="py-8">
+        <section className="py-12">
           <div className="container-full">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {/* Image */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="aspect-[4/5] overflow-hidden bg-white shadow-xl">
+                <div className="aspect-square overflow-hidden bg-white shadow-xl">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -138,80 +161,127 @@ export default function ProductDetail() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="space-y-5"
+                className="space-y-6"
               >
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-neutral-500 mb-3">
-                    {product.category}
-                  </p>
-                  <h1
-                    className="text-5xl lg:text-6xl mb-6 uppercase tracking-tight"
-                    style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontWeight: 400,
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    {product.name}
-                  </h1>
-                  <p className="text-base text-neutral-600 leading-relaxed">
-                    Material natural de alta gama para proyectos de
-                    arquitectura y diseño de interiores premium. Combina
-                    elegancia atemporal con durabilidad excepcional.
-                  </p>
-                </div>
+                {/* Category */}
+                <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
+                  {product.category}
+                </p>
 
-                {/* Color & Finish - DESTACADO */}
-                <div className="bg-white border-2 border-black p-6 space-y-4">
-                  <h3
-                    className="text-sm uppercase tracking-[0.2em] text-black font-semibold mb-4"
-                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                  >
-                    Especificaciones
-                  </h3>
+                {/* Name */}
+                <h1
+                  className="text-5xl leading-tight"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {product.name}
+                </h1>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Color */}
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-neutral-500 mb-2">
-                        Color
-                      </p>
-                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-700 to-slate-900 text-white text-sm font-medium">
-                        {product.color}
-                      </div>
+                {/* Description placeholder - could be dynamic from DB */}
+                <p className="text-neutral-600 leading-relaxed">
+                  Material natural de alta calidad que combina elegancia y durabilidad.
+                  Ideal para proyectos de arquitectura y diseño de interiores premium.
+                </p>
+
+                {/* Tamaños Disponibles */}
+                {categoryData && (
+                  <div className="border-t border-neutral-300 pt-6">
+                    <h3 className="text-sm font-medium uppercase tracking-wider mb-4">
+                      Tamaños Disponibles
+                    </h3>
+                    <div className="flex flex-wrap gap-3">
+                      {categoryData.sizes.map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`px-4 py-2 border-2 transition-all ${selectedSize === size
+                              ? "border-black bg-black text-white"
+                              : "border-neutral-300 bg-white text-black hover:border-black"
+                            }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="mt-3">
+                      <label className="flex items-center gap-2 cursor-pointer w-fit">
+                        <input
+                          type="checkbox"
+                          checked={showTabla}
+                          onChange={(e) => setShowTabla(e.target.checked)}
+                          className="w-4 h-4"
+                        />
+                        <span className="text-sm">Tabla</span>
+                      </label>
                     </div>
 
-                    {/* Acabado */}
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-neutral-500 mb-2">
-                        Acabado
+                    {/* Opus Romano for Travertino */}
+                    {product.category === "Marmol" && product.name.toLowerCase().includes("travertino") && (
+                      <p className="mt-2 text-sm text-neutral-600">
+                        → Los Mármoles que sean TRAVERTINO .... Añadir en tamaño disponible "OPUS ROMANO"
                       </p>
-                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-700 to-slate-900 text-white text-sm font-medium">
-                        {product.finish}
-                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Acabados */}
+                {categoryData && (
+                  <div className="border-t border-neutral-300 pt-6">
+                    <h3 className="text-sm font-medium uppercase tracking-wider mb-4">
+                      Acabados
+                    </h3>
+                    <div className="flex flex-wrap gap-3">
+                      {availableFinishes.map((finish) => (
+                        <button
+                          key={finish}
+                          className="px-4 py-2 border-2 border-neutral-300 bg-white text-black hover:border-black transition-all"
+                        >
+                          {finish}
+                        </button>
+                      ))}
                     </div>
-                  </div>
-                </div>
 
-                {/* Tamaños disponibles */}
-                <div>
-                  <h3
-                    className="text-sm uppercase tracking-[0.2em] mb-4"
-                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                  >
-                    Tamaños Disponibles
-                  </h3>
-                  <div className="space-y-2 text-sm text-neutral-600">
-                    <p>• Placas comerciales: bajo pedido</p>
-                    <p>• Cortes personalizados disponibles</p>
-                    <p>• Consultar disponibilidad de formato</p>
+                    {/* Extra finishes for certain granites */}
+                    {hasExtraFinishes && (
+                      <div className="mt-4">
+                        <p className="text-sm text-neutral-600 mb-3">
+                          → Granitos a añadir acabados extras:
+                        </p>
+                        <div className="flex flex-wrap gap-3">
+                          {CATEGORY_DATA.Granito.extraFinishes.map((finish) => (
+                            <button
+                              key={finish}
+                              className="px-4 py-2 border-2 border-neutral-300 bg-white text-black hover:border-black transition-all"
+                            >
+                              {finish}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
 
-                {/* CTA Buttons - MEJORADOS */}
+                {/* Aplicaciones */}
+                {categoryData && (
+                  <div className="border-t border-neutral-300 pt-6">
+                    <h3 className="text-sm font-medium uppercase tracking-wider mb-4">
+                      Aplicaciones
+                    </h3>
+                    <ul className="space-y-2 text-neutral-700">
+                      {categoryData.applications.map((app) => (
+                        <li key={app} className="flex items-start gap-2">
+                          <span className="text-black mt-1">•</span>
+                          <span>{app}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* CTA Buttons */}
                 <div className="space-y-3 pt-6">
                   <Link href="/contacto">
-                    <a className="group flex items-center justify-center gap-3 w-full px-8 py-4 border-2 border-black bg-transparent hover:bg-black text-black hover:text-white transition-all">
+                    <a className="group flex items-center justify-center gap-3 w-full px-8 py-4 bg-black text-white hover:bg-neutral-800 transition-all">
                       <Mail className="w-5 h-5" />
                       <span
                         className="uppercase tracking-[0.15em] text-sm font-medium"
@@ -234,14 +304,6 @@ export default function ProductDetail() {
                     </a>
                   </Link>
                 </div>
-
-                {/* Back to products */}
-                <Link href="/productos">
-                  <a className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-black transition-colors">
-                    <ArrowLeft className="w-4 h-4" />
-                    <span className="uppercase tracking-wider">Volver a Materiales</span>
-                  </a>
-                </Link>
               </motion.div>
             </div>
           </div>
