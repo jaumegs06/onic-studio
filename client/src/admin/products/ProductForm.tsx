@@ -72,8 +72,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
             }
             onClose(result); // Pass updated product back to parent
         } catch (error) {
-            console.error('Error saving product:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+            const errorMessage = (error as any).message || (error as any).error_description || (error as any).details || 'Error desconocido';
             toast.error(`Error al guardar el material: ${errorMessage}`, { id: toastId });
             setLoading(false); // Keep form open on error
         }

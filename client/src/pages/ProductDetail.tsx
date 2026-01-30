@@ -38,6 +38,11 @@ const CATEGORY_DATA = {
     sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
     finishes: ["Pulido", "Natural", "Apomazado", "Arenado", "Envejecido", "Abujardado", "Abujardado y Cepillado"],
     applications: ["Encimeras", "Baños", "Pavimentos", "Fachadas"]
+  },
+  Cuarcita: {
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm"],
+    finishes: ["Pulido", "Apomazado", "Leather/Vintage"],
+    applications: ["Encimeras", "Pavimentos", "Fachadas"]
   }
 };
 
@@ -194,8 +199,8 @@ export default function ProductDetail() {
                           key={size}
                           onClick={() => setSelectedSize(size)}
                           className={`px-4 py-2 border-2 transition-all ${selectedSize === size
-                              ? "border-black bg-black text-white"
-                              : "border-neutral-300 bg-white text-black hover:border-black"
+                            ? "border-black bg-black text-white"
+                            : "border-neutral-300 bg-white text-black hover:border-black"
                             }`}
                         >
                           {size}
