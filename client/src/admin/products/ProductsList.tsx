@@ -71,7 +71,7 @@ export default function ProductsList() {
         } catch (error) {
             console.error('Error deleting product:', error);
             // Rollback: restore product on error
-            setProducts(prev => [...prev, productToDelete].sort((a, b) => a.id - b.id));
+            setProducts(prev => [...prev, productToDelete].sort((a, b) => a.name.localeCompare(b.name)));
             toast.error('Error al eliminar el material', { id: 'delete-product' });
         } finally {
             setDeletingId(null);
@@ -99,11 +99,13 @@ export default function ProductsList() {
             setProducts(prev => {
                 const existing = prev.find(p => p.id === productWithId.id);
                 if (existing) {
-                    // Update existing
-                    return prev.map(p => p.id === productWithId.id ? productWithId : p);
+                    // Update existing and re-sort
+                    return prev.map(p => p.id === productWithId.id ? productWithId : p)
+                        .sort((a, b) => a.name.localeCompare(b.name));
                 } else {
-                    // Add new
-                    return [...prev, productWithId].sort((a, b) => a.id - b.id);
+                    // Add new and sort
+                    return [...prev, productWithId]
+                        .sort((a, b) => a.name.localeCompare(b.name));
                 }
             });
         }
