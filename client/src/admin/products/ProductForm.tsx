@@ -184,35 +184,50 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                                     className="w-32 h-32 object-cover rounded border border-neutral-300"
                                 />
                             )}
-                            <div className="flex-1">
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="hidden"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => fileInputRef.current?.click()}
-                                    disabled={uploading}
-                                    className="flex items-center gap-2 px-4 py-2 border border-neutral-300 rounded hover:bg-neutral-50 transition-colors disabled:opacity-50"
-                                >
-                                    {uploading ? (
-                                        <>
-                                            <Loader className="w-4 h-4 animate-spin" />
-                                            Subiendo...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Upload className="w-4 h-4" />
-                                            Subir Imagen
-                                        </>
-                                    )}
-                                </button>
-                                <p className="text-xs text-neutral-500 mt-2">
-                                    JPG, PNG o WEBP. Máximo 5MB.
-                                </p>
+                            <div className="flex-1 space-y-3">
+                                {/* File upload button */}
+                                <div>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        className="hidden"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        disabled={uploading}
+                                        className="flex items-center gap-2 px-4 py-2 border border-neutral-300 rounded hover:bg-neutral-50 transition-colors disabled:opacity-50"
+                                    >
+                                        {uploading ? (
+                                            <>
+                                                <Loader className="w-4 h-4 animate-spin" />
+                                                Subiendo...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Upload className="w-4 h-4" />
+                                                Subir Imagen
+                                            </>
+                                        )}
+                                    </button>
+                                    <p className="text-xs text-neutral-500 mt-1">
+                                        JPG, PNG o WEBP. Máximo 5MB.
+                                    </p>
+                                </div>
+
+                                {/* Direct URL input */}
+                                <div>
+                                    <p className="text-xs text-neutral-600 mb-1">O pega la URL de la imagen:</p>
+                                    <input
+                                        type="text"
+                                        value={formData.image}
+                                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                        placeholder="https://ejemplo.com/imagen.jpg"
+                                        className="w-full px-3 py-2 text-sm border border-neutral-300 rounded focus:outline-none focus:border-black transition-colors"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
