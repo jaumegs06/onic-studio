@@ -27,10 +27,21 @@ export function createApp() {
 
     // Serve static files from dist/public in production
     // Note: On Vercel this might be redundant if using outputDirectory, but harmless
-    const staticPath =
-        process.env.NODE_ENV === "production"
-            ? path.resolve(__dirname, "public")
-            : path.resolve(__dirname, "..", "dist", "public");
+    // Serve static files from dist/public in production
+    // Note: On Vercel, static files are handled by the Output API, but this is a fallback.
+    let staticPath = path.join(process.cwd(), "public"); // Default Vercel static path
+
+    try {
+        if (process.env.NODE_ENV === "production") {
+            // In Vercel, sometimes __dirname is weird. process.cwd() is safer.
+            staticPath = path.join(process.cwd(), "dist", "public");
+        } else {
+            staticPath = path.resolve(__dirname, "..", "dist", "public");
+        }
+        console.log(`📂 Static path resolved to: ${staticPath}`);
+    } catch (e) {
+        console.error('⚠️ Error resolving static path:', e);
+    }
 
     // Health check route
     app.get("/api/health", (_req, res) => {
