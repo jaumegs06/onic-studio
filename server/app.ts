@@ -32,6 +32,11 @@ export function createApp() {
             ? path.resolve(__dirname, "public")
             : path.resolve(__dirname, "..", "dist", "public");
 
+    // Health check route
+    app.get("/api/health", (_req, res) => {
+        res.json({ status: "ok", env: process.env.NODE_ENV, timestamp: new Date().toISOString() });
+    });
+
     app.use(express.static(staticPath));
 
     // API Routes
