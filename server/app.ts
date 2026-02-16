@@ -5,9 +5,9 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 
 // Import routes
-import authRoutes from "./routes/auth.js";
+// import authRoutes from "./routes/auth.js";
 import productsRoutes from "./routes/products.js";
-import uploadRoutes from "./routes/upload.js";
+// import uploadRoutes from "./routes/upload.js";
 import contactRoutes from "./routes/contact.js";
 import projectRoutes from "./routes/projects.js";
 
@@ -51,9 +51,9 @@ export function createApp() {
     app.use(express.static(staticPath));
 
     // API Routes
-    app.use("/api/auth", authRoutes);
+    // app.use("/api/auth", authRoutes);
     app.use("/api/products", productsRoutes);
-    app.use("/api/upload", uploadRoutes);
+    // app.use("/api/upload", uploadRoutes);
     app.use("/api/contact", contactRoutes);
     app.use("/api/projects", projectRoutes);
 
