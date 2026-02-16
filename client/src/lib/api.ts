@@ -123,27 +123,45 @@ export const projectsAPI = {
 // Contact API
 export const contactAPI = {
     submit: async (formData: any) => {
-        const { data, error } = await supabase
-            .from('contact_messages')
-            .insert([{
-                ...formData,
-                id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                email_sent: false
-            }])
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data;
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error submitting contact form:', error);
+            throw error;
+        }
     },
+    // Used by ContactMessages.tsx
+    getMessages: async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/api/contact/messages', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+            throw error;
+        }
+    },
+    // Keeping for potential backwards compatibility, though getMessages is preferred
     getAll: async () => {
-        const { data, error } = await supabase
-            .from('contact_messages')
-            .select('*')
-            .order('timestamp', { ascending: false });
-
-        if (error) throw error;
-        return data || [];
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/contact/messages', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await response.json();
+        return data.data || [];
     }
 };
 

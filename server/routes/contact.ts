@@ -71,8 +71,8 @@ router.post('/', async (req, res) => {
         }
 
         // Try to save to database if Supabase is available (OPTIONAL - not mission critical)
+        // We let the DB generate the ID
         const contactMessage = {
-            id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             name,
             email,
             phone: phone || '',
@@ -82,12 +82,13 @@ router.post('/', async (req, res) => {
             emailSent: emailSuccess,
         };
 
+        let savedId = null;
+
         if (supabaseAdmin) {
             try {
-                await supabaseAdmin
+                const { data: insertedData, error } = await supabaseAdmin
                     .from('contact_messages')
                     .insert([{
-                        id: contactMessage.id,
                         name: contactMessage.name,
                         email: contactMessage.email,
                         phone: contactMessage.phone || null,
@@ -95,9 +96,16 @@ router.post('/', async (req, res) => {
                         message: contactMessage.message,
                         timestamp: contactMessage.timestamp,
                         email_sent: contactMessage.emailSent
-                    }]);
+                    }])
+                    .select()
+                    .single();
 
-                console.log('✅ Contact message saved to Supabase');
+                if (error) throw error;
+
+                if (insertedData) {
+                    savedId = insertedData.id;
+                    console.log('✅ Contact message saved to Supabase with ID:', savedId);
+                }
             } catch (dbError) {
                 console.warn('⚠️  Failed to save to database, but continuing:', dbError);
                 // Don't fail the request if database save fails
@@ -111,7 +119,7 @@ router.post('/', async (req, res) => {
             success: true,
             message: 'Mensaje recibido correctamente',
             data: {
-                id: contactMessage.id,
+                id: savedId || 'temp_id', // Return actual ID if saved, or placeholder
                 emailSent: emailSuccess,
                 timestamp: contactMessage.timestamp,
             },
