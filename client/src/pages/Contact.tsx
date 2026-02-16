@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { contactAPI } from "@/lib/api";
+// import { contactAPI } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -23,25 +24,40 @@ export default function Contact() {
     setIsSubmitting(true);
 
     try {
-      const response = await contactAPI.submit(formData);
-
-      if (response.success) {
-        toast.success("¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.");
-        // Clear form
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          projectType: "",
-          message: "",
-        });
-      } else {
-        toast.error(response.error || "Error al enviar el mensaje. Por favor, inténtalo de nuevo.");
+      if (!supabase) {
+        throw new Error("Supabase client not initialized");
       }
+
+      // Direct insertion to Supabase
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert([
+          {
+            full_name: formData.name,
+            email: formData.email,
+            subject: formData.projectType, // Mapping projectType to subject
+            message: formData.phone
+              ? `${formData.message}\n\nTeléfono: ${formData.phone}`
+              : formData.message,
+          },
+        ]);
+
+      if (error) throw error;
+
+      toast.success("¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.");
+
+      // Clear form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        projectType: "",
+        message: "",
+      });
+
     } catch (error: any) {
       console.error("Error submitting contact form:", error);
       toast.error(
-        error.response?.data?.error ||
         "Error al enviar el mensaje. Por favor, verifica tu conexión e inténtalo de nuevo."
       );
     } finally {

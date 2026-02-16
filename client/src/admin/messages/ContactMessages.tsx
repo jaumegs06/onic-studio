@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Mail, RefreshCw, Calendar, User, Phone, MessageSquare, CheckCircle, XCircle } from 'lucide-react';
-import { contactAPI } from '@/lib/api';
+import { Mail, RefreshCw, Calendar, User, MessageSquare } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
 
 interface ContactMessage {
     id: string;
-    name: string;
+    full_name: string;      // Changed from name
     email: string;
-    phone?: string;
-    projectType: string;
+    subject: string;        // Changed from projectType
     message: string;
-    timestamp: string;
-    emailSent: boolean;
+    created_at: string;     // Changed from timestamp
+    // phone and emailSent are no longer in DB schema
 }
 
 export default function ContactMessages() {
@@ -22,8 +21,17 @@ export default function ContactMessages() {
     const loadMessages = async () => {
         try {
             setRefreshing(true);
-            const data = await contactAPI.getMessages();
-            setMessages(data.data || []);
+
+            if (!supabase) throw new Error("Supabase client not initialized");
+
+            const { data, error } = await supabase
+                .from('contact_messages')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            setMessages(data || []);
         } catch (error) {
             console.error('Error loading messages:', error);
         } finally {
@@ -47,14 +55,15 @@ export default function ContactMessages() {
         });
     };
 
-    const getProjectTypeLabel = (type: string) => {
+    // Helper to extract project type if it matches known types, otherwise just show subject context
+    const getProjectTypeLabel = (subject: string) => {
         const types: Record<string, string> = {
             residencial: 'Residencial',
             hoteles: 'Hoteles',
             restauracion: 'Restauración',
             otro: 'Otro',
         };
-        return types[type] || type;
+        return types[subject] || subject;
     };
 
     if (loading) {
@@ -106,9 +115,9 @@ export default function ContactMessages() {
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">
                                             <User className="w-5 h-5 text-neutral-500" />
-                                            <h3 className="text-lg font-semibold">{message.name}</h3>
+                                            <h3 className="text-lg font-semibold">{message.full_name}</h3>
                                             <span className="px-3 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
-                                                {getProjectTypeLabel(message.projectType)}
+                                                {getProjectTypeLabel(message.subject)}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-4 text-sm text-neutral-600">
@@ -121,41 +130,12 @@ export default function ContactMessages() {
                                                     {message.email}
                                                 </a>
                                             </div>
-                                            {message.phone && (
-                                                <div className="flex items-center gap-1">
-                                                    <Phone className="w-4 h-4" />
-                                                    <a
-                                                        href={`tel:${message.phone}`}
-                                                        className="hover:text-black transition-colors"
-                                                    >
-                                                        {message.phone}
-                                                    </a>
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-end gap-2">
                                         <div className="flex items-center gap-1 text-xs text-neutral-500">
                                             <Calendar className="w-4 h-4" />
-                                            {formatDate(message.timestamp)}
-                                        </div>
-                                        <div
-                                            className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${message.emailSent
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-yellow-100 text-yellow-800'
-                                                }`}
-                                        >
-                                            {message.emailSent ? (
-                                                <>
-                                                    <CheckCircle className="w-3 h-3" />
-                                                    Email enviado
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <XCircle className="w-3 h-3" />
-                                                    Email no enviado
-                                                </>
-                                            )}
+                                            {formatDate(message.created_at)}
                                         </div>
                                     </div>
                                 </div>
@@ -174,19 +154,11 @@ export default function ContactMessages() {
                                 {/* Actions */}
                                 <div className="mt-4 flex gap-2">
                                     <a
-                                        href={`mailto:${message.email}?subject=Re: ${getProjectTypeLabel(message.projectType)}&body=Hola ${message.name},%0D%0A%0D%0A`}
+                                        href={`mailto:${message.email}?subject=Re: ${getProjectTypeLabel(message.subject)}&body=Hola ${message.full_name},%0D%0A%0D%0A`}
                                         className="px-4 py-2 text-sm text-white bg-black hover:bg-neutral-800 rounded transition-colors"
                                     >
                                         Responder por Email
                                     </a>
-                                    {message.phone && (
-                                        <a
-                                            href={`tel:${message.phone}`}
-                                            className="px-4 py-2 text-sm text-neutral-700 bg-neutral-100 hover:bg-neutral-200 rounded transition-colors"
-                                        >
-                                            Llamar
-                                        </a>
-                                    )}
                                 </div>
                             </div>
 
