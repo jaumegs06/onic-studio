@@ -2,6 +2,7 @@ import { useState, FormEvent, useRef } from 'react';
 import { X, Upload, Loader } from 'lucide-react';
 import { productsAPI, uploadAPI } from '@/lib/api';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 interface Product {
     id?: number;
@@ -16,7 +17,7 @@ interface Product {
 
 interface ProductFormProps {
     product: Product | null;
-    onClose: () => void;
+    onClose: (updatedProduct?: Product) => void;
 }
 
 export default function ProductForm({ product, onClose }: ProductFormProps) {
@@ -54,9 +55,10 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
         try {
             const result = await uploadAPI.single(file);
             setFormData({ ...formData, image: result.path });
+            toast.success('Imagen subida correctamente');
         } catch (error) {
             console.error('Error uploading image:', error);
-            alert('Error al subir la imagen');
+            toast.error('Error al subir la imagen');
         } finally {
             setUploading(false);
         }
@@ -66,18 +68,24 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
         e.preventDefault();
         setLoading(true);
 
+        const toastId = product ? 'update-product' : 'create-product';
+        const action = product ? 'Actualizando' : 'Creando';
+        toast.loading(`${action} material...`, { id: toastId });
+
         try {
+            let result;
             if (product) {
-                await productsAPI.update(product.id!, formData);
+                result = await productsAPI.update(product.id!, formData);
+                toast.success('Material actualizado correctamente', { id: toastId });
             } else {
-                await productsAPI.create(formData);
+                result = await productsAPI.create(formData);
+                toast.success('Material creado correctamente', { id: toastId });
             }
-            onClose();
+            onClose(result); // Pass updated product back to parent
         } catch (error) {
-            console.error('Error saving product:', error);
-            alert('Error al guardar el producto');
-        } finally {
-            setLoading(false);
+            const errorMessage = (error as any).message || (error as any).error_description || (error as any).details || 'Error desconocido';
+            toast.error(`Error al guardar el material: ${errorMessage}`, { id: toastId });
+            setLoading(false); // Keep form open on error
         }
     };
 
@@ -87,7 +95,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-            onClick={onClose}
+            onClick={() => onClose()}
         >
             <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
@@ -102,7 +110,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                         {product ? 'Editar Producto' : 'Nuevo Producto'}
                     </h3>
                     <button
-                        onClick={onClose}
+                        onClick={() => onClose()}
                         className="p-2 hover:bg-neutral-100 rounded transition-colors"
                     >
                         <X className="w-5 h-5" />
@@ -212,35 +220,40 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                                     className="w-32 h-32 object-cover rounded border border-neutral-300"
                                 />
                             )}
-                            <div className="flex-1">
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="hidden"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => fileInputRef.current?.click()}
-                                    disabled={uploading}
-                                    className="flex items-center gap-2 px-4 py-2 border border-neutral-300 rounded hover:bg-neutral-50 transition-colors disabled:opacity-50"
-                                >
-                                    {uploading ? (
-                                        <>
-                                            <Loader className="w-4 h-4 animate-spin" />
-                                            Subiendo...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Upload className="w-4 h-4" />
-                                            Subir Imagen
-                                        </>
-                                    )}
-                                </button>
-                                <p className="text-xs text-neutral-500 mt-2">
-                                    JPG, PNG o WEBP. Máximo 5MB.
-                                </p>
+                            <div className="flex-1 space-y-3">
+                                {/* File upload button */}
+                                <div>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        className="hidden"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        disabled={uploading}
+                                        className="flex items-center gap-2 px-4 py-2 border border-neutral-300 rounded hover:bg-neutral-50 transition-colors disabled:opacity-50"
+                                    >
+                                        {uploading ? (
+                                            <>
+                                                <Loader className="w-4 h-4 animate-spin" />
+                                                Subiendo...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Upload className="w-4 h-4" />
+                                                Subir Imagen
+                                            </>
+                                        )}
+                                    </button>
+                                    <p className="text-xs text-neutral-500 mt-1">
+                                        JPG, PNG o WEBP. Máximo 5MB.
+                                    </p>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -270,7 +283,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                         </button>
                         <button
                             type="button"
-                            onClick={onClose}
+                            onClick={() => onClose()}
                             className="px-6 py-3 border border-neutral-300 rounded hover:bg-neutral-50 transition-colors"
                         >
                             Cancelar

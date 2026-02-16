@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useRoute, Link } from "wouter";
+import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 import { productsAPI } from "@/lib/api";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Package } from "lucide-react";
 
 interface Product {
   id: number;
@@ -17,10 +17,37 @@ interface Product {
   description?: string;
   // Fields not yet in DB, kept optional/mocked for now
   collection?: string;
-  sizes?: string[];
-  finishes?: string[];
-  applications?: string[];
 }
+
+// Category-specific data (Reserved logic from previous version for fallback/extra data)
+const CATEGORY_DATA = {
+  Granito: {
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm", "Tabla"],
+    finishes: ["Pulido", "Apomazado", "Leather/Vintage"],
+    extraFinishes: ["Bruto", "Flameado", "Granallado"],
+    graniteWithExtraFinishes: [
+      "Angola Black", "Azul noche", "Labrador oscuro", "Negro TEzal",
+      "Negro zimbabwe", "Rojo Balmoral", "Rosa Porriño", "Rosavel", "Blanco cristal"
+    ],
+    applications: ["Encimeras", "Pavimentos", "Fachadas"]
+  },
+  Mármol: {
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm", "Tabla"],
+    finishes: ["Pulido", "Natural", "Apomazado", "Arenado", "Envejecido", "Abujardado", "Abujardado y Cepillado"],
+    applications: ["Encimeras", "Baños", "Pavimentos", "Fachadas"],
+    hasOpusRomano: true // For travertino materials
+  },
+  Caliza: {
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm", "Tabla"],
+    finishes: ["Pulido", "Natural", "Apomazado", "Arenado", "Envejecido", "Abujardado", "Abujardado y Cepillado"],
+    applications: ["Encimeras", "Baños", "Pavimentos", "Fachadas"]
+  },
+  Cuarcita: {
+    sizes: ["60x30 cm", "60x40 cm", "60x60 cm", "80x80 cm", "100x100 cm", "Tabla"],
+    finishes: ["Pulido", "Apomazado", "Leather/Vintage"],
+    applications: ["Encimeras", "Pavimentos", "Fachadas"]
+  }
+};
 
 export default function ProductDetail() {
   const [, params] = useRoute("/productos/:id");
@@ -30,6 +57,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   useEffect(() => {
     if (productId) {
@@ -42,18 +70,8 @@ export default function ProductDetail() {
     setLoading(true);
     try {
       const data = await productsAPI.getById(id);
-
-      // Enrich with static data for missing fields if needed
-      // For now we just use what we have and some defaults
-      const fullProduct = {
-        ...data,
-        sizes: ["2cm", "3cm"], // Default sizes
-        finishes: data.finish, // Already an array now
-        applications: ["Encimeras", "Revestimientos", "Suelos"] // Default apps
-      };
-
-      setProduct(fullProduct);
-      loadRelated(fullProduct.category, fullProduct.id);
+      setProduct(data);
+      loadRelated(data.category, data.id);
     } catch (error) {
       console.error("Error loading product:", error);
       setProduct(null);
@@ -64,8 +82,6 @@ export default function ProductDetail() {
 
   const loadRelated = async (category: string, currentId: number) => {
     try {
-      // Ideally we would have a specific endpoint, but filtering client side for now
-      // is acceptable given the small dataset size usually fetched
       const all = await productsAPI.getAll();
       const related = all
         .filter((p: Product) => p.category === category && p.id !== currentId)
@@ -90,31 +106,50 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Navigation />
-        <main className="bg-stone-200 min-h-screen pt-28 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl mb-4">Producto no encontrado</h1>
-            <Link href="/productos">
-              <Button>Volver a Materiales</Button>
-            </Link>
-          </div>
-        </main>
-        <Footer />
+      <div className="min-h-screen bg-stone-200 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Material no encontrado</h2>
+          <Link href="/productos">
+            <a className="text-black underline">Volver a Materiales</a>
+          </Link>
+        </div>
       </div>
     );
   }
 
-  // Imágenes del producto (por ahora solo la principal, se pueden añadir más si la DB lo soporta)
+  // Imágenes del producto
   const productImages = [product.image];
 
+  // Category specific data lookup
+  const categoryName = product.category.trim();
+  let categoryData = CATEGORY_DATA[categoryName as keyof typeof CATEGORY_DATA];
+
+  if (!categoryData) {
+    const matchingKey = Object.keys(CATEGORY_DATA).find(k => k.toLowerCase() === categoryName.toLowerCase());
+    if (matchingKey) {
+      categoryData = CATEGORY_DATA[matchingKey as keyof typeof CATEGORY_DATA];
+    }
+  }
+
+  // Use product.finish if available (from DB) otherwise fallback to category finishes
+  const displayFinishes = (product.finish && product.finish.length > 0)
+    ? product.finish
+    : (categoryData?.finishes || []);
+
+  const hasExtraFinishes = product.category === "Granito" &&
+    CATEGORY_DATA.Granito.graniteWithExtraFinishes.includes(product.name);
+
   return (
-    <div className="flex flex-col">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Navigation />
 
       <main className="bg-stone-200 min-h-screen pt-28">
         {/* Breadcrumb */}
-        <section className="py-6 bg-white">
+        <section className="py-3 bg-white">
           <div className="container-full">
             <div className="flex gap-2 text-xs uppercase tracking-widest text-neutral-500">
               <Link href="/">
@@ -131,21 +166,24 @@ export default function ProductDetail() {
         </section>
 
         {/* Product Detail */}
-        <section className="py-16">
+        <section className="py-12">
           <div className="container-full">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Galería de imágenes */}
-              <div>
-                <div className="aspect-[3/4] mb-4 overflow-hidden bg-white">
+              {/* Image */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="aspect-square overflow-hidden bg-white shadow-xl">
                   <img
-                    src={productImages[selectedImage]}
+                    src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                {/* Miniaturas - Solo si hay más de una (futuro) */}
                 {productImages.length > 1 && (
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-4">
                     {productImages.map((img, index) => (
                       <button
                         key={index}
@@ -158,10 +196,15 @@ export default function ProductDetail() {
                     ))}
                   </div>
                 )}
-              </div>
+              </motion.div>
 
               {/* Información del producto */}
-              <div className="space-y-8">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="space-y-8"
+              >
                 <div>
                   <p className="text-xs uppercase tracking-widest text-neutral-500 mb-3">
                     {product.collection || product.category}
@@ -174,77 +217,138 @@ export default function ProductDetail() {
                   </p>
                 </div>
 
-                {/* Tamaños disponibles */}
-                <div>
-                  <h3 className="text-lg uppercase tracking-wider mb-4">Tamaños Disponibles</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {product.sizes?.map((size, index) => (
-                      <div key={index} className="px-4 py-2 border border-neutral-300 text-sm">
-                        {size}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Acabados */}
-                {product.finishes && (
-                  <div>
-                    <h3 className="text-lg uppercase tracking-wider mb-4">Acabados</h3>
+                {/* Tamaños Disponibles */}
+                {categoryData && (
+                  <div className="border-t border-neutral-300 pt-6">
+                    <h3 className="text-sm font-medium uppercase tracking-wider mb-4">
+                      Tamaños Disponibles
+                    </h3>
                     <div className="flex flex-wrap gap-3">
-                      {product.finishes.map((finish, index) => (
-                        <div key={index} className="px-4 py-2 bg-white border border-neutral-300 text-sm">
-                          {finish}
-                        </div>
+                      {categoryData.sizes.map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`px-4 py-2 border-2 transition-all ${selectedSize === size
+                            ? "border-black bg-black text-white"
+                            : "border-neutral-300 bg-white text-black hover:border-black"
+                            }`}
+                        >
+                          {size}
+                        </button>
                       ))}
                     </div>
+
+                    {/* Opus Romano for Travertino */}
+                    {product.category === "Mármol" && product.name.toLowerCase().includes("travertino") && (
+                      <p className="mt-2 text-sm text-neutral-600">
+                        → Los Mármoles que sean TRAVERTINO .... Añadir en tamaño disponible "OPUS ROMANO"
+                      </p>
+                    )}
                   </div>
                 )}
 
+                {/* Acabados */}
+                <div className="border-t border-neutral-300 pt-6">
+                  <h3 className="text-sm font-medium uppercase tracking-wider mb-4">
+                    Acabados
+                  </h3>
+                  <div className="flex flex-wrap gap-3">
+                    {displayFinishes.map((finish) => (
+                      <div
+                        key={finish}
+                        className="px-4 py-2 border-2 border-neutral-300 bg-white text-black"
+                      >
+                        {finish}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Extra finishes for certain granites (Legacy logic) */}
+                  {hasExtraFinishes && false && ( /* Disabled for now as we want db driven finishes, but kept code references */
+                    <div className="mt-4">
+                      <p className="text-sm text-neutral-600 mb-3">
+                        → Granitos a añadir acabados extras:
+                      </p>
+                      <div className="flex flex-wrap gap-3">
+                        {CATEGORY_DATA.Granito.extraFinishes.map((finish) => (
+                          <div
+                            key={finish}
+                            className="px-4 py-2 border-2 border-neutral-300 bg-white text-black"
+                          >
+                            {finish}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Aplicaciones */}
-                {product.applications && (
-                  <div>
-                    <h3 className="text-lg uppercase tracking-wider mb-4">Aplicaciones</h3>
-                    <ul className="space-y-2">
-                      {product.applications.map((app, index) => (
-                        <li key={index} className="flex items-center gap-2 text-neutral-700">
-                          <div className="w-1.5 h-1.5 bg-black" />
-                          {app}
+                {categoryData && (
+                  <div className="border-t border-neutral-300 pt-6">
+                    <h3 className="text-sm font-medium uppercase tracking-wider mb-4">
+                      Aplicaciones
+                    </h3>
+                    <ul className="space-y-2 text-neutral-700">
+                      {categoryData.applications.map((app) => (
+                        <li key={app} className="flex items-start gap-2">
+                          <span className="text-black mt-1">•</span>
+                          <span>{app}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
 
-                {/* Botones de acción */}
-                <div className="flex gap-4 pt-4">
+                {/* CTA Buttons */}
+                <div className="space-y-3 pt-6">
                   <Link href="/contacto">
-                    <Button size="lg" className="px-8">
-                      Solicitar Información
-                    </Button>
+                    <a className="group flex items-center justify-center gap-3 w-full px-8 py-4 bg-black text-white hover:bg-neutral-800 transition-all">
+                      <Mail className="w-5 h-5" />
+                      <span
+                        className="uppercase tracking-[0.15em] text-sm font-medium"
+                        style={{ fontFamily: "'Montserrat', sans-serif" }}
+                      >
+                        Solicitar Información
+                      </span>
+                    </a>
                   </Link>
+
                   <Link href="/contacto">
-                    <Button variant="outline" size="lg" className="px-8">
-                      Solicitar Muestra
-                    </Button>
+                    <a className="group flex items-center justify-center gap-3 w-full px-8 py-4 border-2 border-black bg-transparent hover:bg-black text-black hover:text-white transition-all">
+                      <Package className="w-5 h-5" />
+                      <span
+                        className="uppercase tracking-[0.15em] text-sm font-medium"
+                        style={{ fontFamily: "'Montserrat', sans-serif" }}
+                      >
+                        Solicitar Muestra
+                      </span>
+                    </a>
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
-        {/* Productos relacionados */}
+        {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <section className="py-16 bg-white">
-            <div className="container">
-              <h2 className="text-3xl mb-8" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Productos Similares
+          <section className="py-16 bg-white border-t border-neutral-200">
+            <div className="container-full">
+              <h2
+                className="text-4xl mb-12"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                Materiales Similares
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {relatedProducts.map((relatedProduct) => (
                   <Link key={relatedProduct.id} href={`/productos/${relatedProduct.id}`}>
-                    <a className="group">
-                      <div className="aspect-[3/4] overflow-hidden mb-3 bg-stone-100">
+                    <a
+                      className="group"
+                      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    >
+                      <div className="aspect-[3/4] overflow-hidden mb-3 bg-white shadow-md">
                         <img
                           src={relatedProduct.image}
                           alt={relatedProduct.name}
@@ -254,17 +358,20 @@ export default function ProductDetail() {
                       <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">
                         {relatedProduct.category}
                       </p>
-                      <h3 className="text-lg font-serif">{relatedProduct.name}</h3>
+                      <h3 className="text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
+                        {relatedProduct.name}
+                      </h3>
                     </a>
                   </Link>
                 ))}
               </div>
             </div>
           </section>
-        )}
+        )
+        }
       </main>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 }

@@ -28,7 +28,7 @@ router.get('/', async (req: Request, res: Response) => {
         const { data: products, error } = await supabase
             .from('products')
             .select('*')
-            .order('id', { ascending: true });
+            .order('name', { ascending: true });
 
         console.log(`✅ Fetched ${products?.length || 0} products from DB`);
 

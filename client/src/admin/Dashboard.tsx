@@ -17,7 +17,7 @@ export default function Dashboard({ children }: DashboardProps) {
     };
 
     const navItems = [
-        { icon: Package, label: 'Productos', path: '/admin/dashboard' },
+        { icon: Package, label: 'Materiales', path: '/admin/dashboard' },
         { icon: Layers, label: 'Proyectos', path: '/admin/projects' },
         { icon: Mail, label: 'Mensajes', path: '/admin/messages' },
     ];
