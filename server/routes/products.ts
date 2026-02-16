@@ -10,9 +10,10 @@ interface Product {
     name: string;
     category: string;
     color: string;
-    finish: string;
+    finish: string[];
     image: string;
     best_seller?: boolean;
+    description?: string;
 }
 
 // Get all products (public)
@@ -85,7 +86,8 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
                 color: req.body.color,
                 finish: req.body.finish,
                 image: req.body.image,
-                best_seller: req.body.bestSeller || false
+                best_seller: req.body.best_seller || false,
+                description: req.body.description || ''
             }])
             .select()
             .single();
@@ -110,7 +112,8 @@ router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
                 color: req.body.color,
                 finish: req.body.finish,
                 image: req.body.image,
-                best_seller: req.body.bestSeller
+                best_seller: req.body.best_seller,
+                description: req.body.description
             })
             .eq('id', parseInt(req.params.id))
             .select()

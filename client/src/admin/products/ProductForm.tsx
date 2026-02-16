@@ -8,9 +8,10 @@ interface Product {
     name: string;
     category: string;
     color: string;
-    finish: string;
+    finish: string[];
     image: string;
     best_seller?: boolean;
+    description?: string;
 }
 
 interface ProductFormProps {
@@ -23,17 +24,27 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
         name: product?.name || '',
         category: product?.category || 'Granito',
         color: product?.color || 'Blanco',
-        finish: product?.finish || 'Pulido',
+        finish: product?.finish || [], // Initialize as array
         image: product?.image || '',
         best_seller: product?.best_seller || false,
+        description: product?.description || '',
     });
     const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const categories = ['Granito', 'Mármol', 'Cuarcita', 'Caliza'];
-    const colors = ['Blanco', 'Negro', 'Beige', 'Rojo', 'Rosa', 'Verde', 'Azul', 'Marrón'];
-    const finishes = ['Pulido', 'Apomazado', 'Vintage/Leather', 'Bruto', 'Flameado', 'Granallado'];
+    const categories = ['Granito', 'Mármol', 'Cuarcita', 'Caliza', 'Porcelánico', 'Cuarzo'];
+    const colors = ['Blanco', 'Negro', 'Beige', 'Rojo', 'Rosa', 'Verde', 'Azul', 'Marrón', 'Gris', 'Varios'];
+    const finishes = ['Pulido', 'Apomazado', 'Vintage/Leather', 'Bruto', 'Flameado', 'Granallado', 'Mate'];
+
+    const toggleFinish = (finish: string) => {
+        const current = formData.finish || [];
+        if (current.includes(finish)) {
+            setFormData({ ...formData, finish: current.filter(f => f !== finish) });
+        } else {
+            setFormData({ ...formData, finish: [...current, finish] });
+        }
+    };
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -86,7 +97,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                 className="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 sticky top-0 bg-white">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 sticky top-0 bg-white z-10">
                     <h3 className="text-2xl font-bold">
                         {product ? 'Editar Producto' : 'Nuevo Producto'}
                     </h3>
@@ -114,8 +125,8 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                         />
                     </div>
 
-                    {/* Category, Color, Finish - Grid */}
-                    <div className="grid grid-cols-3 gap-4">
+                    {/* Category & Color */}
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-neutral-700 mb-2">
                                 Categoría *
@@ -145,21 +156,47 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
                                 ))}
                             </select>
                         </div>
+                    </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-neutral-700 mb-2">
-                                Acabado *
-                            </label>
-                            <select
-                                value={formData.finish}
-                                onChange={(e) => setFormData({ ...formData, finish: e.target.value })}
-                                className="w-full px-4 py-2 border border-neutral-300 rounded focus:outline-none focus:border-black transition-colors"
-                            >
-                                {finishes.map((finish) => (
-                                    <option key={finish} value={finish}>{finish}</option>
-                                ))}
-                            </select>
+                    {/* Finishes (Multi-select) */}
+                    <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-2">
+                            Acabados *
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                            {finishes.map((finish) => {
+                                const isSelected = (formData.finish || []).includes(finish);
+                                return (
+                                    <button
+                                        key={finish}
+                                        type="button"
+                                        onClick={() => toggleFinish(finish)}
+                                        className={`px-3 py-1.5 text-sm rounded-full border transition-colors ${isSelected
+                                                ? 'bg-black text-white border-black'
+                                                : 'bg-white text-neutral-700 border-neutral-300 hover:border-neutral-400'
+                                            }`}
+                                    >
+                                        {finish}
+                                    </button>
+                                );
+                            })}
                         </div>
+                        {(!formData.finish || formData.finish.length === 0) && (
+                            <p className="text-xs text-red-500 mt-1">Selecciona al menos un acabado</p>
+                        )}
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-2">
+                            Descripción
+                        </label>
+                        <textarea
+                            value={formData.description}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            className="w-full px-4 py-2 border border-neutral-300 rounded focus:outline-none focus:border-black transition-colors h-32 resize-none"
+                            placeholder="Descripción detallada del material..."
+                        />
                     </div>
 
                     {/* Image Upload */}

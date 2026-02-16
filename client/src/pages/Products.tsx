@@ -11,7 +11,7 @@ interface Product {
   name: string;
   category: string;
   color: string;
-  finish: string;
+  finish: string[];
   image: string;
   bestSeller?: boolean;
 }
@@ -130,7 +130,7 @@ export default function Products() {
         ? true
         : product.category === selectedCategory;
     const matchesColor = selectedColor === "Todos" || product.color === selectedColor;
-    const matchesFinish = selectedFinish === "Todos" || product.finish === selectedFinish;
+    const matchesFinish = selectedFinish === "Todos" || (Array.isArray(product.finish) ? product.finish.includes(selectedFinish) : product.finish === selectedFinish);
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesColor && matchesFinish && matchesSearch;
   });

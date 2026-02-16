@@ -9,9 +9,10 @@ interface Product {
     name: string;
     category: string;
     color: string;
-    finish: string;
+    finish: string[];
     image: string;
     best_seller?: boolean;
+    description?: string;
 }
 
 export default function ProductsList() {
@@ -139,7 +140,9 @@ export default function ProductsList() {
                                 <td className="px-6 py-4 font-medium">{product.name}</td>
                                 <td className="px-6 py-4 text-neutral-600">{product.category}</td>
                                 <td className="px-6 py-4 text-neutral-600">{product.color}</td>
-                                <td className="px-6 py-4 text-neutral-600">{product.finish}</td>
+                                <td className="px-6 py-4 text-neutral-600">
+                                    {Array.isArray(product.finish) ? product.finish.join(', ') : product.finish}
+                                </td>
                                 <td className="px-6 py-4">
                                     {product.best_seller && (
                                         <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">

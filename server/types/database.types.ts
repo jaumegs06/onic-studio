@@ -38,7 +38,7 @@ export interface Database {
                     name: string
                     category: string
                     color: string
-                    finish: string
+                    finish: string[]
                     image: string
                     best_seller: boolean
                     created_at: string
@@ -49,7 +49,7 @@ export interface Database {
                     name: string
                     category: string
                     color: string
-                    finish: string
+                    finish: string[]
                     image: string
                     best_seller?: boolean
                     created_at?: string
@@ -60,7 +60,7 @@ export interface Database {
                     name?: string
                     category?: string
                     color?: string
-                    finish?: string
+                    finish?: string[]
                     image?: string
                     best_seller?: boolean
                     created_at?: string
