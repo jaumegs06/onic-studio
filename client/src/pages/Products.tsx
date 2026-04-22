@@ -118,7 +118,7 @@ export default function Products() {
 
   const categories = ["Best Sellers", "All", "Granito", "Mármol", "Cuarcita", "Caliza"];
   const colors = ["Todos", "Blanco", "Negro", "Beige", "Rojo", "Rosa", "Verde", "Azul", "Marrón"];
-  const finishes = ["Todos", "Pulido", "Apomazado", "Vintage/Leather", "Bruto", "Flameado", "Granallado"];
+  const finishes = ["Todos", "Pulido", "Apomazado", "Vintage/Leather", "Bruto", "Flameado", "Granallado", "Mate", "Abujardado", "Abujardado + Envejecido"];
 
   const filteredProducts = (products || []).filter((product) => {
     const matchesCategory = selectedCategory === "Best Sellers"

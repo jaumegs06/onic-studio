@@ -8,7 +8,7 @@ import cors from "cors";
 // import authRoutes from "./routes/auth.js";
 import productsRoutes from "./routes/products.js";
 // import uploadRoutes from "./routes/upload.js";
-import contactRoutes from "./routes/contact.js";
+// import contactRoutes from "./routes/contact.js"; // Removed
 import projectRoutes from "./routes/projects.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,7 +54,7 @@ export function createApp() {
     // app.use("/api/auth", authRoutes);
     app.use("/api/products", productsRoutes);
     // app.use("/api/upload", uploadRoutes);
-    app.use("/api/contact", contactRoutes);
+    // app.use("/api/contact", contactRoutes); // Removed: Using direct Supabase integration
     app.use("/api/projects", projectRoutes);
 
     // Handle client-side routing - serve index.html for all routes

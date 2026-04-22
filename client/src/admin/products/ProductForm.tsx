@@ -36,7 +36,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
 
     const categories = ['Granito', 'Mármol', 'Cuarcita', 'Caliza', 'Porcelánico', 'Cuarzo'];
     const colors = ['Blanco', 'Negro', 'Beige', 'Rojo', 'Rosa', 'Verde', 'Azul', 'Marrón', 'Gris', 'Varios'];
-    const finishes = ['Pulido', 'Apomazado', 'Vintage/Leather', 'Bruto', 'Flameado', 'Granallado', 'Mate'];
+    const finishes = ['Pulido', 'Apomazado', 'Vintage/Leather', 'Bruto', 'Flameado', 'Granallado', 'Mate', 'Abujardado', 'Abujardado + Envejecido'];
 
     const toggleFinish = (finish: string) => {
         const current = formData.finish || [];
