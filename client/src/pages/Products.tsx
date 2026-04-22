@@ -116,7 +116,7 @@ export default function Products() {
 
 
 
-  const categories = ["Best Sellers", "All", "Granito", "Mármol", "Cuarcita", "Caliza"];
+  const categories = ["Best Sellers", "All", "Granito", "Mármol", "Cuarcita", "Caliza", "Porcelánico", "Cuarzo", "Solid Surface"];
   const colors = ["Todos", "Blanco", "Negro", "Beige", "Rojo", "Rosa", "Verde", "Azul", "Marrón"];
   const finishes = ["Todos", "Pulido", "Apomazado", "Vintage/Leather", "Bruto", "Flameado", "Granallado", "Mate", "Abujardado", "Abujardado + Envejecido"];
 

@@ -34,7 +34,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const categories = ['Granito', 'Mármol', 'Cuarcita', 'Caliza', 'Porcelánico', 'Cuarzo'];
+    const categories = ['Granito', 'Mármol', 'Cuarcita', 'Caliza', 'Porcelánico', 'Cuarzo', 'Solid Surface'];
     const colors = ['Blanco', 'Negro', 'Beige', 'Rojo', 'Rosa', 'Verde', 'Azul', 'Marrón', 'Gris', 'Varios'];
     const finishes = ['Pulido', 'Apomazado', 'Vintage/Leather', 'Bruto', 'Flameado', 'Granallado', 'Mate', 'Abujardado', 'Abujardado + Envejecido'];
 
