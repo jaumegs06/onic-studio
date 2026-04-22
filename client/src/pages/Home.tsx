@@ -9,10 +9,10 @@ export default function Home() {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
 
   const heroImages = [
-    "/images/hero-1.jpg",
-    "/images/hero-2.jpg",
-    "/images/hero-3.jpg",
-    "/images/hero-4.jpg"
+    "/images/slider/slide1.jpg",
+    "/images/slider/slide2.jpg",
+    "/images/slider/slide3.jpg",
+    "/images/slider/slide4.jpg"
   ];
 
   const [featuredProjects, setFeaturedProjects] = useState<any[]>([]);
@@ -60,7 +60,7 @@ export default function Home() {
   // Autoplay: rotación automática cada 5 segundos
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveProject((current) => {
+      setActiveProject((current: any) => {
         if (!current || featuredProjects.length === 0) return featuredProjects[0];
         const currentIndex = featuredProjects.findIndex((p) => p.id === current.id);
         const nextIndex = (currentIndex + 1) % featuredProjects.length;
