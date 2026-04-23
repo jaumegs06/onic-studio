@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Upload, X, Save, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { uploadAPI } from '@/lib/api';
 
 export default function SliderManager() {
     const [images, setImages] = useState<string[]>([]);
@@ -19,12 +20,15 @@ export default function SliderManager() {
             const response = await fetch('/api/home-data/slider_images');
             if (response.ok) {
                 const data = await response.json();
-                if (data && data.value && Array.isArray(data.value)) {
+                if (data && data.value && Array.isArray(data.value) && data.value.length > 0) {
                     setImages(data.value);
+                } else {
+                    // Populate with defaults
+                    setImages(["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"]);
                 }
             } else if (response.status === 404) {
-                // Not found is fine, we just start with empty array
-                setImages([]);
+                // Populate with defaults
+                setImages(["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"]);
             } else {
                 throw new Error('Failed to fetch slider images');
             }
@@ -75,26 +79,9 @@ export default function SliderManager() {
 
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                const formData = new FormData();
-                formData.append('image', file);
-
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    headers: {
-                        ...(token ? { Authorization: `Bearer ${token}` } : {})
-                    },
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Failed to upload ${file.name}`);
-                }
-
-                const data = await response.json();
-                // Some upload APIs return data.url, some return data.path. We prefer url if exists, then path.
-                const newUrl = data.url || data.path;
-                if (newUrl) {
-                    uploadedUrls.push(newUrl);
+                const result = await uploadAPI.single(file);
+                if (result && result.path) {
+                    uploadedUrls.push(result.path);
                 }
             }
 
