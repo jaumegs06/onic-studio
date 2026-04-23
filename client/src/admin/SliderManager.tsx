@@ -44,9 +44,9 @@ export default function SliderManager() {
             toast.success('Imágenes guardadas correctamente');
             setImages(newImages);
             setInitialImages(newImages);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error saving slider images:', error);
-            toast.error('Error al guardar las imágenes');
+            toast.error(`Error al guardar: ${error.message || 'Error desconocido'}`);
         } finally {
             setSaving(false);
         }
