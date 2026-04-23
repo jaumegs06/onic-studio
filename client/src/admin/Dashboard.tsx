@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Package, LogOut, Menu, X, Mail, Layers } from 'lucide-react';
+import { Package, LogOut, Menu, X, Mail, Layers, Image as ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface DashboardProps {
@@ -19,6 +19,7 @@ export default function Dashboard({ children }: DashboardProps) {
     const navItems = [
         { icon: Package, label: 'Materiales', path: '/admin/dashboard' },
         { icon: Layers, label: 'Proyectos', path: '/admin/projects' },
+        { icon: ImageIcon, label: 'Fotos Inicio', path: '/admin/slider' },
         { icon: Mail, label: 'Mensajes', path: '/admin/messages' },
     ];
 

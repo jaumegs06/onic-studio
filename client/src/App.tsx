@@ -23,6 +23,7 @@ import ProductsList from "./admin/products/ProductsList";
 import ContactMessages from "./admin/messages/ContactMessages";
 import ProjectsList from "./admin/projects/ProjectsList";
 import ProjectEditor from "./admin/projects/ProjectEditor";
+import SliderManager from "./admin/SliderManager";
 
 function Router() {
   const [location] = useLocation();
@@ -50,6 +51,13 @@ function Router() {
             <ProtectedRoute>
               <Dashboard>
                 <ContactMessages />
+              </Dashboard>
+            </ProtectedRoute>
+          </Route>
+          <Route path={"/admin/slider"}>
+            <ProtectedRoute>
+              <Dashboard>
+                <SliderManager />
               </Dashboard>
             </ProtectedRoute>
           </Route>

@@ -7,13 +7,28 @@ import { projectsAPI } from "@/lib/api";
 
 export default function Home() {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
-
-  const heroImages = [
+  const [heroImages, setHeroImages] = useState<string[]>([
     "/images/slider/slide2.jpg",
     "/images/slider/slide3.jpg",
     "/images/slider/slide4.jpg"
-  ];
+  ]);
 
+  useEffect(() => {
+    const fetchSliderImages = async () => {
+      try {
+        const res = await fetch('/api/home-data/slider_images');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.value && Array.isArray(data.value) && data.value.length > 0) {
+            setHeroImages(data.value);
+          }
+        }
+      } catch (err) {
+        console.error("Error loading slider images:", err);
+      }
+    };
+    fetchSliderImages();
+  }, []);
   const [featuredProjects, setFeaturedProjects] = useState<any[]>([]);
 
   useEffect(() => {

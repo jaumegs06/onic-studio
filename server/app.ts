@@ -10,6 +10,7 @@ import productsRoutes from "./routes/products.js";
 // import uploadRoutes from "./routes/upload.js";
 // import contactRoutes from "./routes/contact.js"; // Removed
 import projectRoutes from "./routes/projects.js";
+import homeDataRoutes from "./routes/homeData.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,6 +57,7 @@ export function createApp() {
     // app.use("/api/upload", uploadRoutes);
     // app.use("/api/contact", contactRoutes); // Removed: Using direct Supabase integration
     app.use("/api/projects", projectRoutes);
+    app.use("/api/home-data", homeDataRoutes);
 
     // Handle client-side routing - serve index.html for all routes
     // This must be AFTER API routes
