@@ -9,7 +9,6 @@ export default function Home() {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
 
   const heroImages = [
-    "/images/slider/slide1.jpg",
     "/images/slider/slide2.jpg",
     "/images/slider/slide3.jpg",
     "/images/slider/slide4.jpg"
