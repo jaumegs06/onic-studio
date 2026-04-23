@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Upload, X, Save, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { uploadAPI } from '@/lib/api';
+import { uploadAPI, homeDataAPI } from '@/lib/api';
 
 export default function SliderManager() {
     const [images, setImages] = useState<string[]>([]);
@@ -18,23 +18,12 @@ export default function SliderManager() {
     const fetchSliderImages = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/home-data/slider_images');
+            const dataValue = await homeDataAPI.getSliderImages();
             
-            // Si la respuesta es 404, de base de datos o el server responde HTML (no api), usar defaults
-            const isJson = response.headers.get('content-type')?.includes('application/json');
-            
-            if (response.ok && isJson) {
-                const data = await response.json();
-                if (data && data.value && Array.isArray(data.value) && data.value.length > 0) {
-                    setImages(data.value);
-                    setInitialImages(data.value);
-                } else {
-                    const defaults = ["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"];
-                    setImages(defaults);
-                    setInitialImages(defaults);
-                }
+            if (dataValue && Array.isArray(dataValue) && dataValue.length > 0) {
+                setImages(dataValue);
+                setInitialImages(dataValue);
             } else {
-                // Fallback (e.g. server restarted or 404)
                 const defaults = ["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"];
                 setImages(defaults);
                 setInitialImages(defaults);
@@ -50,19 +39,7 @@ export default function SliderManager() {
     const saveSliderImages = async (newImages: string[]) => {
         try {
             setSaving(true);
-            const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
-            const response = await fetch('/api/home-data/slider_images', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {})
-                },
-                body: JSON.stringify({ value: newImages })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to save slider images');
-            }
+            await homeDataAPI.saveSliderImages(newImages);
 
             toast.success('Imágenes guardadas correctamente');
             setImages(newImages);

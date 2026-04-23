@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { projectsAPI } from "@/lib/api";
+import { projectsAPI, homeDataAPI } from "@/lib/api";
 
 export default function Home() {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
@@ -16,13 +16,9 @@ export default function Home() {
   useEffect(() => {
     const fetchSliderImages = async () => {
       try {
-        const res = await fetch('/api/home-data/slider_images');
-        const isJson = res.headers.get('content-type')?.includes('application/json');
-        if (res.ok && isJson) {
-          const data = await res.json();
-          if (data && data.value && Array.isArray(data.value) && data.value.length > 0) {
-            setHeroImages(data.value);
-          }
+        const dataValue = await homeDataAPI.getSliderImages();
+        if (dataValue && Array.isArray(dataValue) && dataValue.length > 0) {
+          setHeroImages(dataValue);
         }
       } catch (err) {
         console.error("Error loading slider images:", err);

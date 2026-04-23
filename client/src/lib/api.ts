@@ -218,3 +218,30 @@ export const authAPI = {
         await supabase.auth.signOut();
     }
 };
+
+// Home Data API
+export const homeDataAPI = {
+    getSliderImages: async () => {
+        const { data, error } = await supabase
+            .from('home_data')
+            .select('value')
+            .eq('key', 'slider_images')
+            .single();
+            
+        if (error && error.code !== 'PGRST116') throw error;
+        return data?.value || null;
+    },
+    saveSliderImages: async (images: string[]) => {
+        const { data, error } = await supabase
+            .from('home_data')
+            .upsert(
+                { key: 'slider_images', value: images, updated_at: new Date().toISOString() },
+                { onConflict: 'key' }
+            )
+            .select()
+            .single();
+            
+        if (error) throw error;
+        return data;
+    }
+};
