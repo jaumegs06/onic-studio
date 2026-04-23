@@ -6,6 +6,7 @@ import { uploadAPI } from '@/lib/api';
 
 export default function SliderManager() {
     const [images, setImages] = useState<string[]>([]);
+    const [initialImages, setInitialImages] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -26,12 +27,17 @@ export default function SliderManager() {
                 const data = await response.json();
                 if (data && data.value && Array.isArray(data.value) && data.value.length > 0) {
                     setImages(data.value);
+                    setInitialImages(data.value);
                 } else {
-                    setImages(["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"]);
+                    const defaults = ["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"];
+                    setImages(defaults);
+                    setInitialImages(defaults);
                 }
             } else {
                 // Fallback (e.g. server restarted or 404)
-                setImages(["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"]);
+                const defaults = ["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"];
+                setImages(defaults);
+                setInitialImages(defaults);
             }
         } catch (error) {
             console.error('Error fetching slider images:', error);
@@ -58,8 +64,9 @@ export default function SliderManager() {
                 throw new Error('Failed to save slider images');
             }
 
-            toast.success('Imágenes actualizadas correctamente');
+            toast.success('Imágenes guardadas correctamente');
             setImages(newImages);
+            setInitialImages(newImages);
         } catch (error) {
             console.error('Error saving slider images:', error);
             toast.error('Error al guardar las imágenes');
@@ -87,9 +94,9 @@ export default function SliderManager() {
             }
 
             const updatedImages = [...images, ...uploadedUrls];
-            await saveSliderImages(updatedImages);
+            setImages(updatedImages);
             
-            toast.success(`${uploadedUrls.length} imagen(es) subida(s) correctamente`);
+            toast.success(`${uploadedUrls.length} imagen(es) subida(s). Recuerda hacer clic en "Guardar Cambios".`);
 
             // Reset input
             if (e.target) {
@@ -104,10 +111,8 @@ export default function SliderManager() {
     };
 
     const handleRemoveImage = (indexToRemove: number) => {
-        if (!window.confirm('¿Seguro que quieres eliminar esta imagen del carrusel?')) return;
-        
         const updatedImages = images.filter((_, index) => index !== indexToRemove);
-        saveSliderImages(updatedImages);
+        setImages(updatedImages);
     };
 
     const moveImage = (index: number, direction: 'up' | 'down') => {
@@ -120,7 +125,13 @@ export default function SliderManager() {
         // Swap elements
         [newImages[index], newImages[newIndex]] = [newImages[newIndex], newImages[index]];
         
-        saveSliderImages(newImages);
+        setImages(newImages);
+    };
+
+    const hasChanges = JSON.stringify(initialImages) !== JSON.stringify(images);
+
+    const handleSave = () => {
+        saveSliderImages(images);
     };
 
     if (loading) {
@@ -140,22 +151,30 @@ export default function SliderManager() {
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold">Imágenes del Carrusel</h2>
                     
-                    <div className="relative">
-                        <input
-                            type="file"
-                            id="slider-upload"
-                            multiple
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            className="hidden"
-                            disabled={uploading || saving}
-                        />
-                        <Button asChild disabled={uploading || saving}>
-                            <label htmlFor="slider-upload" className="cursor-pointer">
-                                <Upload className="w-4 h-4 mr-2" />
-                                {uploading ? 'Subiendo...' : 'Subir Imágenes'}
-                            </label>
-                        </Button>
+                    <div className="flex items-center gap-3">
+                        {hasChanges && (
+                            <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white border-0">
+                                <Save className="w-4 h-4 mr-2" />
+                                {saving ? 'Guardando...' : 'Guardar Cambios'}
+                            </Button>
+                        )}
+                        <div className="relative">
+                            <input
+                                type="file"
+                                id="slider-upload"
+                                multiple
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                className="hidden"
+                                disabled={uploading || saving}
+                            />
+                            <Button asChild disabled={uploading || saving} variant={hasChanges ? "outline" : "default"}>
+                                <label htmlFor="slider-upload" className="cursor-pointer">
+                                    <Upload className="w-4 h-4 mr-2" />
+                                    {uploading ? 'Subiendo...' : 'Añadir Imágenes'}
+                                </label>
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
