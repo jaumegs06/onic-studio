@@ -124,6 +124,10 @@ CREATE POLICY "Public services read access" ON services
 CREATE POLICY "Public home_data read access" ON home_data
     FOR SELECT USING (true);
 
+-- Admin write access for home_data
+CREATE POLICY "Admin home_data write access" ON home_data
+    FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
+
 -- Only authenticated users can read users table
 CREATE POLICY "Authenticated users read access" ON users
     FOR SELECT USING (auth.role() = 'authenticated');
