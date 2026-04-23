@@ -18,19 +18,20 @@ export default function SliderManager() {
         try {
             setLoading(true);
             const response = await fetch('/api/home-data/slider_images');
-            if (response.ok) {
+            
+            // Si la respuesta es 404, de base de datos o el server responde HTML (no api), usar defaults
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            
+            if (response.ok && isJson) {
                 const data = await response.json();
                 if (data && data.value && Array.isArray(data.value) && data.value.length > 0) {
                     setImages(data.value);
                 } else {
-                    // Populate with defaults
                     setImages(["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"]);
                 }
-            } else if (response.status === 404) {
-                // Populate with defaults
-                setImages(["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"]);
             } else {
-                throw new Error('Failed to fetch slider images');
+                // Fallback (e.g. server restarted or 404)
+                setImages(["/images/slider/slide2.jpg", "/images/slider/slide3.jpg", "/images/slider/slide4.jpg"]);
             }
         } catch (error) {
             console.error('Error fetching slider images:', error);

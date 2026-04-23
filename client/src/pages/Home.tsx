@@ -17,7 +17,8 @@ export default function Home() {
     const fetchSliderImages = async () => {
       try {
         const res = await fetch('/api/home-data/slider_images');
-        if (res.ok) {
+        const isJson = res.headers.get('content-type')?.includes('application/json');
+        if (res.ok && isJson) {
           const data = await res.json();
           if (data && data.value && Array.isArray(data.value) && data.value.length > 0) {
             setHeroImages(data.value);
