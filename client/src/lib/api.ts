@@ -232,12 +232,13 @@ export const homeDataAPI = {
         return data?.value || null;
     },
     saveSliderImages: async (images: string[]) => {
-        const token = localStorage.getItem('token');
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
         const response = await fetch('/api/home-data/slider_images', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
             body: JSON.stringify({ value: images }),
         });
