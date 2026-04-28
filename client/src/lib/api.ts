@@ -232,20 +232,16 @@ export const homeDataAPI = {
         return data?.value || null;
     },
     saveSliderImages: async (images: string[]) => {
-        const { data: { session } } = await supabase.auth.getSession();
-        const token = session?.access_token;
-        const response = await fetch('/api/home-data/slider_images', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            },
-            body: JSON.stringify({ value: images }),
-        });
-        if (!response.ok) {
-            const errData = await response.json().catch(() => ({}));
-            throw new Error(errData.error || 'Error al guardar las imágenes');
-        }
-        return response.json();
+        const { data, error } = await supabase
+            .from('home_data')
+            .upsert(
+                { key: 'slider_images', value: images, updated_at: new Date().toISOString() },
+                { onConflict: 'key' }
+            )
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
     }
 };
