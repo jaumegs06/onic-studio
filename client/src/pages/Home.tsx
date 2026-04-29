@@ -66,7 +66,7 @@ export default function Home() {
     }, 6000);
 
     return () => clearInterval(heroInterval);
-  }, []);
+  }, [heroImages]);
 
   // Autoplay: rotación automática cada 5 segundos
   useEffect(() => {
