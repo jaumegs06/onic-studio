@@ -73,6 +73,7 @@ export const projectsAPI = {
         const { data, error } = await supabase
             .from('projects')
             .select('*')
+            .order('year', { ascending: false })
             .order('created_at', { ascending: false });
 
         if (error) throw error;
