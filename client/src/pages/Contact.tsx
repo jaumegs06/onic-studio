@@ -291,13 +291,21 @@ export default function Contact() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.4 }}
                   >
-                    <h3 className="text-xl mb-3">Teléfono</h3>
-                    <a
-                      href="tel:+34661206414"
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      +34 661 20 64 14
-                    </a>
+                    <h3 className="text-xl mb-3">Teléfonos</h3>
+                    <div className="flex flex-col space-y-1">
+                      <a
+                        href="tel:+34661206414"
+                        className="text-muted-foreground hover:text-foreground transition-colors block"
+                      >
+                        +34 661 20 64 14
+                      </a>
+                      <a
+                        href="tel:+34618918805"
+                        className="text-muted-foreground hover:text-foreground transition-colors block"
+                      >
+                        +34 618 91 88 05
+                      </a>
+                    </div>
                   </motion.div>
 
                   <motion.div
