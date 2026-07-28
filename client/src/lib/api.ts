@@ -244,5 +244,28 @@ export const homeDataAPI = {
 
         if (error) throw error;
         return data;
+    },
+    getCategories: async () => {
+        const { data, error } = await supabase
+            .from('home_data')
+            .select('value')
+            .eq('key', 'categories')
+            .single();
+
+        if (error && error.code !== 'PGRST116') throw error;
+        return data?.value || null;
+    },
+    saveCategories: async (categories: string[]) => {
+        const { data, error } = await supabase
+            .from('home_data')
+            .upsert(
+                { key: 'categories', value: categories, updated_at: new Date().toISOString() },
+                { onConflict: 'key' }
+            )
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
     }
 };

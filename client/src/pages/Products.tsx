@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ChevronDown, Search, X } from "lucide-react";
-import { productsAPI } from "@/lib/api";
+import { productsAPI, homeDataAPI } from "@/lib/api";
 
 interface Product {
   id: number;
@@ -100,23 +100,29 @@ export default function Products() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProductsAndCategories = async () => {
       try {
-        const data = await productsAPI.getAll();
-        setProducts(data);
+        const [productsData, dbCategories] = await Promise.all([
+          productsAPI.getAll(),
+          homeDataAPI.getCategories()
+        ]);
+        setProducts(productsData);
+        if (dbCategories && Array.isArray(dbCategories)) {
+          setCategories(["Best Sellers", "All", ...dbCategories]);
+        }
       } catch (e) {
-        console.error('Error fetching products:', e);
+        console.error('Error fetching products/categories:', e);
         setError('Failed to load products');
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchProductsAndCategories();
   }, []);
 
 
 
-  const categories = ["Best Sellers", "All", "Granito", "Mármol", "Cuarcita", "Caliza", "Porcelánico", "Cuarzo", "Solid Surface"];
+  const [categories, setCategories] = useState<string[]>(["Best Sellers", "All", "Granito", "Mármol", "Cuarcita", "Caliza", "Porcelánico", "Cuarzo", "Solid Surface"]);
   const colors = ["Todos", "Blanco", "Negro", "Beige", "Rojo", "Rosa", "Verde", "Azul", "Marrón"];
   const finishes = ["Todos", "Pulido", "Apomazado", "Vintage/Leather", "Bruto", "Flameado", "Granallado", "Mate", "Abujardado", "Abujardado + Envejecido"];
 

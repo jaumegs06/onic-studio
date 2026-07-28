@@ -1,6 +1,6 @@
-import { useState, FormEvent, useRef } from 'react';
+import { useState, FormEvent, useRef, useEffect } from 'react';
 import { X, Upload, Loader } from 'lucide-react';
-import { productsAPI, uploadAPI } from '@/lib/api';
+import { productsAPI, uploadAPI, homeDataAPI } from '@/lib/api';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
@@ -34,9 +34,26 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const categories = ['Granito', 'Mármol', 'Cuarcita', 'Caliza', 'Porcelánico', 'Cuarzo', 'Solid Surface'];
+    const [categories, setCategories] = useState<string[]>(['Granito', 'Mármol', 'Cuarcita', 'Caliza', 'Porcelánico', 'Cuarzo', 'Solid Surface']);
     const colors = ['Blanco', 'Negro', 'Beige', 'Rojo', 'Rosa', 'Verde', 'Azul', 'Marrón', 'Gris', 'Varios'];
     const finishes = ['Pulido', 'Apomazado', 'Vintage/Leather', 'Bruto', 'Flameado', 'Granallado', 'Mate', 'Abujardado', 'Abujardado + Envejecido'];
+
+    useEffect(() => {
+        const loadCategories = async () => {
+            try {
+                const dbCategories = await homeDataAPI.getCategories();
+                if (dbCategories && Array.isArray(dbCategories)) {
+                    setCategories(dbCategories);
+                    if (!product) {
+                        setFormData(prev => ({ ...prev, category: dbCategories[0] || '' }));
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading categories in form:', error);
+            }
+        };
+        loadCategories();
+    }, [product]);
 
     const toggleFinish = (finish: string) => {
         const current = formData.finish || [];

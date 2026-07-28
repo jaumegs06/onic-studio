@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Search } from 'lucide-react';
+import { Plus, Edit, Trash2, Search, Tag } from 'lucide-react';
 import { productsAPI } from '@/lib/api';
 import ProductForm from './ProductForm';
+import CategoryManager from './CategoryManager';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import ConfirmDialog from '@/components/ConfirmDialog';
@@ -33,6 +34,7 @@ export default function ProductsList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [showForm, setShowForm] = useState(false);
+    const [showCategories, setShowCategories] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; product: Product | null }>({ open: false, product: null });
     const [deletingId, setDeletingId] = useState<number | null>(null);
 
@@ -125,13 +127,22 @@ export default function ProductsList() {
         <div>
             <div className="flex items-center justify-between mb-8">
                 <h2 className="text-3xl font-bold">Productos</h2>
-                <button
-                    onClick={handleAdd}
-                    className="flex items-center gap-2 px-6 py-3 bg-black text-white rounded hover:bg-neutral-800 transition-colors"
-                >
-                    <Plus className="w-5 h-5" />
-                    Añadir Producto
-                </button>
+                <div className="flex gap-3">
+                    <button
+                        onClick={() => setShowCategories(true)}
+                        className="flex items-center gap-2 px-6 py-3 border border-neutral-300 bg-white text-neutral-700 rounded hover:bg-neutral-50 hover:border-neutral-400 transition-colors"
+                    >
+                        <Tag className="w-5 h-5" />
+                        Gestionar Categorías
+                    </button>
+                    <button
+                        onClick={handleAdd}
+                        className="flex items-center gap-2 px-6 py-3 bg-black text-white rounded hover:bg-neutral-800 transition-colors"
+                    >
+                        <Plus className="w-5 h-5" />
+                        Añadir Producto
+                    </button>
+                </div>
             </div>
 
             {/* Search */}
@@ -244,6 +255,15 @@ export default function ProductsList() {
                     <ProductForm
                         product={editingProduct}
                         onClose={handleFormClose}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Category Manager Modal */}
+            <AnimatePresence>
+                {showCategories && (
+                    <CategoryManager
+                        onClose={() => setShowCategories(false)}
                     />
                 )}
             </AnimatePresence>
